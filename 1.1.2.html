@@ -1316,10 +1316,166 @@ table { max-width: 100% !important; }
     font-size: 0.9rem;
   }
 }
+
+/* ===== THEME OVERRIDES (light pages default to light) ===== */
+html[data-theme="dark"] {
+  --bg: #0c1220;
+  --surface: #141e30;
+  --light: #111827;
+  --deep: #f0f4f8;
+  --navy: #7dd3fc;
+  --slate: #94a3b8;
+  --muted: #64748b;
+  --border: #334155;
+  --ink: #e2e8f0;
+  --cream: #0c1220;
+  --white: #1e293b;
+}
+
+html[data-theme="dark"] body {
+  background: #0c1220 !important;
+  color: #e2e8f0 !important;
+}
+html[data-theme="dark"] body::before {
+  opacity: 0 !important;
+}
+
+/* Nav */
+html[data-theme="dark"] .nav,
+html[data-theme="dark"] .top-nav {
+  background: rgba(12,18,32,.95) !important;
+  border-bottom-color: rgba(148,163,184,.1) !important;
+}
+
+/* Hero sections in dark mode */
+html[data-theme="dark"] .hero {
+  background: linear-gradient(135deg, #0c1220 0%, #1a1a2e 45%, #16213e 100%) !important;
+}
+html[data-theme="dark"] .hero h1,
+html[data-theme="dark"] .hero-t {
+  color: #e2e8f0 !important;
+}
+
+/* Cards in dark mode */
+html[data-theme="dark"] .source-card,
+html[data-theme="dark"] .index-card,
+html[data-theme="dark"] .guide-card,
+html[data-theme="dark"] .concept-card,
+html[data-theme="dark"] .crossed-card,
+html[data-theme="dark"] .glass-card {
+  background: #1e293b !important;
+  border-color: rgba(148,163,184,.15) !important;
+  color: #e2e8f0 !important;
+}
+
+/* Sections in dark mode */
+html[data-theme="dark"] .sec,
+html[data-theme="dark"] .section {
+  background: transparent !important;
+}
+
+/* Footer */
+html[data-theme="dark"] .footer {
+  background: #0c1220 !important;
+  color: #94a3b8 !important;
+}
+
+/* Tables */
+html[data-theme="dark"] .tbl thead th {
+  background: #1e293b !important;
+  color: #94a3b8 !important;
+}
+html[data-theme="dark"] .tbl tbody td {
+  background: rgba(30,41,59,.5) !important;
+  color: #e2e8f0 !important;
+}
+
+/* Page nav */
+html[data-theme="dark"] .page-nav-top {
+  background: rgba(12,18,32,.95) !important;
+  border-color: rgba(148,163,184,.12) !important;
+}
+html[data-theme="dark"] .page-nav-top a,
+html[data-theme="dark"] .page-nav-top a:visited {
+  color: #e2e8f0 !important;
+  background: rgba(148,163,184,.1) !important;
+  border-color: rgba(148,163,184,.15) !important;
+}
+html[data-theme="dark"] .page-nav-bottom {
+  background: rgba(12,18,32,.95) !important;
+}
+
+/* Theme toggle */
+.theme-toggle {
+  min-height: 44px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 1px solid var(--border, rgba(15,52,96,.12));
+  background: rgba(15,52,96,.06);
+  color: var(--ink, #16213e);
+  font-weight: 700;
+  font-size: .82rem;
+  cursor: pointer;
+  transition: background .2s, transform .2s;
+  font-family: 'Cairo', sans-serif;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+}
+.theme-toggle:hover {
+  background: rgba(2,132,199,.15);
+  transform: translateY(-2px);
+}
+html[data-theme="dark"] .theme-toggle {
+  background: rgba(255,255,255,.12) !important;
+  border-color: rgba(255,255,255,.18) !important;
+  color: #e2e8f0 !important;
+}
+html[data-theme="dark"] .theme-toggle:hover {
+  background: rgba(56,189,248,.2) !important;
+}
+
+/* Progress bars */
+html[data-theme="dark"] .prog-bar,
+html[data-theme="dark"] .pgbar,
+html[data-theme="dark"] .pg {
+  background: #141e30 !important;
+  border-color: rgba(148,163,184,.12) !important;
+}
+
+/* Equations */
+html[data-theme="dark"] .eq {
+  background: rgba(12,18,32,.6) !important;
+  border-color: rgba(148,163,184,.15) !important;
+}
+
+/* Chart boxes */
+html[data-theme="dark"] .cbox {
+  background: linear-gradient(135deg, rgba(12,18,32,.95), rgba(20,30,48,.95)) !important;
+}
+
+/* Insights */
+html[data-theme="dark"] .ins {
+  border-color: rgba(148,163,184,.12) !important;
+}
+
+/* Hide starfield in chapter 1 dark overrides */
+html[data-theme="dark"] canvas#sf {
+  display: block !important;
+}
+
+/* canvas in already-light pages */
+html[data-theme="light"] canvas#sf {
+  display: none !important;
+}
+
 </style>
+
+<script>(function(){var t=localStorage.getItem('gth-theme')||'light';document.documentElement.setAttribute('data-theme',t);if(t==='light'){document.documentElement.classList.add('light-mode');}})();</script>
 </head>
 <body>
-<nav class="page-nav-top" aria-label="تنقل الصفحة العلوي"><a href="index.html" class="nav-home">الرئيسية</a></nav>
+<nav class="page-nav-top" aria-label="تنقل الصفحة العلوي"><a href="index.html" class="nav-home">الرئيسية</a> <button type="button" class="theme-toggle" data-theme-toggle aria-pressed="false">الوضع الليلي</button></nav>
 
 <!-- ════════ NAV ════════ -->
 <nav class="top-nav">
@@ -2122,6 +2278,32 @@ window.addEventListener('load', () => {
 });
 </script>
 
-<div class="page-nav-bottom" style="background:linear-gradient(135deg,#0a0a1a,#111827);"><a href="index.html" style="background:linear-gradient(135deg,#16213e,#0f3460);color:#fff;">&#x1F3E0; &#x627;&#x644;&#x631;&#x626;&#x64A;&#x633;&#x64A;&#x629;</a> <a href="1.1.1.html" style="background:linear-gradient(135deg,#4a5568,#2d3748);color:#fff;">&#x2190; &#x627;&#x644;&#x633;&#x627;&#x628;&#x642;</a> <a href="2.1.html" style="background:linear-gradient(135deg,#2b6cb0,#2c5282);color:#fff;">&#x627;&#x644;&#x62A;&#x627;&#x644;&#x64A; &#x2192;</a></div>
+<div class="page-nav-bottom" style="background:linear-gradient(135deg,#0a0a1a,#111827);"><a href="index.html" style="background:linear-gradient(135deg,#16213e,#0f3460);color:#fff;">&#x1F3E0; &#x627;&#x644;&#x631;&#x626;&#x64A;&#x633;&#x64A;&#x629;</a> <a href="1.1.1.html" style="background:linear-gradient(135deg,#4a5568,#2d3748);color:#fff;">&#x2190; &#x627;&#x644;&#x633;&#x627;&#x628;&#x642;</a> <a href="2.1.html" style="background:linear-gradient(135deg,#2b6cb0,#2c5282);color:#fff;">&#x627;&#x644;&#x62A;&#x627;&#x644;&#x64A; &#x2192;</a> <button type="button" class="theme-toggle" data-theme-toggle aria-pressed="false">الوضع الليلي</button></div>
+
+<script>
+(function(){
+  var STORAGE_KEY='gth-theme';
+  function applyTheme(theme){
+    document.documentElement.setAttribute('data-theme',theme);
+    if(theme==='light'){document.documentElement.classList.add('light-mode');}
+    else{document.documentElement.classList.remove('light-mode');}
+    var btns=document.querySelectorAll('[data-theme-toggle]');
+    for(var i=0;i<btns.length;i++){
+      btns[i].textContent=theme==='dark'?'الوضع النهاري':'الوضع الليلي';
+      btns[i].setAttribute('aria-pressed',theme==='dark'?'true':'false');
+    }
+  }
+  var saved=localStorage.getItem(STORAGE_KEY)||'light';
+  applyTheme(saved);
+  document.addEventListener('click',function(e){
+    var btn=e.target.closest('[data-theme-toggle]');
+    if(!btn)return;
+    var cur=document.documentElement.getAttribute('data-theme')||'light';
+    var next=cur==='dark'?'light':'dark';
+    localStorage.setItem(STORAGE_KEY,next);
+    applyTheme(next);
+  });
+})();
+</script>
 </body>
 </html>

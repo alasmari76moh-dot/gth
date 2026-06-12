@@ -672,6 +672,56 @@ table { max-width: 100%; }
 
 pre, code { white-space: pre-wrap; word-break: break-word; max-width: 100%; }
 
+/* === PAGE NAV TOP === */
+.page-nav-top {
+  direction: rtl;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  width: min(100% - 24px, 1100px);
+  margin: 14px auto;
+  padding: 10px;
+  border-radius: 16px;
+  background: rgba(15, 52, 96, 0.88);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.14);
+  backdrop-filter: blur(8px);
+  position: relative;
+  z-index: 10;
+}
+.page-nav-top a,
+.page-nav-top a:visited {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 8px 18px;
+  border-radius: 999px;
+  text-decoration: none;
+  font-weight: 700;
+  color: #ffffff;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.18);
+  transition: background 0.2s, transform 0.2s;
+}
+.page-nav-top a:hover {
+  background: rgba(0, 180, 216, 0.28);
+  transform: translateY(-2px);
+}
+@media (max-width: 480px) {
+  .page-nav-top {
+    width: calc(100% - 20px);
+    gap: 8px;
+    padding: 8px;
+  }
+  .page-nav-top a {
+    flex: 1 1 auto;
+    min-width: 90px;
+    padding: 8px 12px;
+    font-size: 0.9rem;
+  }
+}
+
 /* Page bottom navigation */
 .page-nav-bottom {
   display: flex; flex-wrap: wrap; gap: 12px;
@@ -1332,9 +1382,166 @@ table { max-width: 100% !important; }
     align-items: center !important;
   }
 }
+
+/* ===== THEME OVERRIDES (light pages default to light) ===== */
+html[data-theme="dark"] {
+  --bg: #0c1220;
+  --surface: #141e30;
+  --light: #111827;
+  --deep: #f0f4f8;
+  --navy: #7dd3fc;
+  --slate: #94a3b8;
+  --muted: #64748b;
+  --border: #334155;
+  --ink: #e2e8f0;
+  --cream: #0c1220;
+  --white: #1e293b;
+}
+
+html[data-theme="dark"] body {
+  background: #0c1220 !important;
+  color: #e2e8f0 !important;
+}
+html[data-theme="dark"] body::before {
+  opacity: 0 !important;
+}
+
+/* Nav */
+html[data-theme="dark"] .nav,
+html[data-theme="dark"] .top-nav {
+  background: rgba(12,18,32,.95) !important;
+  border-bottom-color: rgba(148,163,184,.1) !important;
+}
+
+/* Hero sections in dark mode */
+html[data-theme="dark"] .hero {
+  background: linear-gradient(135deg, #0c1220 0%, #1a1a2e 45%, #16213e 100%) !important;
+}
+html[data-theme="dark"] .hero h1,
+html[data-theme="dark"] .hero-t {
+  color: #e2e8f0 !important;
+}
+
+/* Cards in dark mode */
+html[data-theme="dark"] .source-card,
+html[data-theme="dark"] .index-card,
+html[data-theme="dark"] .guide-card,
+html[data-theme="dark"] .concept-card,
+html[data-theme="dark"] .crossed-card,
+html[data-theme="dark"] .glass-card {
+  background: #1e293b !important;
+  border-color: rgba(148,163,184,.15) !important;
+  color: #e2e8f0 !important;
+}
+
+/* Sections in dark mode */
+html[data-theme="dark"] .sec,
+html[data-theme="dark"] .section {
+  background: transparent !important;
+}
+
+/* Footer */
+html[data-theme="dark"] .footer {
+  background: #0c1220 !important;
+  color: #94a3b8 !important;
+}
+
+/* Tables */
+html[data-theme="dark"] .tbl thead th {
+  background: #1e293b !important;
+  color: #94a3b8 !important;
+}
+html[data-theme="dark"] .tbl tbody td {
+  background: rgba(30,41,59,.5) !important;
+  color: #e2e8f0 !important;
+}
+
+/* Page nav */
+html[data-theme="dark"] .page-nav-top {
+  background: rgba(12,18,32,.95) !important;
+  border-color: rgba(148,163,184,.12) !important;
+}
+html[data-theme="dark"] .page-nav-top a,
+html[data-theme="dark"] .page-nav-top a:visited {
+  color: #e2e8f0 !important;
+  background: rgba(148,163,184,.1) !important;
+  border-color: rgba(148,163,184,.15) !important;
+}
+html[data-theme="dark"] .page-nav-bottom {
+  background: rgba(12,18,32,.95) !important;
+}
+
+/* Theme toggle */
+.theme-toggle {
+  min-height: 44px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 1px solid var(--border, rgba(15,52,96,.12));
+  background: rgba(15,52,96,.06);
+  color: var(--ink, #16213e);
+  font-weight: 700;
+  font-size: .82rem;
+  cursor: pointer;
+  transition: background .2s, transform .2s;
+  font-family: 'Cairo', sans-serif;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+}
+.theme-toggle:hover {
+  background: rgba(2,132,199,.15);
+  transform: translateY(-2px);
+}
+html[data-theme="dark"] .theme-toggle {
+  background: rgba(255,255,255,.12) !important;
+  border-color: rgba(255,255,255,.18) !important;
+  color: #e2e8f0 !important;
+}
+html[data-theme="dark"] .theme-toggle:hover {
+  background: rgba(56,189,248,.2) !important;
+}
+
+/* Progress bars */
+html[data-theme="dark"] .prog-bar,
+html[data-theme="dark"] .pgbar,
+html[data-theme="dark"] .pg {
+  background: #141e30 !important;
+  border-color: rgba(148,163,184,.12) !important;
+}
+
+/* Equations */
+html[data-theme="dark"] .eq {
+  background: rgba(12,18,32,.6) !important;
+  border-color: rgba(148,163,184,.15) !important;
+}
+
+/* Chart boxes */
+html[data-theme="dark"] .cbox {
+  background: linear-gradient(135deg, rgba(12,18,32,.95), rgba(20,30,48,.95)) !important;
+}
+
+/* Insights */
+html[data-theme="dark"] .ins {
+  border-color: rgba(148,163,184,.12) !important;
+}
+
+/* Hide starfield in chapter 1 dark overrides */
+html[data-theme="dark"] canvas#sf {
+  display: block !important;
+}
+
+/* canvas in already-light pages */
+html[data-theme="light"] canvas#sf {
+  display: none !important;
+}
+
 </style>
+
+<script>(function(){var t=localStorage.getItem('gth-theme')||'light';document.documentElement.setAttribute('data-theme',t);if(t==='light'){document.documentElement.classList.add('light-mode');}})();</script>
 </head>
 <body>
+<nav class="page-nav-top" aria-label="تنقل الصفحة العلوي"><button type="button" class="theme-toggle" data-theme-toggle aria-pressed="false">الوضع الليلي</button></nav>
 
   <section class="hero">
     <div class="hero-content">
@@ -1444,5 +1651,31 @@ table { max-width: 100% !important; }
     <p>دليل بصري تفاعلي في نظرية إمكانية التعميم</p>
   </footer>
 
+
+<script>
+(function(){
+  var STORAGE_KEY='gth-theme';
+  function applyTheme(theme){
+    document.documentElement.setAttribute('data-theme',theme);
+    if(theme==='light'){document.documentElement.classList.add('light-mode');}
+    else{document.documentElement.classList.remove('light-mode');}
+    var btns=document.querySelectorAll('[data-theme-toggle]');
+    for(var i=0;i<btns.length;i++){
+      btns[i].textContent=theme==='dark'?'الوضع النهاري':'الوضع الليلي';
+      btns[i].setAttribute('aria-pressed',theme==='dark'?'true':'false');
+    }
+  }
+  var saved=localStorage.getItem(STORAGE_KEY)||'light';
+  applyTheme(saved);
+  document.addEventListener('click',function(e){
+    var btn=e.target.closest('[data-theme-toggle]');
+    if(!btn)return;
+    var cur=document.documentElement.getAttribute('data-theme')||'light';
+    var next=cur==='dark'?'light':'dark';
+    localStorage.setItem(STORAGE_KEY,next);
+    applyTheme(next);
+  });
+})();
+</script>
 </body>
 </html>
