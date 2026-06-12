@@ -1,0 +1,1913 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>دراسة D · تباينات الخطأ · المعاملات | الفصل 2.3</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f2f5fb; --surf:#fff; --deep:#111827; --navy:#1e3a5f;
+  --blue:#2563eb; --sky:#0ea5e9; --teal:#0d9488; --mint:#10b981;
+  --amber:#d97706; --orange:#ea580c; --red:#dc2626; --rose:#e11d48;
+  --violet:#7c3aed; --purple:#9333ea;
+  --slate:#475569; --muted:#94a3b8; --border:#e2e8f0;
+  --r:16px; --sh:0 2px 14px rgba(17,24,39,.07); --shm:0 8px 32px rgba(17,24,39,.11);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'Cairo','Tajawal',sans-serif;background:var(--bg);color:var(--deep);direction:rtl;overflow-x:hidden;line-height:1.75;}
+
+/* ── PROGRESS ── */
+.pgbar{position:fixed;top:0;left:0;right:0;z-index:1000;height:3px;background:var(--border);}
+.pgfill{height:100%;width:0%;background:linear-gradient(90deg,var(--blue),var(--teal),var(--mint));transition:width .1s;}
+
+/* ── NAV ── */
+.nav{position:sticky;top:3px;z-index:900;background:rgba(255,255,255,.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 32px;display:flex;align-items:stretch;box-shadow:var(--sh);}
+.nav-logo{font-size:.85rem;font-weight:700;color:var(--blue);display:flex;align-items:center;gap:8px;padding:13px 0;margin-left:18px;white-space:nowrap;}
+.nav-links{display:flex;overflow-x:auto;}
+.nl{padding:0 14px;height:50px;display:flex;align-items:center;font-size:.74rem;font-weight:700;color:var(--slate);text-decoration:none;white-space:nowrap;border-bottom:3px solid transparent;transition:all .2s;}
+.nl:hover{color:var(--blue);background:rgba(37,99,235,.04);}
+.nl.active{color:var(--blue);border-bottom-color:var(--blue);}
+
+/* ── HERO ── */
+.hero{background:linear-gradient(140deg,#0f172a 0%,#1e3a5f 55%,#0c3350 100%);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px 40px;position:relative;overflow:hidden;text-align:center;}
+.hero::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.02) 1px,transparent 1px);background-size:52px 52px;}
+.hero-glow{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 700px 500px at 30% 40%,rgba(14,165,233,.11) 0%,transparent 60%),radial-gradient(ellipse 500px 400px at 78% 68%,rgba(13,148,136,.09) 0%,transparent 58%);}
+.hero-tag{display:inline-flex;align-items:center;gap:8px;background:rgba(14,165,233,.15);border:1px solid rgba(14,165,233,.3);color:#7dd3fc;padding:8px 22px;border-radius:50px;font-size:.78rem;font-weight:700;letter-spacing:1px;margin-bottom:28px;}
+.hero h1{font-size:clamp(2.6rem,6.5vw,4.8rem);font-weight:900;color:white;line-height:1.1;margin-bottom:18px;}
+.hero h1 em{font-style:normal;background:linear-gradient(120deg,#38bdf8,#34d399);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.hero-sub{font-size:1.05rem;color:rgba(255,255,255,.6);max-width:640px;margin:0 auto 50px;line-height:1.95;}
+.hero-chips{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;}
+.hchip{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:16px 22px;min-width:148px;text-align:center;transition:all .3s;cursor:default;}
+.hchip:hover{background:rgba(255,255,255,.12);transform:translateY(-5px);}
+.hchip .sym{font-family:'Georgia',serif;font-size:1.5rem;font-weight:700;margin-bottom:5px;}
+.hchip .lbl{font-size:.72rem;color:rgba(255,255,255,.6);}
+
+/* ── SECTIONS ── */
+.sec{padding:70px 40px;}
+.sec-inner{max-width:1080px;margin:0 auto;}
+.sec-alt{background:#f8faff;}
+.sec-warm{background:#fffdf6;}
+.sec-dark{background:#0f172a;color:white;}
+
+.tag{display:inline-block;padding:5px 16px;border-radius:50px;font-size:.73rem;font-weight:700;letter-spacing:1px;margin-bottom:12px;}
+.tb{background:linear-gradient(135deg,var(--blue),var(--sky));color:white;}
+.tt{background:linear-gradient(135deg,var(--teal),var(--mint));color:white;}
+.ta{background:linear-gradient(135deg,var(--amber),var(--orange));color:white;}
+.tv{background:linear-gradient(135deg,var(--violet),var(--purple));color:white;}
+.tr{background:linear-gradient(135deg,var(--red),var(--rose));color:white;}
+.ts{background:var(--slate);color:white;}
+.tm{background:linear-gradient(135deg,var(--mint),var(--teal));color:white;}
+
+h2.st{font-size:clamp(1.7rem,4vw,2.5rem);font-weight:900;color:var(--deep);margin-bottom:12px;}
+h2.st.wh{color:white;}
+.sdesc{font-size:.95rem;color:var(--slate);max-width:650px;line-height:1.9;margin-bottom:42px;}
+.sdesc.wh{color:rgba(255,255,255,.68);}
+.cx{text-align:center;}.cmx{margin:0 auto;}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:22px;}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;}
+
+.card{background:var(--surf);border-radius:var(--r);padding:26px;box-shadow:var(--sh);border:1px solid var(--border);transition:all .28s;}
+.card:hover{transform:translateY(-3px);box-shadow:var(--shm);}
+.dcard{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:var(--r);padding:24px;}
+
+.eq{background:#f5f8ff;border-radius:10px;padding:12px 18px;border-right:3px solid;font-family:'Georgia',serif;font-size:.95rem;direction:ltr;text-align:center;margin:8px 0;box-shadow:var(--sh);}
+.eq-b{border-color:var(--blue);} .eq-t{border-color:var(--teal);} .eq-a{border-color:var(--amber);}
+.eq-v{border-color:var(--violet);} .eq-r{border-color:var(--red);} .eq-m{border-color:var(--mint);}
+.eq-main{background:linear-gradient(135deg,#eff6ff,#e0f2fe);border-radius:14px;padding:20px 28px;border:2px solid rgba(37,99,235,.2);font-family:'Georgia',serif;font-size:1.05rem;direction:ltr;text-align:center;margin:16px 0;box-shadow:var(--shm);}
+
+.ins{border-radius:14px;padding:18px 22px;display:flex;gap:12px;margin:14px 0;}
+.ins .ico{font-size:1.4rem;flex-shrink:0;margin-top:2px;}
+.ins .ititle{font-weight:700;font-size:.88rem;margin-bottom:4px;}
+.ins .itext{font-size:.82rem;color:var(--slate);line-height:1.85;}
+.ib{background:#eff6ff;border:1.5px solid #bfdbfe;} .ib .ititle{color:var(--blue);}
+.it{background:#f0fdf9;border:1.5px solid #a7f3d0;} .it .ititle{color:var(--teal);}
+.ia{background:#fffbeb;border:1.5px solid #fde68a;} .ia .ititle{color:var(--amber);}
+.iv{background:#f5f3ff;border:1.5px solid #ddd6fe;} .iv .ititle{color:var(--violet);}
+.ir{background:#fff1f2;border:1.5px solid #fecdd3;} .ir .ititle{color:var(--red);}
+
+.bdg{display:inline-block;padding:3px 11px;border-radius:50px;font-size:.72rem;font-weight:700;}
+.bdb{background:#dbeafe;color:#1e40af;} .bdt{background:#d1fae5;color:#065f46;}
+.bdv{background:#ede9fe;color:#4c1d95;} .bda{background:#fef3c7;color:#92400e;}
+.bdr{background:#fee2e2;color:#991b1b;}
+
+.divr{height:3px;border:none;background:linear-gradient(90deg,var(--blue),var(--sky),var(--teal),var(--mint),var(--amber),var(--violet));}
+footer{background:#0f172a;color:rgba(255,255,255,.45);text-align:center;padding:38px 20px;font-size:.88rem;line-height:1.9;}
+
+.fu{opacity:0;transform:translateY(22px);transition:opacity .58s ease,transform .58s ease;}
+.fu.in{opacity:1;transform:translateY(0);}
+.fu:nth-child(2){transition-delay:.07s;}.fu:nth-child(3){transition-delay:.14s;}.fu:nth-child(4){transition-delay:.21s;}
+
+/* ════ SECTION SPECIFIC ════ */
+
+/* G→D transition */
+.gd-flow{display:flex;align-items:center;gap:0;overflow-x:auto;}
+.gd-node{border-radius:14px;padding:18px 22px;text-align:center;min-width:160px;flex-shrink:0;}
+.gd-arr{font-size:2rem;color:var(--muted);padding:0 12px;flex-shrink:0;align-self:center;}
+.gdn-g{background:linear-gradient(135deg,#eff6ff,#dbeafe);border:2px solid #93c5fd;color:#1e40af;}
+.gdn-d{background:linear-gradient(135deg,#f0fdf9,#d1fae5);border:2px solid #6ee7b7;color:#065f46;}
+.gdn-arr{background:linear-gradient(135deg,#fef9f0,#fef3c7);border:2px solid #fcd34d;color:#92400e;}
+.gd-sym{font-family:'Georgia',serif;font-size:1.3rem;font-weight:700;margin-bottom:6px;}
+.gd-name{font-size:.78rem;font-weight:600;margin-bottom:3px;}
+.gd-sub{font-size:.7rem;opacity:.8;}
+
+/* Error comparison cards */
+.err-compare{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+.err-card{border-radius:var(--r);overflow:hidden;box-shadow:var(--shm);}
+.err-hdr{padding:20px 26px;color:white;display:flex;align-items:center;gap:12px;}
+.eh-abs{background:linear-gradient(135deg,#b91c1c,var(--red));}
+.eh-rel{background:linear-gradient(135deg,#1d4ed8,var(--blue));}
+.err-sym{font-family:'Georgia',serif;font-size:1.5rem;}
+.err-body{background:white;padding:24px;}
+.comp-item{display:flex;align-items:center;gap:8px;padding:7px 11px;border-radius:9px;margin-bottom:5px;font-size:.81rem;}
+.ci-yes{background:#f0fdf4;} .ci-no{background:#f8fafc;opacity:.45;}
+.ctick{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700;flex-shrink:0;}
+.cy{background:#16a34a;color:white;} .cn{background:#dc2626;color:white;}
+.ck{font-family:'Georgia',serif;font-weight:700;direction:ltr;color:var(--blue);min-width:65px;}
+.cd{color:var(--slate);}
+.err-result{margin-top:14px;padding:12px 16px;border-radius:10px;font-family:'Georgia',serif;font-weight:700;font-size:1rem;text-align:center;direction:ltr;}
+.er-a{background:#fef2f2;color:#b91c1c;border:1.5px solid #fca5a5;}
+.er-r{background:#eff6ff;color:#1d4ed8;border:1.5px solid #93c5fd;}
+
+/* Venn SVG wrapper */
+.venn-box{background:white;border-radius:var(--r);padding:36px;box-shadow:var(--shm);border:1px solid var(--border);text-align:center;}
+.venn-key{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin-top:16px;font-size:.8rem;}
+.vk{display:flex;align-items:center;gap:6px;}
+.vk-dot{width:14px;height:14px;border-radius:3px;display:inline-block;}
+
+/* Coefficient cards */
+.coeff-duo{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+.coeff-card{border-radius:var(--r);overflow:hidden;box-shadow:var(--shm);}
+.coeff-hdr{padding:22px 28px;color:white;display:flex;align-items:center;gap:14px;}
+.ch-g{background:linear-gradient(135deg,#065f46,var(--teal));}
+.ch-phi{background:linear-gradient(135deg,#4c1d95,var(--violet));}
+.coeff-sym{font-family:'Georgia',serif;font-size:2rem;font-weight:700;}
+.coeff-body{background:white;padding:26px;}
+.coeff-val-box{text-align:center;margin-top:14px;padding:14px;border-radius:12px;}
+.cvb-g{background:#f0fdf9;border:1.5px solid #a7f3d0;}
+.cvb-phi{background:#f5f3ff;border:1.5px solid #ddd6fe;}
+.coeff-val{font-size:1.8rem;font-weight:900;}
+.coeff-val-g{color:var(--teal);}
+.coeff-val-v{color:var(--violet);}
+
+/* SCALING VISUAL */
+.scale-rule{background:white;border-radius:var(--r);padding:32px;box-shadow:var(--shm);border:1px solid var(--border);}
+.scale-row{display:flex;align-items:center;gap:14px;margin-bottom:16px;padding:14px 18px;border-radius:12px;}
+.sr-g{background:#eff6ff;border:1px solid #bfdbfe;}
+.sr-d{background:#f0fdf9;border:1px solid #a7f3d0;}
+.scale-sym{font-family:'Georgia',serif;font-size:1.1rem;font-weight:700;min-width:70px;direction:ltr;}
+.scale-arr{font-size:1.5rem;color:var(--muted);}
+.scale-eq{font-family:'Georgia',serif;font-size:.92rem;direction:ltr;flex:1;}
+.scale-desc{font-size:.8rem;color:var(--slate);}
+
+/* n'i slider chart */
+.slider-box{background:white;border-radius:var(--r);padding:32px;box-shadow:var(--shm);border:1px solid var(--border);}
+.slider-ctrl{display:flex;flex-direction:column;align-items:center;gap:8px;margin-bottom:24px;}
+.slider-ctrl label{font-size:.88rem;font-weight:700;color:var(--deep);}
+.slider-ctrl input{width:280px;accent-color:var(--blue);}
+.sval{display:inline-block;background:var(--blue);color:white;font-weight:700;font-size:.88rem;padding:3px 14px;border-radius:50px;min-width:40px;text-align:center;}
+.slider-results{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-bottom:22px;}
+.spill{padding:10px 18px;border-radius:10px;font-size:.85rem;font-weight:700;display:flex;align-items:center;gap:8px;}
+.sp-g{background:#f0fdf9;border:1.5px solid #a7f3d0;color:var(--teal);}
+.sp-phi{background:#f5f3ff;border:1.5px solid #ddd6fe;color:var(--violet);}
+.sp-abs{background:#fff1f2;border:1.5px solid #fecdd3;color:var(--red);}
+.sp-rel{background:#eff6ff;border:1.5px solid #bfdbfe;color:var(--blue);}
+
+/* vbar */
+.vbar-sec{background:white;border-radius:var(--r);padding:28px;box-shadow:var(--sh);border:1px solid var(--border);}
+.vbr{display:flex;align-items:center;gap:12px;margin-bottom:10px;}
+.vblbl{min-width:70px;font-family:'Georgia',serif;font-size:.82rem;font-weight:700;direction:ltr;text-align:left;}
+.vbbg{flex:1;background:#f1f5f9;border-radius:50px;height:26px;overflow:hidden;}
+.vb{height:100%;border-radius:50px;display:flex;align-items:center;padding:0 10px;font-size:.72rem;font-weight:700;color:white;direction:ltr;justify-content:flex-end;min-width:38px;transition:width 1.3s cubic-bezier(.34,1.56,.64,1);}
+.vbp{background:linear-gradient(90deg,#1d4ed8,#38bdf8);}
+.vbi{background:linear-gradient(90deg,#065f46,#34d399);}
+.vbpi{background:linear-gradient(90deg,#4c1d95,#a78bfa);}
+.vbnum{min-width:48px;font-size:.8rem;font-weight:700;direction:ltr;}
+.vbdesc{font-size:.76rem;color:var(--slate);}
+
+/* real data table */
+.rtbl{width:100%;border-collapse:separate;border-spacing:0;border-radius:var(--r);overflow:hidden;box-shadow:var(--shm);}
+.rtbl thead tr{background:linear-gradient(135deg,var(--deep),var(--navy));}
+.rtbl th{padding:14px 16px;font-size:.8rem;font-weight:700;color:white;text-align:center;}
+.rtbl th:first-child{text-align:right;}
+.rtbl tbody tr{background:white;transition:background .2s;}
+.rtbl tbody tr:nth-child(even){background:#f8faff;}
+.rtbl tbody tr:hover{background:#eff6ff;}
+.rtbl td{padding:12px 16px;font-size:.82rem;border-bottom:1px solid var(--border);text-align:center;vertical-align:middle;}
+.rtbl td:first-child{text-align:right;font-weight:600;}
+.rtbl tfoot tr{background:#f0fdf9;}
+.rtbl tfoot td{padding:12px 16px;font-size:.8rem;font-weight:700;color:var(--teal);border-top:2px solid #a7f3d0;}
+
+/* steps */
+.steps{display:flex;flex-direction:column;gap:0;position:relative;}
+.steps::before{content:'';position:absolute;right:27px;top:36px;bottom:36px;width:2px;background:linear-gradient(to bottom,var(--blue),var(--teal),var(--mint));border-radius:2px;}
+.step{display:flex;gap:18px;padding:16px 0;position:relative;}
+.snum{width:54px;height:54px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.1rem;font-weight:900;color:white;flex-shrink:0;position:relative;z-index:2;box-shadow:var(--shm);}
+.sn1{background:linear-gradient(135deg,var(--blue),var(--sky));}
+.sn2{background:linear-gradient(135deg,var(--teal),var(--mint));}
+.sn3{background:linear-gradient(135deg,var(--amber),var(--orange));}
+.sn4{background:linear-gradient(135deg,var(--violet),var(--purple));}
+.sn5{background:linear-gradient(135deg,var(--red),var(--rose));}
+.sbody{background:white;border-radius:14px;padding:20px 24px;flex:1;box-shadow:var(--sh);border:1px solid var(--border);}
+.sbody h4{font-size:.9rem;font-weight:700;color:var(--deep);margin-bottom:8px;}
+.sbody p{font-size:.83rem;color:var(--slate);line-height:1.85;}
+
+/* big summary */
+.big-sum{background:linear-gradient(135deg,#eff6ff,#f0fdf9);border-radius:var(--r);padding:42px;text-align:center;border:2px solid #bfdbfe;}
+
+@media(max-width:860px){
+  .g2,.g3,.err-compare,.coeff-duo{grid-template-columns:1fr;}
+  .gd-flow{flex-direction:column;align-items:stretch;}
+  .gd-arr{transform:rotate(90deg);text-align:center;}
+  .sec{padding:50px 20px;} .hero{padding:60px 20px;}
+  .steps::before{display:none;} .nav{padding:0 14px;}
+}
+@media(max-width:480px){
+  .hero-chips{flex-direction:column;align-items:center;}
+}
+
+/* COMPREHENSIVE MOBILE RESPONSIVE FIXES */
+*, *::before, *::after { box-sizing: border-box; }
+html { max-width: 100%; }
+body { max-width: 100%; }
+img, svg, canvas, video, iframe { max-width: 100%; height: auto; }
+table { max-width: 100%; }
+
+.table-wrap {
+  width: 100%; max-width: 100%;
+  overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 12px;
+}
+.tbl-wrap { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.score-matrix-wrap { overflow-x: auto; }
+
+pre, code { white-space: pre-wrap; word-break: break-word; max-width: 100%; }
+
+/* Page bottom navigation */
+.page-nav-bottom {
+  display: flex; flex-wrap: wrap; gap: 12px;
+  justify-content: center; align-items: center;
+  padding: 28px 20px; text-align: center;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  margin-top: 40px;
+}
+.page-nav-bottom a {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 12px 28px; border-radius: 50px;
+  font-size: 0.95rem; font-weight: 700;
+  text-decoration: none; min-height: 48px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.page-nav-bottom a:hover { transform: translateY(-2px); }
+
+@media (max-width: 768px) {
+  .page-nav-bottom { padding: 18px 14px; gap: 8px; }
+  .page-nav-bottom a { font-size: 0.88rem; padding: 10px 18px; }
+}
+@media (max-width: 480px) {
+  .page-nav-bottom a { font-size: 0.82rem; padding: 8px 14px; min-height: 44px; width: 100%; justify-content: center; }
+}
+
+/* Overflow fixes */
+.eq-row { flex-wrap: wrap; gap: 8px; }
+.eq-formula { min-width: 0; }
+.sym-featured { flex-wrap: wrap; gap: 12px; }
+
+@media (max-width: 768px) {
+  /* Navigation */
+  .nav, .top-nav {
+    padding: 0 14px !important;
+    height: auto !important;
+    min-height: 52px;
+    flex-wrap: wrap !important;
+    gap: 4px;
+  }
+  .nav-links { flex-wrap: wrap !important; gap: 2px !important; overflow-x: visible !important; }
+  .nav a, .nav-link, .nl {
+    font-size: 0.78rem !important;
+    padding: 5px 9px !important;
+    white-space: normal !important;
+    height: auto !important;
+    min-height: 30px;
+    display: inline-flex !important;
+    align-items: center;
+  }
+  .nav-logo, .nav-brand { font-size: 0.85rem !important; white-space: normal !important; }
+
+  /* Hero */
+  .hero {
+    min-height: auto !important;
+    padding: 44px 14px !important;
+  }
+  .hero h1, .hero-t, .hero-title {
+    font-size: clamp(1.6rem, 7vw, 2.8rem) !important;
+    line-height: 1.25 !important;
+  }
+  .hero h2, .hero-sub, .hero-subtitle-line {
+    font-size: clamp(1.15rem, 4vw, 1.8rem) !important;
+  }
+  .hero p, .hero-desc { font-size: 0.95rem !important; }
+  .hero-content, .hero-c { max-width: 100% !important; width: 100% !important; }
+  .hero::before, .hero::after,
+  .hero-aura { width: 280px !important; height: 280px !important; opacity: 0.2 !important; }
+  .hero-ring, .hero-ring-2, .hr1, .hr2 { display: none !important; }
+  .hero-mesh, .hero-grid { opacity: 0.08 !important; }
+  .hero-badge, .hero-eyebrow { font-size: 0.68rem !important; padding: 5px 14px; }
+  .hero-meta { flex-wrap: wrap !important; gap: 8px; justify-content: center; }
+  .hero-meta-item { padding: 10px 14px; min-width: 0; flex: 1 1 40%; }
+  .hero-cards { gap: 10px; justify-content: center; }
+  .hero-pills { flex-wrap: wrap !important; gap: 8px; }
+  .hcard { min-width: 0 !important; padding: 14px 16px; }
+  .scroll-hint { display: none !important; }
+  .chapter-deco { display: none !important; }
+
+  /* Sections */
+  .section, .sec { padding: 44px 14px !important; }
+  .section-inner, .sec-inner, .sec-in { max-width: 100% !important; }
+  .section-header, .sec-header { margin-bottom: 28px; }
+
+  /* Grids */
+  .scenario-grid, .crossed-grid, .concepts-grid, .gstudy-layout,
+  .matrix-grid, .sym-grid-2, .sym-grid-3, .sym-card-grid,
+  .authors-grid, .design-compare, .asm-grid, .expect-grid,
+  .rel-grid, .vp-grid, .g2, .g3, .g4, .compare-grid,
+  .ms-grid, .concepts-grid { grid-template-columns: 1fr !important; gap: 16px !important; }
+
+  .hero-cards { grid-template-columns: 1fr 1fr !important; }
+
+  /* Flex */
+  .tree-row { flex-wrap: wrap !important; justify-content: center; }
+  .var-row { flex-wrap: wrap !important; gap: 6px; }
+  .step-item { flex-wrap: wrap !important; gap: 14px; }
+  .step-content { width: 100% !important; order: 1; }
+  .step-num { order: 0; }
+  .decomp, .decomp-live, .flow-row { flex-direction: column !important; align-items: center !important; }
+  .decomp-op, .dl-op, .fn-arrow { transform: rotate(90deg); }
+  .crow { flex-direction: column !important; }
+  .concept-row { flex-wrap: wrap; }
+
+  /* Padding */
+  .family-bg, .universe-card, .scenario-bg, .var-section-bg,
+  .source-card, .guide-card, .interactive-box, .score-matrix-wrap,
+  .assumption-wrap, .lm-box, .ins, .highlight-box, .warn-box,
+  .crossed-card, .concept-card, .section-card, .cbox {
+    padding: 20px 14px !important;
+  }
+  .intro-callout { padding: 18px 16px; }
+  .source-card { gap: 14px; }
+  .tree-connector { height: 20px; }
+  .tree-node { min-width: 120px !important; font-size: 0.82rem !important; padding: 10px 14px !important; }
+  .section-divider, .div { margin: 0 14px; }
+
+  /* Fixed widths */
+  .var-label { min-width: 50px !important; font-size: 0.78rem !important; }
+  .var-desc { min-width: 0 !important; flex: 1 1 100% !important; }
+  .var-value { min-width: 40px !important; }
+  .sym-featured-glyph { width: 44px !important; height: 44px !important; }
+
+  /* Tables */
+  .table-wrap {
+    margin: 0 -14px; padding: 0 14px;
+    width: calc(100% + 28px); border-radius: 0;
+  }
+  .tbl-wrap { margin: 0 -14px; padding: 0 14px; }
+
+  .prog-bar { z-index: 9999; }
+}
+
+@media (max-width: 480px) {
+  .hero { padding: 32px 10px !important; }
+  .hero h1, .hero-t, .hero-title { font-size: clamp(1.3rem, 8vw, 2rem) !important; }
+  .hero h2, .hero-sub { font-size: clamp(1rem, 5vw, 1.5rem) !important; }
+  .hero p, .hero-desc { font-size: 0.9rem !important; }
+  .nav, .top-nav { padding: 0 8px !important; min-height: 44px; gap: 2px !important; }
+  .nav a, .nav-link, .nl { font-size: 0.7rem !important; padding: 4px 7px !important; }
+
+  .section, .sec { padding: 28px 10px !important; }
+
+  .hero-cards { grid-template-columns: 1fr !important; }
+  .hero-pills { gap: 6px; }
+  .pill { padding: 8px 10px; }
+
+  .table-wrap {
+    margin: 0 -10px; padding: 0 10px;
+    width: calc(100% + 20px);
+  }
+  table { font-size: 0.72rem !important; }
+  td, th { padding: 5px 7px !important; }
+
+  .hero-card, .concept-card, .crossed-card, .scenario-item,
+  .step-content, .coeff-card, .card, .design-card, .sym-card,
+  .exp-card, .author-card, .hcard { padding: 12px !important; }
+
+  .tree-node { min-width: 100px !important; font-size: 0.78rem !important; }
+  .hero-meta-item { padding: 8px 10px; }
+
+  .btn, .btn-primary, .btn-ghost {
+    width: 100%; justify-content: center; min-height: 44px;
+  }
+}
+
+/* â•â•â•â•â•â• ADDITIONAL OVERFLOW FIXES â•â•â•â•â•â• */
+[style*="min-width:200px"], [style*="min-width: 200px"], [style*="min-width:220px"], [style*="min-width: 220px"],
+[style*="min-width:280px"], [style*="min-width: 280px"], [style*="min-width:500px"], [style*="min-width: 500px"] {
+  min-width: 0 !important;
+}
+[style*="width:480px"], [style*="width: 480px"], [style*="width:400px"], [style*="width: 400px"] {
+  max-width: 100% !important;
+  width: auto !important;
+}
+.flex-item, .sym-grid-2 > .sym-featured, .eq-row { flex-wrap: wrap; }
+.score-matrix { min-width: 0 !important; }
+.hcard, .pill { min-width: 0 !important; }
+.dt-node { max-width: 100% !important; }
+
+@media (max-width: 768px) {
+  .mat { grid-template-columns: repeat(auto-fill, minmax(32px, 1fr)) !important; }
+  .mc { width: 32px !important; height: 32px !important; font-size: 0.6rem !important; }
+  .hcard { min-width: 0 !important; }
+  .hero-meta-num { font-size: 1.5rem !important; }
+  .hero-meta-lbl { font-size: 0.68rem !important; }
+  .hero-meta-item { flex: 1 1 42% !important; }
+  .pill { min-width: 0 !important; flex: 1 1 30% !important; }
+}
+
+@media (max-width: 480px) {
+  .mat { grid-template-columns: repeat(auto-fill, minmax(28px, 1fr)) !important; }
+  .mc { width: 28px !important; height: 28px !important; font-size: 0.55rem !important; }
+}
+
+/* ==================================================
+   FINAL REAL MOBILE LAYOUT REBUILD
+   Must be the last CSS block in the file
+   ================================================== */
+*, *::before, *::after { box-sizing: border-box !important; }
+html, body {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  min-width: 0 !important;
+}
+img, svg, canvas, video, iframe {
+  max-width: 100% !important;
+  height: auto !important;
+}
+table { max-width: 100% !important; }
+
+/* Force all major containers to viewport width */
+@media (max-width: 768px) {
+  html, body {
+    overflow-x: clip !important;
+    min-width: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .hero,
+  .section,
+  .sec,
+  .container,
+  .wrapper,
+  .content,
+  .main,
+  .page,
+  .page-wrap,
+  .layout,
+  .shell,
+  .panel,
+  .chapter,
+  .chapter-wrap,
+  .story,
+  .story-wrap,
+  .book-page,
+  .section-dark,
+  .section-mid,
+  .intro-section,
+  .source-section,
+  .guide-section,
+  .sec-dark,
+  .sec-alt,
+  .sec-inner,
+  .section-inner,
+  .section-header,
+  .sec-header,
+  .family-bg,
+  .universe-card,
+  .scenario-bg,
+  .var-section-bg,
+  .source-card,
+  .index-card,
+  .guide-card,
+  .intro-body,
+  .interactive-box,
+  .score-matrix-wrap,
+  .assumption-wrap,
+  .lm-box,
+  .cbox,
+  .comparison-wrap,
+  .steps-flow,
+  .highlight-box,
+  .warn-box,
+  .insight-box,
+  .history-wrap {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+    transform: none !important;
+    left: auto !important;
+    right: auto !important;
+    box-sizing: border-box !important;
+  }
+
+  .hero {
+    min-height: auto !important;
+    height: auto !important;
+    padding-top: 36px !important;
+    padding-bottom: 36px !important;
+    text-align: center !important;
+    overflow: hidden !important;
+  }
+
+  .hero-content,
+  .hero-inner,
+  .hero-wrap,
+  .hero-text,
+  .hero-c,
+  .hero-content {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+    text-align: center !important;
+    transform: none !important;
+    position: relative !important;
+  }
+
+  .hero h1,
+  .hero-title,
+  .hero-t,
+  .hero-ta,
+  h1 {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    font-size: clamp(1.55rem, 8vw, 2.3rem) !important;
+    line-height: 1.25 !important;
+    text-align: center !important;
+    white-space: normal !important;
+    overflow-wrap: break-word !important;
+    word-break: normal !important;
+  }
+
+  .hero-sub,
+  .hero-subtitle-line,
+  .hero-s,
+  .hero-d,
+  .hero-desc,
+  .sec-lead,
+  .slead,
+  .section-desc,
+  .subtitle,
+  .lead {
+    max-width: 100% !important;
+    white-space: normal !important;
+    overflow-wrap: break-word !important;
+    width: 100% !important;
+  }
+
+  .grid,
+  .cards,
+  .hero-cards,
+  .hero-meta,
+  .hero-pills,
+  .scenario-grid,
+  .crossed-grid,
+  .concepts-grid,
+  .gstudy-layout,
+  .matrix-grid,
+  .design-compare,
+  .authors-grid,
+  .rel-grid,
+  .vp-grid,
+  .g2,
+  .g3,
+  .g4,
+  .asm-grid,
+  .expect-grid,
+  .sym-grid-2,
+  .sym-grid-3,
+  .sym-card-grid,
+  .compare-grid,
+  .ms-grid,
+  .crow {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    gap: 16px !important;
+    transform: none !important;
+  }
+
+  .hero-cards {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+  }
+
+  .card,
+  .hero-card,
+  .glass-card,
+  .info-card,
+  .concept-card,
+  .step-card,
+  .source-card,
+  .index-card,
+  .guide-card,
+  .hcard,
+  .pill,
+  .tree-node,
+  .dt-node,
+  .matrix-card,
+  .panel-card,
+  .design-card,
+  .design-header,
+  .design-body,
+  .crossed-card,
+  .scenario-item,
+  .step-content,
+  .author-card,
+  .sym-card,
+  .sym-featured,
+  .var-section-bg,
+  .intro-callout,
+  .eq-row,
+  .eq-main {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    transform: none !important;
+  }
+
+  [style*="min-width"],
+  [style*="width: 480"],
+  [style*="width:480"],
+  [style*="width: 400"],
+  [style*="width:400"] {
+    max-width: 100% !important;
+    min-width: 0 !important;
+    width: auto !important;
+  }
+
+  .nav,
+  .top-nav,
+  .page-nav,
+  .page-nav-bottom {
+    width: 100% !important;
+    max-width: 100% !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    white-space: normal !important;
+    overflow: visible !important;
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
+
+  .nav-links {
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    gap: 4px !important;
+    overflow: visible !important;
+    width: auto !important;
+  }
+
+  .nav a,
+  .nav-link,
+  .nl,
+  .top-nav a,
+  .page-nav a,
+  .page-nav-bottom a {
+    max-width: 100% !important;
+    white-space: normal !important;
+    text-align: center !important;
+    min-height: 36px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 4px 10px !important;
+    font-size: 0.75rem !important;
+  }
+
+  .nav-logo,
+  .nav-brand {
+    font-size: 0.82rem !important;
+    white-space: normal !important;
+    max-width: 100% !important;
+    overflow: visible !important;
+  }
+
+  /* Hide all decorative overlays, rings, meshes */
+  .hero::before,
+  .hero::after,
+  .hero-ring,
+  .hero-ring-2,
+  .hr1,
+  .hr2,
+  .hero-mesh,
+  .hero-grid,
+  .hero-aura,
+  .chapter-deco,
+  .decor,
+  .bg-shape,
+  .section-divider,
+  .rainbow,
+  .div,
+  .scroll-hint,
+  .starfield {
+    display: none !important;
+  }
+
+  /* Section dividers must not cause overflow */
+  .section-divider,
+  .div-a,
+  .div-r,
+  .div-s,
+  .div-v,
+  .div-g {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    max-width: 100% !important;
+  }
+
+  .table-wrap,
+  .tbl-wrap {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  /* Hero-specific containers */
+  .hero-badge,
+  .hero-eyebrow {
+    display: inline-flex !important;
+    max-width: 100% !important;
+    white-space: normal !important;
+  }
+
+  .hero-meta {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .hero-meta-item {
+    flex: 1 1 42% !important;
+    min-width: 0 !important;
+    max-width: 48% !important;
+  }
+
+  .hcard,
+  .pill {
+    min-width: 0 !important;
+    flex: 1 1 42% !important;
+    max-width: 48% !important;
+  }
+
+  .decomp-block,
+  .decomp-live .dl-block {
+    min-width: 0 !important;
+    flex: 1 1 auto !important;
+  }
+
+  /* Family tree and diagrams */
+  .family-bg {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  /* Force flex containers to wrap */
+  .concept-row,
+  .badge-row,
+  .hero-actions {
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+  }
+
+  .btn,
+  .btn-primary,
+  .btn-ghost,
+  .calc-btn {
+    min-height: 44px !important;
+    padding: 12px 24px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  html, body {
+    min-width: 0 !important;
+    width: 100% !important;
+  }
+
+  .hero,
+  .section,
+  .sec,
+  .container,
+  .wrapper,
+  .content,
+  .main,
+  .page,
+  .page-wrap {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+  }
+
+  .hero {
+    padding-top: 28px !important;
+    padding-bottom: 28px !important;
+  }
+
+  .hero h1,
+  .hero-title,
+  .hero-t,
+  .hero-ta,
+  h1 {
+    font-size: clamp(1.35rem, 8.5vw, 2rem) !important;
+    line-height: 1.28 !important;
+  }
+
+  h2 {
+    font-size: clamp(1.2rem, 6.5vw, 1.65rem) !important;
+  }
+
+  h3 {
+    font-size: clamp(1rem, 5.5vw, 1.35rem) !important;
+  }
+
+  .card,
+  .hero-card,
+  .glass-card,
+  .info-card,
+  .concept-card,
+  .step-card,
+  .source-card,
+  .crossed-card,
+  .scenario-item,
+  .design-card {
+    padding: 14px 10px !important;
+  }
+
+  .nav,
+  .top-nav {
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+  }
+
+  .nav a,
+  .nav-link,
+  .nl {
+    padding: 3px 6px !important;
+    font-size: 0.68rem !important;
+  }
+
+  .hero-meta-item {
+    flex: 1 1 100% !important;
+    max-width: 100% !important;
+  }
+
+  .hcard {
+    flex: 1 1 100% !important;
+    max-width: 100% !important;
+  }
+
+  .hero-cards {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    flex-direction: column !important;
+    align-items: center !important;
+  }
+}
+
+/* === PAGE NAV TOP === */
+.page-nav-top {
+  direction: rtl;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  width: min(100% - 24px, 1100px);
+  margin: 14px auto;
+  padding: 10px;
+  border-radius: 16px;
+  background: rgba(15, 52, 96, 0.88);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.14);
+  backdrop-filter: blur(8px);
+  position: relative;
+  z-index: 10;
+}
+.page-nav-top a,
+.page-nav-top a:visited {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 8px 18px;
+  border-radius: 999px;
+  text-decoration: none;
+  font-weight: 700;
+  color: #ffffff;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.18);
+  transition: background 0.2s, transform 0.2s;
+}
+.page-nav-top a:hover {
+  background: rgba(0, 180, 216, 0.28);
+  transform: translateY(-2px);
+}
+@media (max-width: 480px) {
+  .page-nav-top {
+    width: calc(100% - 20px);
+    gap: 8px;
+    padding: 8px;
+  }
+  .page-nav-top a {
+    flex: 1 1 auto;
+    min-width: 90px;
+    padding: 8px 12px;
+    font-size: 0.9rem;
+  }
+}
+</style>
+</head>
+<body>
+<nav class="page-nav-top" aria-label="تنقل الصفحة العلوي"><a href="index.html" class="nav-home">الرئيسية</a></nav>
+
+
+<div class="pgbar"><div class="pgfill" id="pg"></div></div>
+
+<nav class="nav">
+  <div class="nav-logo">📊 الفصل 2 · §2.3</div>
+  <div class="nav-links">
+<a href="2.2.html">السابق</a><a href="index.html">الرئيسية</a><a href="2.4.html">التالي</a>
+
+    <a href="#gd"    class="nl active" data-s="gd">من G إلى D</a>
+    <a href="#scale" class="nl" data-s="scale">قاعدة التقليص</a>
+    <a href="#err"   class="nl" data-s="err">تباينات الخطأ</a>
+    <a href="#venn"  class="nl" data-s="venn">مخططات فن</a>
+    <a href="#coeff" class="nl" data-s="coeff">المعاملات</a>
+    <a href="#sim"   class="nl" data-s="sim">المثال العددي</a>
+    <a href="#real"  class="nl" data-s="real">بيانات حقيقية</a>
+    <a href="#bp"    class="nl" data-s="bp">ضغط الدم</a>
+  </div>
+
+
+</nav>
+
+<!-- ═══════════════ HERO ═══════════════ -->
+<section class="hero" id="top">
+  <div class="hero-glow"></div>
+  <div class="hero-tag">📐 الفصل الثاني — الأقسام 2.3 إلى 2.3.4</div>
+  <h1>دراسة D ·<br><em>تباينات الخطأ · المعاملات</em></h1>
+  <p class="hero-sub">كيف ننتقل من درجة فقرة واحدة (دراسة G) إلى متوسط درجات نᵢ′ فقرة (دراسة D) — ونحسب الخطأ ونُقدِّر الاعتمادية؟</p>
+  <div class="hero-chips">
+    <div class="hchip"><div class="sym" style="color:#67e8f9;">X̄ₚ</div><div class="lbl">متوسط الدرجة عبر nᵢ′ فقرة</div></div>
+    <div class="hchip"><div class="sym" style="color:#6ee7b7;">σ²(Δ)</div><div class="lbl">تباين الخطأ المطلق</div></div>
+    <div class="hchip"><div class="sym" style="color:#7dd3fc;">σ²(δ)</div><div class="lbl">تباين الخطأ النسبي</div></div>
+    <div class="hchip"><div class="sym" style="color:#c4b5fd;">Eρ² · Φ</div><div class="lbl">معاملات الاعتمادية</div></div>
+  </div>
+</section>
+<hr class="divr">
+
+<!-- ═══════════════ SECTION 1: من G إلى D ═══════════════ -->
+<section class="sec sec-alt" id="gd">
+<div class="sec-inner">
+  <div class="cx fu">
+    <span class="tag tb">المفهوم المحوري</span>
+    <h2 class="st">لماذا نحتاج دراسة D؟</h2>
+    <p class="sdesc cmx">دراسة G تقيس أداء شخص على <strong>فقرة واحدة</strong>. في الواقع نُعطيه <strong>اختباراً كاملاً</strong> من nᵢ′ فقرة ونتخذ القرار بناءً على متوسطه</p>
+  </div>
+
+  <!-- Flow diagram -->
+  <div class="card fu" style="padding:32px;margin-bottom:28px;">
+    <div style="font-size:.9rem;font-weight:700;color:var(--slate);margin-bottom:20px;text-align:center;">🔁 الانتقال من دراسة G إلى دراسة D</div>
+    <div class="gd-flow" style="gap:16px;flex-wrap:wrap;justify-content:center;">
+      <div class="gd-node gdn-g">
+        <div class="gd-sym">Xₚᵢ</div>
+        <div class="gd-name">دراسة G</div>
+        <div class="gd-sub">درجة فقرة واحدة</div>
+      </div>
+      <div class="gd-arr">→</div>
+      <div class="gd-node gdn-arr">
+        <div class="gd-sym" style="font-size:1rem;">÷ nᵢ′</div>
+        <div class="gd-name">متوسط عبر nᵢ′ فقرة</div>
+        <div class="gd-sub">التقليص بحجم العينة</div>
+      </div>
+      <div class="gd-arr">→</div>
+      <div class="gd-node gdn-d">
+        <div class="gd-sym">XₚI = X̄ₚ</div>
+        <div class="gd-name">دراسة D</div>
+        <div class="gd-sub">متوسط الدرجة الملحوظة</div>
+      </div>
+      <div class="gd-arr">→</div>
+      <div class="gd-node" style="background:linear-gradient(135deg,#fdf4ff,#ede9fe);border:2px solid #c4b5fd;color:#4c1d95;">
+        <div class="gd-sym">μₚ</div>
+        <div class="gd-name">الهدف</div>
+        <div class="gd-sub">درجة الكون (التعميم)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Two models comparison -->
+  <div class="g2 fu">
+    <div class="card" style="border-top:4px solid #3b82f6;">
+      <div style="font-size:.88rem;font-weight:700;color:var(--blue);margin-bottom:12px;">📌 نموذج دراسة G (فقرة مفردة)</div>
+      <div class="eq eq-b">Xₚᵢ = μ + νₚ + νᵢ + νₚᵢ &nbsp;&nbsp;(2.5)</div>
+      <p style="font-size:.82rem;color:var(--slate);margin-top:10px;line-height:1.8;">يصف درجة شخص على <em>فقرة واحدة</em> من كون الملاحظات المقبولة. الحرف الصغير i = فقرة مفردة.</p>
+    </div>
+    <div class="card" style="border-top:4px solid #0d9488;">
+      <div style="font-size:.88rem;font-weight:700;color:var(--teal);margin-bottom:12px;">📌 نموذج دراسة D (متوسط الفقرات)</div>
+      <div class="eq eq-t">XₚI = μ + νₚ + νI + νₚI &nbsp;&nbsp;(2.22)</div>
+      <p style="font-size:.82rem;color:var(--slate);margin-top:10px;line-height:1.8;">يصف <em>متوسط درجة شخص</em> عبر nᵢ′ فقرات. الحرف الكبير I = متوسط مجموعة فقرات. النموذجان مطابقان في البنية!</p>
+    </div>
+  </div>
+
+  <!-- Key point: Universe score -->
+  <div class="card fu" style="margin-top:22px;background:linear-gradient(135deg,#f0fdf9,#ecfdf5);border-color:#a7f3d0;">
+    <div style="font-size:.92rem;font-weight:700;color:var(--teal);margin-bottom:14px;display:flex;align-items:center;gap:8px;">⭐ النقطة الحاسمة — درجة الكون وعلاقتها بدراسة D</div>
+    <div class="g2">
+      <div>
+        <div class="eq eq-t" style="font-size:.9rem;">μₚ ≡ E<sub>I</sub> XₚI &nbsp;&nbsp;(2.23)</div>
+        <p style="font-size:.82rem;color:var(--slate);margin-top:10px;line-height:1.85;">درجة الكون للشخص هي القيمة المتوقعة لمتوسط درجته عبر <strong>جميع الصور المتوازية عشوائياً</strong> الممكنة. "درجة الكون" تشير إلى كون التعميم — لا كون الملاحظات!</p>
+      </div>
+      <div>
+        <div class="eq eq-t" style="font-size:.9rem;">σ²(p) = E<sub>p</sub>(μₚ − μ)² = E<sub>p</sub> νₚ² &nbsp;&nbsp;(2.24)</div>
+        <p style="font-size:.82rem;color:var(--slate);margin-top:10px;line-height:1.85;">تباين درجات الكون هو نفس σ²(p) من دراسة G — لا يتغير! يمكن أيضاً تعريفه كالتغاير المتوقع بين صورتين متوازيتين عشوائياً: σ²(p) = E σ(XₚI, XₚI′)</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="ins ia fu">
+    <div class="ico">💡</div>
+    <div>
+      <div class="ititle">الصور المتوازية عشوائياً — ميزة نظرية التعميم</div>
+      <div class="itext">
+        في النظرية التقليدية تُفترض الصور المتوازية متطابقة التوزيع (نفس المتوسط). في نظرية التعميم، الصور المتوازية <strong>عشوائية</strong> — كل صورة هي عينة مختلفة من nᵢ′ فقرة من نفس الكون. هذا يعني أن متوسطات الصور (μI) تتباين، وهذا التباين مصدر للخطأ المطلق.
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ═══════════════ SECTION 2: قاعدة التقليص ═══════════════ -->
+<section class="sec sec-warm" id="scale">
+<div class="sec-inner">
+  <div class="cx fu">
+    <span class="tag tt">قاعدة التقليص</span>
+    <h2 class="st">من مكوّنات G إلى مكوّنات D</h2>
+    <p class="sdesc cmx">مبدأ رياضي أنيق: تباين المتوسط = تباين العنصر ÷ حجم العينة</p>
+  </div>
+
+  <div class="scale-rule fu">
+    <div style="font-size:.9rem;font-weight:700;color:var(--deep);margin-bottom:20px;text-align:center;">🔢 المعادلتان 2.28 و 2.29 — قاعدة التقليص بـ nᵢ′</div>
+
+    <div class="scale-row sr-g" style="margin-bottom:6px;">
+      <div style="font-size:.82rem;font-weight:700;color:var(--blue);min-width:80px;">من G:</div>
+      <div style="font-family:'Georgia',serif;font-size:.9rem;color:#1e40af;">σ²(i) — تباين صعوبة الفقرات الفردية</div>
+    </div>
+    <div style="text-align:center;font-size:1.6rem;color:var(--muted);margin:4px 0;">↓ ÷ nᵢ′</div>
+    <div class="scale-row sr-d" style="margin-bottom:22px;">
+      <div style="font-size:.82rem;font-weight:700;color:var(--teal);min-width:80px;">إلى D:</div>
+      <div class="scale-eq">σ²(I) = σ²(i) / nᵢ′ &nbsp;&nbsp;(2.28)</div>
+    </div>
+
+    <div class="scale-row sr-g" style="margin-bottom:6px;">
+      <div style="font-size:.82rem;font-weight:700;color:var(--violet);min-width:80px;">من G:</div>
+      <div style="font-family:'Georgia',serif;font-size:.9rem;color:#4c1d95;">σ²(pi) — التباين المتبقي للفقرة المفردة</div>
+    </div>
+    <div style="text-align:center;font-size:1.6rem;color:var(--muted);margin:4px 0;">↓ ÷ nᵢ′</div>
+    <div class="scale-row sr-d" style="margin-bottom:22px;">
+      <div style="font-size:.82rem;font-weight:700;color:var(--teal);min-width:80px;">إلى D:</div>
+      <div class="scale-eq">σ²(pI) = σ²(pi) / nᵢ′ &nbsp;&nbsp;(2.29)</div>
+    </div>
+
+    <div class="scale-row" style="background:linear-gradient(135deg,#eff6ff,#e0f2fe);border:2px solid #93c5fd;">
+      <div style="font-size:.82rem;font-weight:700;color:var(--blue);min-width:80px;">⚠️ σ²(p)</div>
+      <div style="font-size:.85rem;color:#1e40af;font-weight:700;">لا يتغير! σ²(p) في دراسة D = σ²(p) في دراسة G</div>
+    </div>
+
+    <!-- Interactive scaling demo -->
+    <div style="background:#f8faff;border-radius:12px;padding:20px;margin-top:22px;border:1px solid var(--border);">
+      <div style="font-size:.88rem;font-weight:700;color:var(--deep);margin-bottom:14px;text-align:center;">🎛️ شاهد التقليص: اسحب لتغيير nᵢ′</div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:6px;margin-bottom:16px;">
+        <label style="font-size:.82rem;font-weight:700;color:var(--slate);">nᵢ′ (عدد الفقرات في دراسة D)</label>
+        <input type="range" id="niSlider" min="1" max="30" value="12" style="width:220px;accent-color:var(--teal);">
+        <span class="sval" id="niVal">12</span>
+      </div>
+      <div class="g3" id="scaleDemo">
+        <div style="background:white;border-radius:10px;padding:14px;text-align:center;border:1.5px solid #bfdbfe;">
+          <div style="font-size:.72rem;color:var(--muted);margin-bottom:5px;">σ²(p) من G</div>
+          <div style="font-family:'Georgia',serif;font-size:1.3rem;font-weight:700;color:#1e40af;">.0574</div>
+          <div style="font-size:.68rem;color:var(--teal);margin-top:3px;">لا يتغير ✓</div>
+        </div>
+        <div style="background:white;border-radius:10px;padding:14px;text-align:center;border:1.5px solid #a7f3d0;">
+          <div style="font-size:.72rem;color:var(--muted);margin-bottom:5px;">σ²(I) = .0754 ÷ nᵢ′</div>
+          <div style="font-family:'Georgia',serif;font-size:1.3rem;font-weight:700;color:var(--teal);" id="sigI">0063</div>
+        </div>
+        <div style="background:white;border-radius:10px;padding:14px;text-align:center;border:1.5px solid #ddd6fe;">
+          <div style="font-size:.72rem;color:var(--muted);margin-bottom:5px;">σ²(pI) = .1269 ÷ nᵢ′</div>
+          <div style="font-family:'Georgia',serif;font-size:1.3rem;font-weight:700;color:var(--violet);" id="sigPI">.0106</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ins ib fu" style="margin-top:20px;">
+    <div class="ico">🎯</div>
+    <div>
+      <div class="ititle">لماذا التقليص منطقي؟</div>
+      <div class="itext">
+        متوسط nᵢ′ ملاحظات عشوائية يتباين أقل من الملاحظة الواحدة — هذا مبدأ إحصائي أساسي (قانون الأعداد الكبيرة). كلما زادت nᵢ′ كلما اقتربت درجة الشخص من درجة كونه الحقيقية، وكلما صغر الخطأ.
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ═══════════════ SECTION 3: تباينات الخطأ ═══════════════ -->
+<section class="sec" id="err">
+<div class="sec-inner">
+  <div class="cx fu">
+    <span class="tag tr">تباينات الخطأ</span>
+    <h2 class="st">ثلاثة أنواع من الخطأ — لكل منها سياقه</h2>
+    <p class="sdesc cmx">ليس كل الخطأ واحداً — اختيار النوع الصحيح يعتمد على السؤال الذي تُجيب عليه</p>
+  </div>
+
+  <!-- Three error types overview -->
+  <div class="g3 fu" style="margin-bottom:28px;">
+    <div class="card" style="border-top:4px solid var(--red);text-align:center;">
+      <div style="font-size:2rem;margin-bottom:8px;">🎯</div>
+      <div style="font-family:'Georgia',serif;font-weight:700;font-size:1.2rem;color:var(--red);margin-bottom:6px;">الخطأ المطلق Δ</div>
+      <div style="font-size:.82rem;color:var(--slate);line-height:1.8;">XₚI بوصفه تقديراً لـ μₚ<br>يُستخدم مع التفسير المرجعي للمحك</div>
+      <div class="bdg bdr" style="margin-top:10px;">σ²(Δ) = σ²(I) + σ²(pI)</div>
+    </div>
+    <div class="card" style="border-top:4px solid var(--blue);text-align:center;">
+      <div style="font-size:2rem;margin-bottom:8px;">📊</div>
+      <div style="font-family:'Georgia',serif;font-weight:700;font-size:1.2rem;color:var(--blue);margin-bottom:6px;">الخطأ النسبي δ</div>
+      <div style="font-size:.82rem;color:var(--slate);line-height:1.8;">(XₚI − μI) بوصفه تقديراً لـ (μₚ − μ)<br>يُستخدم مع التفسير المرجعي للمعيار</div>
+      <div class="bdg bdb" style="margin-top:10px;">σ²(δ) = σ²(pI)</div>
+    </div>
+    <div class="card" style="border-top:4px solid var(--amber);text-align:center;">
+      <div style="font-size:2rem;margin-bottom:8px;">🌐</div>
+      <div style="font-family:'Georgia',serif;font-weight:700;font-size:1.2rem;color:var(--amber);margin-bottom:6px;">خطأ تقدير μ</div>
+      <div style="font-size:.82rem;color:var(--slate);line-height:1.8;">X̄ (المتوسط الكلي) بوصفه تقديراً للمتوسط العام μ<br>يتضمن تباين الأشخاص والفقرات معاً</div>
+      <div class="bdg bda" style="margin-top:10px;">σ²(X̄) = σ²(P)+σ²(I)+σ²(PI)</div>
+    </div>
+  </div>
+
+  <!-- Absolute vs Relative detailed -->
+  <div class="err-compare fu">
+    <!-- Absolute -->
+    <div class="err-card">
+      <div class="err-hdr eh-abs">
+        <div class="err-sym">σ²(Δ)</div>
+        <div>
+          <div style="font-weight:700;font-size:1rem;">الخطأ المطلق — Absolute Error</div>
+          <div style="font-size:.75rem;opacity:.85;">المعادلتان 2.30–2.32</div>
+        </div>
+      </div>
+      <div class="err-body">
+        <div class="eq eq-r" style="font-size:.85rem;">Δₚ<sub>I</sub> ≡ X<sub>pI</sub> − μₚ = νI + νₚI &nbsp;(2.31)</div>
+        <p style="font-size:.82rem;color:var(--slate);margin-bottom:14px;line-height:1.8;">الخطأ هو الفرق بين الدرجة الملحوظة ودرجة الكون. يشمل أثر صعوبة مجموعة الفقرات (νI) والتفاعل (νₚI).</p>
+        <div style="font-size:.82rem;font-weight:700;color:var(--slate);margin-bottom:8px;">ما الذي يدخل في σ²(Δ)؟</div>
+        <div class="comp-item ci-no"><div class="ctick cn">✗</div><div class="ck">σ²(p)</div><div class="cd">درجة الكون ليست خطأ</div></div>
+        <div class="comp-item ci-yes"><div class="ctick cy">✓</div><div class="ck">σ²(I)</div><div class="cd">تباين صعوبة مجموعات الفقرات</div></div>
+        <div class="comp-item ci-yes"><div class="ctick cy">✓</div><div class="ck">σ²(pI)</div><div class="cd">التباين المتبقي (تفاعل+خطأ)</div></div>
+        <div class="err-result er-a">σ²(Δ) = σ²(i)/nᵢ′ + σ²(pi)/nᵢ′ &nbsp;(2.32)</div>
+      </div>
+    </div>
+    <!-- Relative -->
+    <div class="err-card">
+      <div class="err-hdr eh-rel">
+        <div class="err-sym">σ²(δ)</div>
+        <div>
+          <div style="font-weight:700;font-size:1rem;">الخطأ النسبي — Relative Error</div>
+          <div style="font-size:.75rem;opacity:.85;">المعادلتان 2.33–2.36</div>
+        </div>
+      </div>
+      <div class="err-body">
+        <div class="eq eq-b" style="font-size:.85rem;">δₚ<sub>I</sub> = (X<sub>pI</sub>−μI) − (μₚ−μ) = νₚI &nbsp;(2.35)</div>
+        <p style="font-size:.82rem;color:var(--slate);margin-bottom:14px;line-height:1.8;">الخطأ هو الفرق في الانحراف. يُعامَل متوسط الصورة μI ثابتاً للجميع، فيختفي أثر νI تلقائياً!</p>
+        <div style="font-size:.82rem;font-weight:700;color:var(--slate);margin-bottom:8px;">ما الذي يدخل في σ²(δ)؟</div>
+        <div class="comp-item ci-no"><div class="ctick cn">✗</div><div class="ck">σ²(p)</div><div class="cd">درجة الكون ليست خطأ</div></div>
+        <div class="comp-item ci-no"><div class="ctick cn">✗</div><div class="ck">σ²(I)</div><div class="cd">μI يُعامَل ثابتاً → لا خطأ</div></div>
+        <div class="comp-item ci-yes"><div class="ctick cy">✓</div><div class="ck">σ²(pI)</div><div class="cd">فقط التفاعل المُربك للترتيب</div></div>
+        <div class="err-result er-r">σ²(δ) = σ²(pI) = σ²(pi)/nᵢ′ &nbsp;(2.36)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- KEY RELATION -->
+  <div class="card fu" style="margin-top:22px;background:linear-gradient(135deg,#fef9f0,#fef3c7);border-color:#fde68a;">
+    <div style="text-align:center;">
+      <div style="font-size:.9rem;font-weight:700;color:var(--amber);margin-bottom:12px;">🔗 العلاقة الجوهرية بين النوعين</div>
+      <div class="eq-main" style="font-size:1.1rem;background:white;border-color:rgba(217,119,6,.3);">
+        σ²(Δ) = σ²(δ) + σ²(I)
+      </div>
+      <p style="font-size:.84rem;color:var(--slate);max-width:600px;margin:12px auto 0;line-height:1.85;">
+        الخطأ المطلق دائماً ≥ الخطأ النسبي. الفارق بينهما هو σ²(I) — تباين صعوبة مجموعات الفقرات. 
+        في النظرية التقليدية (صور متوازية = σ²(I)=0) لا يوجد فرق بينهما — لكن نظرية التعميم تُميِّز بينهما بوضوح!
+      </p>
+    </div>
+  </div>
+
+  <!-- σ²(X̄) -->
+  <div class="card fu" style="margin-top:18px;">
+    <div style="font-size:.9rem;font-weight:700;color:var(--amber);margin-bottom:12px;">📐 النوع الثالث: تباين خطأ تقدير المتوسط العام μ</div>
+    <div class="eq eq-a">σ²(X̄) = σ²(P) + σ²(I) + σ²(PI) = σ²(p)/nₚ′ + σ²(i)/nᵢ′ + σ²(pi)/(nₚ′nᵢ′) &nbsp;&nbsp;(2.38)</div>
+    <p style="font-size:.82rem;color:var(--slate);margin-top:10px;line-height:1.85;">يُقدِّر الخطأ في استخدام المتوسط الكلي الملحوظ X̄ لتقدير μ. يتضمن تباين الأشخاص (P) والفقرات (I) والتفاعل (PI)، كلها مُقلَّصة بحجمي العينة nₚ′ و nᵢ′.</p>
+  </div>
+</div>
+</section>
+
+<!-- ═══════════════ SECTION 4: مخططات فن ═══════════════ -->
+<section class="sec sec-alt" id="venn">
+<div class="sec-inner">
+  <div class="cx fu">
+    <span class="tag tb">مخططات فن</span>
+    <h2 class="st">الصورة البصرية للخطأ والمعاملات</h2>
+    <p class="sdesc cmx">مخططات فن (الشكل 2.2) تُوضّح الفرق بين σ²(Δ) وσ²(δ) والعلاقة مع Eρ² وΦ بشكل بصري مباشر</p>
+  </div>
+
+  <div class="g2 fu">
+    <!-- Left: Venn diagram -->
+    <div class="venn-box">
+      <div style="font-size:.9rem;font-weight:700;color:var(--deep);margin-bottom:20px;">مخطط فن — تصميم p × I</div>
+      <svg width="300" height="280" viewBox="0 0 300 280" xmlns="http://www.w3.org/2000/svg" style="max-width:100%;">
+        <defs>
+          <clipPath id="clip-p"><circle cx="130" cy="130" r="95"/></clipPath>
+          <clipPath id="clip-i"><circle cx="220" cy="155" r="80"/></clipPath>
+        </defs>
+        <!-- p circle -->
+        <circle cx="130" cy="130" r="95" fill="rgba(37,99,235,.1)" stroke="#3b82f6" stroke-width="2.5"/>
+        <!-- I circle (overlapping) -->
+        <circle cx="220" cy="155" r="80" fill="rgba(220,38,38,.1)" stroke="#ef4444" stroke-width="2.5"/>
+        <!-- Intersection (pI) highlighted -->
+        <circle cx="220" cy="155" r="80" fill="rgba(220,38,38,.18)" clip-path="url(#clip-p)"/>
+        <!-- Labels -->
+        <text x="90" y="100" text-anchor="middle" font-family="Georgia" font-size="14" font-weight="700" fill="#1e40af">σ²(p)</text>
+        <text x="90" y="118" text-anchor="middle" font-family="Cairo" font-size="10" fill="#1e40af">تباين</text>
+        <text x="90" y="132" text-anchor="middle" font-family="Cairo" font-size="10" fill="#1e40af">الكون</text>
+        <!-- pI region label -->
+        <text x="183" y="140" text-anchor="middle" font-family="Georgia" font-size="12" font-weight="700" fill="#4c1d95">σ²(pI)</text>
+        <text x="183" y="156" text-anchor="middle" font-family="Cairo" font-size="9" fill="#4c1d95">= σ²(δ)</text>
+        <!-- I only region label -->
+        <text x="250" y="148" text-anchor="middle" font-family="Georgia" font-size="12" font-weight="700" fill="#b91c1c">σ²(I)</text>
+        <!-- Brackets for errors -->
+        <line x1="143" y1="240" x2="300" y2="240" stroke="#ef4444" stroke-width="2" marker-end="url(#arr)"/>
+        <line x1="143" y1="248" x2="300" y2="248" stroke="#ef4444" stroke-width="1" opacity=".3"/>
+        <text x="220" y="265" text-anchor="middle" font-family="Cairo" font-size="10" font-weight="700" fill="#b91c1c">σ²(Δ) = σ²(δ) + σ²(I)</text>
+        <!-- arrow marker -->
+        <defs><marker id="arr" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#ef4444"/></marker></defs>
+        <!-- p circle bracket -->
+        <line x1="35" y1="240" x2="143" y2="240" stroke="#3b82f6" stroke-width="2"/>
+        <text x="89" y="265" text-anchor="middle" font-family="Cairo" font-size="10" font-weight="700" fill="#1e40af">σ²(p)</text>
+      </svg>
+      <div class="venn-key">
+        <div class="vk"><div class="vk-dot" style="background:#3b82f6;"></div><span>دائرة p — الأشخاص = ES²(p)</span></div>
+        <div class="vk"><div class="vk-dot" style="background:#ef4444;"></div><span>دائرة I — الصور</span></div>
+        <div class="vk"><div class="vk-dot" style="background:#7c3aed;"></div><span>التقاطع pI = σ²(δ)</span></div>
+      </div>
+    </div>
+
+    <!-- Right: Reading the diagram -->
+    <div>
+      <div class="card" style="margin-bottom:16px;border-right:4px solid var(--red);">
+        <div style="font-weight:700;color:var(--red);margin-bottom:8px;">📍 σ²(Δ) — دائرة I بالكامل</div>
+        <p style="font-size:.83rem;color:var(--slate);line-height:1.8;">تباين الخطأ المطلق = دائرة I كاملةً = σ²(I) + σ²(pI). يشمل كل الخطأ في استخدام درجة الشخص الملحوظة لتقدير درجته الكونية.</p>
+      </div>
+      <div class="card" style="margin-bottom:16px;border-right:4px solid var(--blue);">
+        <div style="font-weight:700;color:var(--blue);margin-bottom:8px;">📍 σ²(δ) — الجزء المشترك فقط</div>
+        <p style="font-size:.83rem;color:var(--slate);line-height:1.8;">تباين الخطأ النسبي = الجزء من دائرة I الداخل في دائرة p = σ²(pI) فقط. يُحذف أثر صعوبة الصورة (σ²(I)) لأنه يؤثر على الجميع بالتساوي.</p>
+      </div>
+      <div class="card" style="margin-bottom:16px;border-right:4px solid var(--teal);">
+        <div style="font-weight:700;color:var(--teal);margin-bottom:8px;">📍 ES²(p) — دائرة p بالكامل</div>
+        <p style="font-size:.83rem;color:var(--slate);line-height:1.8;">تباين الدرجة الملحوظة المتوقع = دائرة p كاملةً = σ²(p) + σ²(pI) = σ²(p) + σ²(δ). هذا هو مقام المعامل Eρ² (المعادلة 2.39).</p>
+      </div>
+      <div class="ins ib" style="margin:0;">
+        <div class="ico">🎓</div>
+        <div>
+          <div class="ititle">القاعدة العملية</div>
+          <div class="itext">عند التفسير <strong>المرجعي للمحك</strong> (هل أجاز؟) → استخدم σ²(Δ) وΦ.<br>عند <strong>مقارنة الأشخاص</strong> (من الأحسن؟) → استخدم σ²(δ) وEρ².</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ═══════════════ SECTION 5: المعاملات ═══════════════ -->
+<section class="sec" id="coeff">
+<div class="sec-inner">
+  <div class="cx fu">
+    <span class="tag tv">المعاملات</span>
+    <h2 class="st">Eρ² وΦ — معاملا الاعتمادية</h2>
+    <p class="sdesc cmx">معاملان يُجيبان على سؤالين مختلفين — اختيار أحدهما يُحدِّد نوع القرار الذي تتخذه</p>
+  </div>
+
+  <!-- ES²(p) derivation -->
+  <div class="card fu" style="margin-bottom:24px;background:linear-gradient(135deg,#f0fdf9,#ecfdf5);border-color:#a7f3d0;">
+    <div style="font-size:.9rem;font-weight:700;color:var(--teal);margin-bottom:12px;">🔑 خطوة مهمة: تباين الدرجة الملحوظة المتوقَّع ES²(p)</div>
+    <div class="eq eq-t">ES²(p) = E<sub>I</sub>[E<sub>p</sub>(X<sub>pI</sub> − μI)²] = σ²(p) + σ²(pI) = σ²(p) + σ²(δ) &nbsp;(2.39)</div>
+    <p style="font-size:.83rem;color:var(--slate);margin-top:10px;line-height:1.85;">هذا هو القيمة المتوقعة لتباين درجات الأشخاص الملحوظة (عبر الصور المتوازية). يساوي تباين الكون + الخطأ النسبي. تُمثِّله دائرة p بالكامل في مخطط فن.</p>
+  </div>
+
+  <div class="coeff-duo fu">
+    <!-- Eρ² -->
+    <div class="coeff-card">
+      <div class="coeff-hdr ch-g">
+        <div class="coeff-sym">Eρ²</div>
+        <div>
+          <div style="font-weight:700;font-size:1rem;">معامل التعميم</div>
+          <div style="font-size:.75rem;opacity:.85;">G Coefficient — Cronbach et al. 1972</div>
+        </div>
+      </div>
+      <div class="coeff-body">
+        <div class="eq eq-t" style="font-size:.95rem;">Eρ² = σ²(p) / [σ²(p) + σ²(δ)] &nbsp;(2.40)</div>
+        <p style="font-size:.83rem;color:var(--slate);margin-top:12px;line-height:1.85;">نسبة تباين الكون إلى تباين الدرجة الملحوظة المتوقع. يشمل مقامه الخطأ <strong>النسبي</strong> فقط.</p>
+        <p style="font-size:.83rem;color:var(--slate);margin:10px 0;line-height:1.85;"><strong>معنى بديل:</strong> القيمة المتوقعة تقريباً للارتباط بين صورتين متوازيتين عشوائياً من nᵢ′ فقرة.</p>
+        <p style="font-size:.83rem;color:var(--slate);line-height:1.85;"><strong>علاقته بمعاملات تقليدية:</strong> Êρ² ≈ معامل ألفا كرونباخ، وعند البيانات الثنائية يطابق KR-20.</p>
+        <div class="coeff-val-box cvb-g">
+          <div style="font-size:.72rem;color:var(--muted);">عند nᵢ′=12 (المثال الاصطناعي)</div>
+          <div class="coeff-val coeff-val-g">0.844</div>
+          <div style="font-size:.72rem;color:var(--teal);">= يطابق KR-20 للبيانات الثنائية ✓</div>
+        </div>
+      </div>
+    </div>
+    <!-- Φ -->
+    <div class="coeff-card">
+      <div class="coeff-hdr ch-phi">
+        <div class="coeff-sym">Φ</div>
+        <div>
+          <div style="font-weight:700;font-size:1rem;">مؤشر الاعتمادية (فاي)</div>
+          <div style="font-size:.75rem;opacity:.85;">Dependability Index — Brennan & Kane 1977</div>
+        </div>
+      </div>
+      <div class="coeff-body">
+        <div class="eq eq-v" style="font-size:.95rem;">Φ = σ²(p) / [σ²(p) + σ²(Δ)] &nbsp;(2.41)</div>
+        <p style="font-size:.83rem;color:var(--slate);margin-top:12px;line-height:1.85;">نسبة تباين الكون إلى مقام يشمل الخطأ <strong>المطلق</strong>. مقامه ليس تباين الدرجات الملحوظة، بل E(X̄ₚ − μ)².</p>
+        <p style="font-size:.83rem;color:var(--slate);margin:10px 0;line-height:1.85;"><strong>متى يُستخدم؟</strong> عند التفسير المرجعي للمحك: هل تجاوز الطالب حداً معيناً؟ هل يملك مهارة ما؟</p>
+        <p style="font-size:.83rem;color:var(--slate);line-height:1.85;"><strong>دائماً:</strong> Φ ≤ Eρ² لأن σ²(Δ) ≥ σ²(δ).</p>
+        <div class="coeff-val-box cvb-phi">
+          <div style="font-size:.72rem;color:var(--muted);">عند nᵢ′=12 (المثال الاصطناعي)</div>
+          <div class="coeff-val coeff-val-v">0.802</div>
+          <div style="font-size:.72rem;color:var(--violet);">< Eρ² = 0.844 كما هو متوقع ✓</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Comparison table -->
+  <div class="card fu" style="margin-top:22px;">
+    <div style="font-size:.9rem;font-weight:700;color:var(--deep);margin-bottom:16px;text-align:center;">⚖️ متى تستخدم أيهما؟</div>
+    <div class="table-wrap"><table style="width:100%;border-collapse:separate;border-spacing:0;border-radius:12px;overflow:hidden;font-size:.83rem;">
+      <thead><tr style="background:linear-gradient(135deg,var(--deep),var(--navy));color:white;">
+        <th style="padding:12px 16px;text-align:right;">السياق</th>
+        <th style="padding:12px 16px;text-align:center;">نوع القرار</th>
+        <th style="padding:12px 16px;text-align:center;">المعامل المناسب</th>
+        <th style="padding:12px 16px;text-align:center;">تباين الخطأ</th>
+      </tr></thead>
+      <tbody>
+        <tr style="background:#f8faff;">
+          <td style="padding:12px 16px;">اختبارات التصنيف (من الأفضل؟)</td>
+          <td style="text-align:center;padding:12px;"><span class="bdg bdb">نسبي</span></td>
+          <td style="text-align:center;padding:12px;font-family:'Georgia',serif;font-weight:700;color:var(--teal);">Eρ²</td>
+          <td style="text-align:center;padding:12px;font-family:'Georgia',serif;">σ²(δ)</td>
+        </tr>
+        <tr style="background:white;">
+          <td style="padding:12px 16px;">اجتياز/رسوب (هل تجاوز الحد؟)</td>
+          <td style="text-align:center;padding:12px;"><span class="bdg bdr">مطلق</span></td>
+          <td style="text-align:center;padding:12px;font-family:'Georgia',serif;font-weight:700;color:var(--violet);">Φ</td>
+          <td style="text-align:center;padding:12px;font-family:'Georgia',serif;">σ²(Δ)</td>
+        </tr>
+        <tr style="background:#f8faff;">
+          <td style="padding:12px 16px;">شهادات مهنية بمستوى محدد</td>
+          <td style="text-align:center;padding:12px;"><span class="bdg bdr">مطلق</span></td>
+          <td style="text-align:center;padding:12px;font-family:'Georgia',serif;font-weight:700;color:var(--violet);">Φ</td>
+          <td style="text-align:center;padding:12px;font-family:'Georgia',serif;">σ²(Δ)</td>
+        </tr>
+        <tr style="background:white;">
+          <td style="padding:12px 16px;">مقارنة مجموعات أو أفراد</td>
+          <td style="text-align:center;padding:12px;"><span class="bdg bdb">نسبي</span></td>
+          <td style="text-align:center;padding:12px;font-family:'Georgia',serif;font-weight:700;color:var(--teal);">Eρ²</td>
+          <td style="text-align:center;padding:12px;font-family:'Georgia',serif;">σ²(δ)</td>
+        </tr>
+      </tbody>
+    </table></div>
+  </div>
+</div>
+</section>
+
+<!-- ═══════════════ SECTION 6: المثال العددي التفاعلي ═══════════════ -->
+<section class="sec sec-alt" id="sim">
+<div class="sec-inner">
+  <div class="cx fu">
+    <span class="tag ta">المثال العددي</span>
+    <h2 class="st">البيانات الاصطناعية رقم 1 — أثر عدد الفقرات</h2>
+    <p class="sdesc cmx">مكوّنات G: σ̂²(p)=.0574 · σ̂²(i)=.0754 · σ̂²(pi)=.1269<br>شاهد كيف تتحسن المعاملات مع زيادة nᵢ′</p>
+  </div>
+
+  <!-- Interactive slider -->
+  <div class="slider-box fu">
+    <div class="slider-ctrl">
+      <label>عدد الفقرات nᵢ′</label>
+      <input type="range" id="ni2" min="1" max="25" value="12">
+      <span class="sval" id="ni2v">12</span>
+    </div>
+    <div class="slider-results" id="slRes">
+      <div class="spill sp-g">Eρ̂² = <span id="sr_g">0.844</span></div>
+      <div class="spill sp-phi">Φ̂ = <span id="sr_phi">0.802</span></div>
+      <div class="spill sp-abs">σ̂(Δ) = <span id="sr_abs">0.128</span></div>
+      <div class="spill sp-rel">σ̂(δ) = <span id="sr_rel">0.103</span></div>
+    </div>
+    <canvas id="lineChart" height="180" style="width:100%;max-height:180px;"></canvas>
+    <div id="slInsight" class="ins ib" style="margin-top:14px;">
+      <div class="ico">📊</div>
+      <div><div class="ititle" id="sit">الاستنتاج</div><div class="itext" id="sii">اسحب المؤشر</div></div>
+    </div>
+  </div>
+
+  <!-- Summary table for key n'i values -->
+  <div class="card fu" style="margin-top:22px;overflow-x:auto;">
+    <div style="font-size:.9rem;font-weight:700;color:var(--deep);margin-bottom:16px;">📋 الجدول 2.4 — ملخص نتائج دراسات D لقيم مختلفة من nᵢ′</div>
+    <div class="table-wrap"><table style="width:100%;border-collapse:separate;border-spacing:0;border-radius:12px;overflow:hidden;font-size:.82rem;max-width:100%;">
+      <thead><tr style="background:linear-gradient(135deg,#1e3a5f,#0f2547);color:white;">
+        <th style="padding:12px 14px;text-align:center;">nᵢ′</th>
+        <th style="padding:12px 14px;text-align:center;font-family:'Georgia',serif;">σ̂²(I)</th>
+        <th style="padding:12px 14px;text-align:center;font-family:'Georgia',serif;">σ̂²(pI)</th>
+        <th style="padding:12px 14px;text-align:center;font-family:'Georgia',serif;">σ̂²(Δ)</th>
+        <th style="padding:12px 14px;text-align:center;font-family:'Georgia',serif;">σ̂(Δ)</th>
+        <th style="padding:12px 14px;text-align:center;font-family:'Georgia',serif;">σ̂(δ)</th>
+        <th style="padding:12px 14px;text-align:center;font-family:'Georgia',serif;">Eρ̂²</th>
+        <th style="padding:12px 14px;text-align:center;font-family:'Georgia',serif;">Φ̂</th>
+      </tr></thead>
+      <tbody id="dTable"></tbody>
+    </table></div>
+  </div>
+</div>
+</section>
+
+<!-- ═══════════════ SECTION 7: بيانات حقيقية ═══════════════ -->
+<section class="sec" id="real">
+<div class="sec-inner">
+  <div class="cx fu">
+    <span class="tag tt">بيانات حقيقية</span>
+    <h2 class="st">الجدول 2.5 — خمسة اختبارات واقعية</h2>
+    <p class="sdesc cmx">مقارنة مكوّنات التباين والمعاملات عبر أنواع مختلفة من البيانات القياسية التربوية</p>
+  </div>
+
+  <div class="fu" style="overflow-x:auto;">
+  <div class="table-wrap"><table class="rtbl">
+    <thead><tr>
+      <th>الاختبار</th>
+      <th>nᵢ</th>
+      <th>نوع البيانات</th>
+      <th style="font-family:'Georgia',serif;">σ̂²(p)</th>
+      <th style="font-family:'Georgia',serif;">σ̂²(i)</th>
+      <th style="font-family:'Georgia',serif;">σ̂²(pi)</th>
+      <th style="font-family:'Georgia',serif;">Eρ̂²</th>
+      <th style="font-family:'Georgia',serif;">σ̂(δ)</th>
+    </tr></thead>
+    <tbody>
+      <tr>
+        <td>ITBS — مفاهيم الرياضيات</td>
+        <td>32</td>
+        <td><span class="bdg bdb">ثنائي</span></td>
+        <td style="font-family:'Georgia',serif;">.0163</td>
+        <td style="font-family:'Georgia',serif;">.0087</td>
+        <td style="font-family:'Georgia',serif;">.1890</td>
+        <td style="font-family:'Georgia',serif;font-weight:700;color:var(--teal);">.73</td>
+        <td style="font-family:'Georgia',serif;">.077</td>
+      </tr>
+      <tr>
+        <td>ITED — المفردات</td>
+        <td>40</td>
+        <td><span class="bdg bdb">ثنائي</span></td>
+        <td style="font-family:'Georgia',serif;">.0180</td>
+        <td style="font-family:'Georgia',serif;">.0060</td>
+        <td style="font-family:'Georgia',serif;">.1350</td>
+        <td style="font-family:'Georgia',serif;font-weight:700;color:var(--teal);">.84</td>
+        <td style="font-family:'Georgia',serif;">.058</td>
+      </tr>
+      <tr>
+        <td>ACT — الرياضيات</td>
+        <td>60</td>
+        <td><span class="bdg bdb">ثنائي</span></td>
+        <td style="font-family:'Georgia',serif;">.0295</td>
+        <td style="font-family:'Georgia',serif;">.0037</td>
+        <td style="font-family:'Georgia',serif;">.1613</td>
+        <td style="font-family:'Georgia',serif;font-weight:700;color:var(--teal);">.92</td>
+        <td style="font-family:'Georgia',serif;">.052</td>
+      </tr>
+      <tr>
+        <td>IWA — الكتابة (موجّهان)</td>
+        <td>2</td>
+        <td><span class="bdg bda">متعدد الفئات (4)</span></td>
+        <td style="font-family:'Georgia',serif;">.1543</td>
+        <td style="font-family:'Georgia',serif;">.0174</td>
+        <td style="font-family:'Georgia',serif;">.6640</td>
+        <td style="font-family:'Georgia',serif;font-weight:700;color:var(--amber);">.32</td>
+        <td style="font-family:'Georgia',serif;">.577</td>
+      </tr>
+      <tr>
+        <td>QUASAR — الأداء (تسع مهام)</td>
+        <td>9</td>
+        <td><span class="bdg bda">متعدد الفئات (5)</span></td>
+        <td style="font-family:'Georgia',serif;">.1286</td>
+        <td style="font-family:'Georgia',serif;">.0374</td>
+        <td style="font-family:'Georgia',serif;">.6620</td>
+        <td style="font-family:'Georgia',serif;font-weight:700;color:var(--amber);">.64</td>
+        <td style="font-family:'Georgia',serif;">.272</td>
+      </tr>
+    </tbody>
+  </table></div>
+  </div>
+
+  <!-- Two key observations -->
+  <div class="g2 fu" style="margin-top:22px;">
+    <div class="ins ib">
+      <div class="ico">⚠️</div>
+      <div>
+        <div class="ititle">القيد .25 للبيانات الثنائية</div>
+        <div class="itext">مجموع مكوّنات التباين في البيانات الثنائية (0/1) لا يمكن أن يتجاوز .25 (أقصى تباين للتوزيع ثنائي الحد بـ p=.5). لهذا تبدو المكوّنات صغيرة الحجم المطلق — لكن حجمها النسبي هو ما يهم.</div>
+      </div>
+    </div>
+    <div class="ins it">
+      <div class="ico">📌</div>
+      <div>
+        <div class="ititle">σ²(pi) دائماً الأكبر</div>
+        <div class="itext">في جميع الأمثلة الخمسة، مكوّن التباين المتبقي σ²(pi) هو الأكبر. لكن أثره يتقلص مع زيادة nᵢ′ (المقسوم عليه في حساب تباينات الخطأ) — وهذا هو مبرر استخدام اختبارات أطول.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Vbar chart of the 5 tests -->
+  <div class="vbar-sec fu" style="margin-top:22px;">
+    <div style="font-size:.9rem;font-weight:700;color:var(--deep);margin-bottom:16px;">📊 مقارنة σ̂²(pi) النسبي عبر الاختبارات الخمسة</div>
+    <div id="realBars">
+      <div class="vbr"><div class="vblbl">ITBS</div><div class="vbbg"><div class="vb vbpi" data-w="88%" style="width:0%">.1890</div></div><div class="vbnum" style="color:var(--violet);">.1890</div><div class="vbdesc">أكبر مكوّن — يُخفَّض بـ 32 فقرة</div></div>
+      <div class="vbr"><div class="vblbl">ITED</div><div class="vbbg"><div class="vb vbpi" data-w="65%" style="width:0%">.1350</div></div><div class="vbnum" style="color:var(--violet);">.1350</div><div class="vbdesc">40 فقرة تُقلِّص أثره جيداً → Eρ²=.84</div></div>
+      <div class="vbr"><div class="vblbl">ACT</div><div class="vbbg"><div class="vb vbpi" data-w="76%" style="width:0%">.1613</div></div><div class="vbnum" style="color:var(--violet);">.1613</div><div class="vbdesc">60 فقرة → أعلى معامل Eρ²=.92</div></div>
+      <div class="vbr"><div class="vblbl">IWA</div><div class="vbbg"><div class="vb" style="background:linear-gradient(90deg,#ea580c,#f97316);width:0%" data-w="99%">.6640</div></div><div class="vbnum" style="color:var(--orange);">.6640</div><div class="vbdesc">موجّهان فقط — Eρ²=.32 منخفض</div></div>
+      <div class="vbr"><div class="vblbl">QUASAR</div><div class="vbbg"><div class="vb" style="background:linear-gradient(90deg,#ea580c,#f97316);width:0%" data-w="99%">.6620</div></div><div class="vbnum" style="color:var(--orange);">.6620</div><div class="vbdesc">9 مهام تساعد → Eρ²=.64</div></div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ═══════════════ SECTION 8: ضغط الدم ═══════════════ -->
+<section class="sec sec-warm" id="bp">
+<div class="sec-inner">
+  <div class="cx fu">
+    <span class="tag tv">تطبيق عملي</span>
+    <h2 class="st">كم مرة نقيس ضغط الدم؟</h2>
+    <p class="sdesc cmx">دراسة Llabre وآخرين (1988) — نظرية التعميم تُجيب على سؤال طبي عملي: كم قراءة كافية؟</p>
+  </div>
+
+  <!-- Context -->
+  <div class="g2 fu" style="margin-bottom:24px;">
+    <div class="card" style="border-right:4px solid var(--violet);">
+      <div style="font-size:.9rem;font-weight:700;color:var(--violet);margin-bottom:10px;">🩺 تصميم الدراسة</div>
+      <div class="steps" style="margin-top:0;">
+        <div class="step" style="padding:8px 0;">
+          <div class="snum sn1" style="width:36px;height:36px;font-size:.8rem;">p</div>
+          <div class="sbody" style="padding:12px 16px;"><h4 style="font-size:.82rem;">40 مفحوصاً</h4></div>
+        </div>
+        <div class="step" style="padding:8px 0;">
+          <div class="snum sn2" style="width:36px;height:36px;font-size:.8rem;">r</div>
+          <div class="sbody" style="padding:12px 16px;"><h4 style="font-size:.82rem;">3 قراءات لكل شخص (nᵣ=3)</h4></div>
+        </div>
+        <div class="step" style="padding:8px 0;">
+          <div class="snum sn3" style="width:36px;height:36px;font-size:.8rem;">3</div>
+          <div class="sbody" style="padding:12px 16px;"><h4 style="font-size:.82rem;">3 مواقع: مختبر · منزل · عمل</h4></div>
+        </div>
+      </div>
+    </div>
+    <div class="card" style="border-right:4px solid var(--sky);">
+      <div style="font-size:.9rem;font-weight:700;color:var(--sky);margin-bottom:10px;">🎯 السؤال البحثي</div>
+      <p style="font-size:.85rem;color:var(--slate);line-height:1.9;">كم قراءة (r) من ضغط الدم تكفي للوصول إلى <strong>Φ̂ ≥ 0.80</strong>؟ يختلف الجواب باختلاف الموقع وباختلاف نوع الضغط (انقباضي/انبساطي).</p>
+      <div class="ins iv" style="margin-top:12px;padding:12px 16px;">
+        <div class="ico" style="font-size:1rem;">💡</div>
+        <div><div class="itext">المختبر بيئة مضبوطة أكثر → تباين أقل → قراءات أقل كافية. المنزل والعمل بيئات متغيرة → تباين أكبر → نحتاج قراءات أكثر.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BP Results table -->
+  <div class="card fu" style="overflow-x:auto;">
+    <div style="font-size:.9rem;font-weight:700;color:var(--deep);margin-bottom:16px;">📋 الجدول 2.6 — نتائج ضغط الدم بالمليمتر الزئبقي (mmHg)</div>
+    <div class="table-wrap"><table class="rtbl">
+      <thead><tr>
+        <th>الموقع</th>
+        <th>نوع الضغط</th>
+        <th style="font-family:'Georgia',serif;">σ̂²(p)</th>
+        <th style="font-family:'Georgia',serif;">σ̂²(pi)</th>
+        <th>عند nᵣ=1<br>Φ̂</th>
+        <th>عند nᵣ=3<br>Φ̂</th>
+        <th>عدد القراءات<br>لـ Φ̂≥.80</th>
+      </tr></thead>
+      <tbody>
+        <tr>
+          <td rowspan="2" style="background:#eff6ff;font-weight:700;color:var(--blue);">🏥 المختبر</td>
+          <td>انقباضي</td>
+          <td style="font-family:'Georgia',serif;">282.2</td>
+          <td style="font-family:'Georgia',serif;">28.7</td>
+          <td style="font-family:'Georgia',serif;font-weight:700;color:var(--teal);">.91</td>
+          <td style="font-family:'Georgia',serif;font-weight:700;color:var(--teal);">.97</td>
+          <td><span class="bdg bdt">1 كافية ✓</span></td>
+        </tr>
+        <tr>
+          <td>انبساطي</td>
+          <td style="font-family:'Georgia',serif;">107.9</td>
+          <td style="font-family:'Georgia',serif;">19.3</td>
+          <td style="font-family:'Georgia',serif;font-weight:700;color:var(--teal);">.85</td>
+          <td style="font-family:'Georgia',serif;font-weight:700;color:var(--teal);">.94</td>
+          <td><span class="bdg bdt">1 كافية ✓</span></td>
+        </tr>
+        <tr style="background:#fffbeb;">
+          <td rowspan="2" style="background:#fef9f0;font-weight:700;color:var(--amber);">🏠 المنزل</td>
+          <td>انقباضي</td>
+          <td style="font-family:'Georgia',serif;">227.9</td>
+          <td style="font-family:'Georgia',serif;">196.4</td>
+          <td style="font-family:'Georgia',serif;font-weight:700;color:var(--amber);">.54</td>
+          <td style="font-family:'Georgia',serif;font-weight:700;color:var(--amber);">.78</td>
+          <td><span class="bdg bda">≥ 6 قراءات ⚠️</span></td>
+        </tr>
+        <tr style="background:#fffbeb;">
+          <td>انبساطي</td>
+          <td style="font-family:'Georgia',serif;">98.7</td>
+          <td style="font-family:'Georgia',serif;">136.3</td>
+          <td style="font-family:'Georgia',serif;font-weight:700;color:var(--red);">.42</td>
+          <td style="font-family:'Georgia',serif;font-weight:700;color:var(--amber);">.68</td>
+          <td><span class="bdg bdr">6–10 قراءات ❗</span></td>
+        </tr>
+        <tr style="background:#fff1f2;">
+          <td rowspan="2" style="background:#fff0f0;font-weight:700;color:var(--red);">🏢 العمل</td>
+          <td>انقباضي</td>
+          <td style="font-family:'Georgia',serif;">176.3</td>
+          <td style="font-family:'Georgia',serif;">243.7</td>
+          <td style="font-family:'Georgia',serif;font-weight:700;color:var(--red);">.42</td>
+          <td style="font-family:'Georgia',serif;font-weight:700;color:var(--amber);">.70</td>
+          <td><span class="bdg bdr">≥ 6 قراءات ❗</span></td>
+        </tr>
+        <tr style="background:#fff1f2;">
+          <td>انبساطي</td>
+          <td style="font-family:'Georgia',serif;">64.2</td>
+          <td style="font-family:'Georgia',serif;">189.6</td>
+          <td style="font-family:'Georgia',serif;font-weight:700;color:var(--red);">.25</td>
+          <td style="font-family:'Georgia',serif;font-weight:700;color:var(--red);">.52</td>
+          <td><span class="bdg bdr">≥ 10 قراءات ❗</span></td>
+        </tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <div class="ins ia fu" style="margin-top:18px;">
+    <div class="ico">🔬</div>
+    <div>
+      <div class="ititle">الاستنتاج الطبي — مُستنَد من نظرية التعميم</div>
+      <div class="itext">
+        في المختبر: قراءة واحدة كافية (بيئة مضبوطة، σ²(pi) صغير). في المنزل والعمل: الضغط يتغير بتغيُّر الأوقات والمواقف، فـ σ²(pi) كبير جداً مقارنة بـ σ²(p). لتحقيق Φ̂≥.80 نحتاج 6–10 قراءات!
+        <br><br>
+        <strong>هذا مثال رائع على قوة نظرية التعميم:</strong> تُجيب على سؤال عملي (كم مرة نقيس؟) بدليل كمي دقيق بدلاً من الحكم الحدسي.
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ═══════════════ SUMMARY ═══════════════ -->
+<section class="sec sec-dark">
+<div class="sec-inner">
+  <div class="cx fu">
+    <span class="tag ts">الخلاصة الشاملة</span>
+    <h2 class="st wh">ما الذي تعلمناه في القسم 2.3؟</h2>
+    <p class="sdesc wh cmx">سبعة مبادئ جوهرية تُبنى عليها كل تحليلات الاعتمادية</p>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:18px;" class="fu">
+    <div class="dcard">
+      <div style="font-size:1.5rem;margin-bottom:8px;">🔁</div>
+      <h4 style="color:#67e8f9;font-size:.9rem;margin-bottom:8px;">G → D: تقليص بـ nᵢ′</h4>
+      <p style="font-size:.82rem;color:rgba(255,255,255,.68);line-height:1.8;">σ²(I)=σ²(i)/nᵢ′ وσ²(pI)=σ²(pi)/nᵢ′ بينما σ²(p) ثابت. زيادة الفقرات تُقلِّص الخطأ.</p>
+    </div>
+    <div class="dcard">
+      <div style="font-size:1.5rem;margin-bottom:8px;">🎯</div>
+      <h4 style="color:#34d399;font-size:.9rem;margin-bottom:8px;">درجة الكون = متوسط الصور</h4>
+      <p style="font-size:.82rem;color:rgba(255,255,255,.68);line-height:1.8;">μₚ هو القيمة المتوقعة لـ XₚI عبر كل الصور المتوازية عشوائياً. الهدف الذي ندور حوله.</p>
+    </div>
+    <div class="dcard">
+      <div style="font-size:1.5rem;margin-bottom:8px;">⚖️</div>
+      <h4 style="color:#f9a8d4;font-size:.9rem;margin-bottom:8px;">σ²(Δ) = σ²(δ) + σ²(I)</h4>
+      <p style="font-size:.82rem;color:rgba(255,255,255,.68);line-height:1.8;">المطلق دائماً ≥ النسبي. الفرق هو تباين صعوبة مجموعات الفقرات — مهم جداً في التفسير المرجعي.</p>
+    </div>
+    <div class="dcard">
+      <div style="font-size:1.5rem;margin-bottom:8px;">📊</div>
+      <h4 style="color:#fde68a;font-size:.9rem;margin-bottom:8px;">δₚI = νₚI فحسب!</h4>
+      <p style="font-size:.82rem;color:rgba(255,255,255,.68);line-height:1.8;">الخطأ النسبي مطابق لتأثير التفاعل فقط. أثر الفقرة (νI) يتلاشى في التفسير النسبي لأنه يُطبَّق على الجميع.</p>
+    </div>
+    <div class="dcard">
+      <div style="font-size:1.5rem;margin-bottom:8px;">📈</div>
+      <h4 style="color:#6ee7b7;font-size:.9rem;margin-bottom:8px;">Eρ² ≈ ألفا ≈ KR-20</h4>
+      <p style="font-size:.82rem;color:rgba(255,255,255,.68);line-height:1.8;">معامل التعميم يُوحِّد مؤشرات ثبات كانت تبدو مستقلة. نظرية التعميم توسِّع نظرية الاختبار التقليدية.</p>
+    </div>
+    <div class="dcard">
+      <div style="font-size:1.5rem;margin-bottom:8px;">🩺</div>
+      <h4 style="color:#c4b5fd;font-size:.9rem;margin-bottom:8px;">التطبيق: كم قياساً كافٍ؟</h4>
+      <p style="font-size:.82rem;color:rgba(255,255,255,.68);line-height:1.8;">دراسة ضغط الدم تُثبت عملياً كيف تُحدِّد نظرية التعميم عدد القياسات اللازمة لتحقيق مستوى اعتمادية مقبول.</p>
+    </div>
+  </div>
+
+  <!-- Final formula summary -->
+  <div class="dcard fu" style="margin-top:22px;text-align:center;">
+    <div style="font-size:.9rem;font-weight:700;color:rgba(255,255,255,.8);margin-bottom:14px;">🔑 المعادلات الأساسية الست</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;direction:ltr;">
+      <div style="background:rgba(255,255,255,.06);border-radius:10px;padding:12px;font-family:'Georgia',serif;font-size:.85rem;">σ²(I) = σ²(i)/nᵢ′</div>
+      <div style="background:rgba(255,255,255,.06);border-radius:10px;padding:12px;font-family:'Georgia',serif;font-size:.85rem;">σ²(pI) = σ²(pi)/nᵢ′</div>
+      <div style="background:rgba(255,255,255,.06);border-radius:10px;padding:12px;font-family:'Georgia',serif;font-size:.85rem;">Δ = νI + νₚI</div>
+      <div style="background:rgba(255,255,255,.06);border-radius:10px;padding:12px;font-family:'Georgia',serif;font-size:.85rem;">σ²(Δ) = σ²(I)+σ²(pI)</div>
+      <div style="background:rgba(255,255,255,.06);border-radius:10px;padding:12px;font-family:'Georgia',serif;font-size:.85rem;">Eρ² = σ²(p)/[σ²(p)+σ²(δ)]</div>
+      <div style="background:rgba(255,255,255,.06);border-radius:10px;padding:12px;font-family:'Georgia',serif;font-size:.85rem;">Φ = σ²(p)/[σ²(p)+σ²(Δ)]</div>
+    </div>
+  </div>
+</div>
+</section>
+
+<hr class="divr">
+<footer>
+  <p style="font-size:1rem;color:white;margin-bottom:8px;">📖 <strong>Generalizability Theory</strong> — Robert L. Brennan</p>
+  <p>الفصل الثاني — الأقسام 2.3 · 2.3.1 · 2.3.2 · 2.3.3 · 2.3.4</p>
+  <p style="margin-top:10px;font-size:.76rem;opacity:.4;">الدليل البصري الشامل لمفاهيم القياس التربوي المتقدم</p>
+</footer>
+
+<script>
+/* PROGRESS + NAV */
+window.addEventListener('scroll',()=>{
+  const p=window.scrollY/(document.body.scrollHeight-window.innerHeight)*100;
+  document.getElementById('pg').style.width=p+'%';
+  const ss=['gd','scale','err','venn','coeff','sim','real','bp'];
+  let cur='gd';
+  ss.forEach(s=>{const el=document.getElementById(s);if(el&&el.getBoundingClientRect().top<110)cur=s;});
+  document.querySelectorAll('.nl').forEach(l=>l.classList.toggle('active',l.dataset.s===cur));
+},{passive:true});
+
+/* FADE */
+const io=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('in');});},{threshold:.07});
+document.querySelectorAll('.fu').forEach(el=>io.observe(el));
+
+/* VBAR */
+const vio=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting){
+  x.target.querySelectorAll('.vb').forEach(b=>{const w=b.getAttribute('data-w');if(w)setTimeout(()=>{b.style.width=w;},200);});
+  vio.unobserve(x.target);
+}});},{threshold:.25});
+['vbars','realBars'].forEach(id=>{const el=document.getElementById(id);if(el)vio.observe(el);});
+
+/* G STUDY COMPONENTS */
+const sp=.0574, si=.0754, spi=.1269;
+
+/* SCALE SLIDER */
+const niSl=document.getElementById('niSlider');
+if(niSl) niSl.addEventListener('input',function(){
+  const n=+this.value;
+  document.getElementById('niVal').textContent=n;
+  document.getElementById('sigI').textContent=(si/n).toFixed(4);
+  document.getElementById('sigPI').textContent=(spi/n).toFixed(4);
+});
+
+/* D STUDY CALCULATIONS */
+function calcD(ni){
+  const sI=si/ni, spI=spi/ni;
+  const sdelta=spI, sDelta=sI+spI;
+  const g=sp/(sp+sdelta), phi=sp/(sp+sDelta);
+  return{sI,spI,sdelta,sDelta,semA:Math.sqrt(sDelta),semR:Math.sqrt(sdelta),g,phi};
+}
+
+/* n'i INTERACTIVE SLIDER */
+const ni2=document.getElementById('ni2');
+const ctx=document.getElementById('lineChart').getContext('2d');
+const dpr=window.devicePixelRatio||1;
+const lc=document.getElementById('lineChart');
+function setupCanvas(){lc.width=lc.offsetWidth*dpr;lc.height=lc.offsetHeight*dpr;ctx.scale(dpr,dpr);lc.style.width=lc.offsetWidth+'px';lc.style.height=lc.offsetHeight+'px';}
+
+/* history data for chart */
+const histG=[],histPhi=[],histN=[];
+for(let n=1;n<=25;n++){const d=calcD(n);histN.push(n);histG.push(+d.g.toFixed(3));histPhi.push(+d.phi.toFixed(3));}
+
+function drawLineChart(curN){
+  const W=lc.offsetWidth,H=lc.offsetHeight;
+  ctx.clearRect(0,0,W,H);
+  const pad={t:20,r:20,b:32,l:45};
+  const cw=W-pad.l-pad.r,ch=H-pad.t-pad.b;
+  const xs=n=>(n-1)/(25-1)*cw+pad.l;
+  const ys=v=>(1-v)*ch+pad.t;
+  // grid
+  [.5,.6,.7,.8,.9,1].forEach(v=>{
+    ctx.beginPath();ctx.strokeStyle='rgba(0,0,0,.07)';ctx.lineWidth=1;
+    ctx.moveTo(pad.l,ys(v));ctx.lineTo(pad.l+cw,ys(v));ctx.stroke();
+    ctx.fillStyle='#94a3b8';ctx.font='11px Cairo';ctx.textAlign='right';
+    ctx.fillText(v.toFixed(1),pad.l-5,ys(v)+4);
+  });
+  // x axis labels
+  [1,5,10,15,20,25].forEach(n=>{
+    ctx.fillStyle='#94a3b8';ctx.font='11px Cairo';ctx.textAlign='center';
+    ctx.fillText(n,xs(n),H-pad.b+14);
+  });
+  // axes labels
+  ctx.fillStyle='#475569';ctx.font='bold 11px Cairo';ctx.textAlign='center';
+  ctx.fillText("nᵢ′ (عدد الفقرات)",W/2,H-2);
+  // Eρ² line
+  ctx.beginPath();ctx.strokeStyle='#0d9488';ctx.lineWidth=2.5;ctx.setLineDash([]);
+  histN.forEach((n,i)=>{i===0?ctx.moveTo(xs(n),ys(histG[i])):ctx.lineTo(xs(n),ys(histG[i]));});
+  ctx.stroke();
+  // Φ line
+  ctx.beginPath();ctx.strokeStyle='#7c3aed';ctx.lineWidth=2.5;ctx.setLineDash([4,3]);
+  histN.forEach((n,i)=>{i===0?ctx.moveTo(xs(n),ys(histPhi[i])):ctx.lineTo(xs(n),ys(histPhi[i]));});
+  ctx.stroke();ctx.setLineDash([]);
+  // vertical line for curN
+  ctx.beginPath();ctx.strokeStyle='rgba(0,0,0,.2)';ctx.lineWidth=1.5;ctx.setLineDash([3,3]);
+  ctx.moveTo(xs(curN),pad.t);ctx.lineTo(xs(curN),H-pad.b);ctx.stroke();ctx.setLineDash([]);
+  // dots
+  const d=calcD(curN);
+  ctx.beginPath();ctx.fillStyle='#0d9488';ctx.arc(xs(curN),ys(d.g),5,0,Math.PI*2);ctx.fill();
+  ctx.beginPath();ctx.fillStyle='#7c3aed';ctx.arc(xs(curN),ys(d.phi),5,0,Math.PI*2);ctx.fill();
+  // legend
+  ctx.font='bold 11px Cairo';
+  ctx.fillStyle='#0d9488';ctx.fillRect(W-150,pad.t,16,3);ctx.textAlign='left';ctx.fillText('Eρ²',W-130,pad.t+5);
+  ctx.setLineDash([4,3]);ctx.beginPath();ctx.strokeStyle='#7c3aed';ctx.lineWidth=2;ctx.moveTo(W-150,pad.t+14);ctx.lineTo(W-134,pad.t+14);ctx.stroke();ctx.setLineDash([]);
+  ctx.fillStyle='#7c3aed';ctx.fillText('Φ',W-130,pad.t+18);
+  // .80 reference line
+  ctx.beginPath();ctx.strokeStyle='rgba(217,119,6,.4)';ctx.lineWidth=1.5;ctx.setLineDash([6,4]);
+  ctx.moveTo(pad.l,ys(.80));ctx.lineTo(pad.l+cw,ys(.80));ctx.stroke();ctx.setLineDash([]);
+  ctx.fillStyle='#d97706';ctx.font='10px Cairo';ctx.textAlign='left';ctx.fillText('.80',pad.l+4,ys(.80)-3);
+}
+
+function updateSlider(){
+  const n=+document.getElementById('ni2').value;
+  document.getElementById('ni2v').textContent=n;
+  const d=calcD(n);
+  document.getElementById('sr_g').textContent=d.g.toFixed(3);
+  document.getElementById('sr_phi').textContent=d.phi.toFixed(3);
+  document.getElementById('sr_abs').textContent=d.semA.toFixed(3);
+  document.getElementById('sr_rel').textContent=d.semR.toFixed(3);
+  setupCanvas();drawLineChart(n);
+  // insight
+  const t=document.getElementById('sit'),i=document.getElementById('sii'),b=document.getElementById('slInsight');
+  if(d.g>=.90){b.className='ins it';t.textContent='✅ اعتمادية ممتازة!';i.textContent=`عند nᵢ′=${n}: Eρ²=${d.g.toFixed(3)} وΦ=${d.phi.toFixed(3)}. جودة قياس ممتازة.`;}
+  else if(d.g>=.80){b.className='ins ib';t.textContent='⚠️ اعتمادية جيدة';i.textContent=`عند nᵢ′=${n}: Eρ²=${d.g.toFixed(3)} وΦ=${d.phi.toFixed(3)}. مقبولة لمعظم الأغراض.`;}
+  else{b.className='ins ir';t.textContent='❌ اعتمادية منخفضة';i.textContent=`عند nᵢ′=${n}: Eρ²=${d.g.toFixed(3)}. زِد عدد الفقرات للوصول لـ .80 على الأقل.`;}
+}
+ni2.addEventListener('input',updateSlider);
+
+/* D TABLE */
+function buildDTable(){
+  const tb=document.getElementById('dTable');
+  [5,10,12,15,20,25].forEach(n=>{
+    const d=calcD(n);
+    const tr=document.createElement('tr');
+    if(n===12)tr.style.background='#eff6ff';
+    tr.innerHTML=`<td style="font-weight:700;text-align:center;font-family:'Georgia',serif;">${n}</td>
+      <td style="font-family:'Georgia',serif;text-align:center;">${d.sI.toFixed(4)}</td>
+      <td style="font-family:'Georgia',serif;text-align:center;">${d.spI.toFixed(4)}</td>
+      <td style="font-family:'Georgia',serif;text-align:center;">${d.sDelta.toFixed(4)}</td>
+      <td style="font-family:'Georgia',serif;text-align:center;">${d.semA.toFixed(3)}</td>
+      <td style="font-family:'Georgia',serif;text-align:center;">${d.semR.toFixed(3)}</td>
+      <td style="font-family:'Georgia',serif;font-weight:700;color:${d.g>=.8?'#0d9488':'#dc2626'};text-align:center;">${d.g.toFixed(3)}</td>
+      <td style="font-family:'Georgia',serif;font-weight:700;color:${d.phi>=.8?'#7c3aed':'#dc2626'};text-align:center;">${d.phi.toFixed(3)}</td>`;
+    tb.appendChild(tr);
+  });
+}
+buildDTable();
+
+window.addEventListener('load',()=>{setupCanvas();updateSlider();});
+window.addEventListener('resize',()=>{setupCanvas();drawLineChart(+document.getElementById('ni2').value);});
+</script>
+
+<div class="page-nav-bottom" style="background:linear-gradient(135deg,#0a0a1a,#111827);"><a href="index.html" style="background:linear-gradient(135deg,#16213e,#0f3460);color:#fff;">&#x1F3E0; &#x627;&#x644;&#x631;&#x626;&#x64A;&#x633;&#x64A;&#x629;</a> <a href="2.2.html" style="background:linear-gradient(135deg,#4a5568,#2d3748);color:#fff;">&#x2190; &#x627;&#x644;&#x633;&#x627;&#x628;&#x642;</a> <a href="2.4.html" style="background:linear-gradient(135deg,#2b6cb0,#2c5282);color:#fff;">&#x627;&#x644;&#x62A;&#x627;&#x644;&#x64A; &#x2192;</a></div>
+</body>
+</html>

@@ -1,0 +1,1616 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>§3.5 مكوّنات التباين لنماذج أخرى | الفصل الثالث</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@400;500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f0f5f8; --surf:#fff; --deep:#0a1628; --navy:#10203c;
+  --blue:#1848c8; --sky:#1898d8; --cyan:#00a8e0; --teal:#008070;
+  --mint:#00b878; --lime:#48b808; --amber:#c87800; --orange:#c85808;
+  --red:#b81018; --rose:#a81048; --violet:#5010b8; --purple:#7020d8;
+  --gold:#c8a000; --warm:#8b4500;
+  --slate:#384858; --muted:#6878a0; --border:#c0d0e8; --lite:#edf2fb;
+  --r:14px; --sh:0 2px 14px rgba(10,22,40,.07); --shm:0 8px 28px rgba(10,22,40,.12);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'Cairo','Tajawal',sans-serif;background:var(--bg);color:var(--deep);direction:rtl;overflow-x:hidden;line-height:1.75;}
+.pgbar{position:fixed;top:0;left:0;right:0;z-index:1000;height:3px;background:var(--border);}
+.pgf{height:100%;width:0%;background:linear-gradient(90deg,var(--violet),var(--blue),var(--teal),var(--mint));transition:width .1s;}
+.nav{position:sticky;top:3px;z-index:900;background:rgba(255,255,255,.96);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);padding:0 28px;display:flex;align-items:stretch;box-shadow:var(--sh);}
+.nav-logo{font-size:.84rem;font-weight:700;color:var(--blue);display:flex;align-items:center;gap:8px;padding:13px 0;margin-left:16px;white-space:nowrap;}
+.nav-links{display:flex;overflow-x:auto;}
+.nl{padding:0 12px;height:49px;display:flex;align-items:center;font-size:.72rem;font-weight:700;color:var(--slate);text-decoration:none;white-space:nowrap;border-bottom:3px solid transparent;transition:all .2s;}
+.nl:hover{color:var(--blue);} .nl.active{color:var(--blue);border-bottom-color:var(--blue);}
+
+/* HERO */
+.hero{background:linear-gradient(140deg,#060e1e 0%,#0c1630 40%,#140a30 80%,#0a1428 100%);min-height:84vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 40px;position:relative;overflow:hidden;text-align:center;}
+.hero::before{content:'';position:absolute;inset:0;background-image:radial-gradient(circle,rgba(80,16,184,.12) 1px,transparent 1px);background-size:44px 44px;}
+.hero::after{content:'';position:absolute;inset:0;background-image:radial-gradient(circle,rgba(0,168,224,.06) 1px,transparent 1px);background-size:88px 88px;background-position:22px 22px;}
+.hero-glow{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 700px 500px at 30% 42%,rgba(80,16,184,.14) 0%,transparent 60%),radial-gradient(ellipse 500px 400px at 74% 65%,rgba(0,128,112,.1) 0%,transparent 58%);}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(80,16,184,.18);border:1px solid rgba(160,120,255,.3);color:#c4b5fd;padding:8px 22px;border-radius:50px;font-size:.78rem;font-weight:700;letter-spacing:1px;margin-bottom:26px;}
+.hero h1{font-size:clamp(2.2rem,5.5vw,4rem);font-weight:900;color:white;line-height:1.1;margin-bottom:16px;}
+.hero h1 em{font-style:normal;background:linear-gradient(120deg,#c4b5fd,#86efac);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.hero-sub{font-size:.98rem;color:rgba(255,255,255,.62);max-width:640px;margin:0 auto 44px;line-height:1.95;}
+.hero-chips{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+.hchip{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.13);border-radius:11px;padding:13px 17px;min-width:130px;text-align:center;transition:all .3s;cursor:default;}
+.hchip:hover{background:rgba(196,181,253,.1);transform:translateY(-4px);}
+.hchip .hs{font-family:'JetBrains Mono',monospace;font-size:1.1rem;font-weight:700;margin-bottom:4px;}
+.hchip .hl{font-size:.67rem;color:rgba(255,255,255,.57);}
+
+.sec{padding:66px 40px;}
+.sec-inner{max-width:1080px;margin:0 auto;}
+.sec-alt{background:#f4f7fd;}
+.sec-dark{background:var(--deep);color:white;}
+.cx{text-align:center;}.cmx{margin:0 auto;}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:22px;}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;}
+
+.tag{display:inline-block;padding:5px 15px;border-radius:50px;font-size:.72rem;font-weight:700;letter-spacing:1px;margin-bottom:12px;}
+.tb{background:linear-gradient(135deg,var(--blue),var(--sky));color:white;}
+.tt{background:linear-gradient(135deg,var(--teal),var(--mint));color:white;}
+.ta{background:linear-gradient(135deg,var(--amber),var(--orange));color:white;}
+.tv{background:linear-gradient(135deg,var(--violet),var(--purple));color:white;}
+.tg{background:linear-gradient(135deg,var(--gold),var(--amber));color:white;}
+.ts{background:var(--slate);color:white;}
+.tr{background:linear-gradient(135deg,var(--red),var(--rose));color:white;}
+.tl{background:linear-gradient(135deg,var(--lime),var(--teal));color:white;}
+
+h2.st{font-size:clamp(1.7rem,4vw,2.5rem);font-weight:900;color:var(--deep);margin-bottom:12px;}
+h2.st.wh{color:white;}
+.sd{font-size:.94rem;color:var(--slate);max-width:650px;line-height:1.9;margin-bottom:40px;}
+.sd.wh{color:rgba(255,255,255,.7);}
+
+.card{background:var(--surf);border-radius:var(--r);padding:26px;box-shadow:var(--sh);border:1px solid var(--border);transition:all .28s;}
+.card:hover{transform:translateY(-3px);box-shadow:var(--shm);}
+.dcard{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:var(--r);padding:24px;}
+.mono{font-family:'JetBrains Mono',monospace;}
+
+.eq{background:var(--lite);border-radius:10px;padding:11px 16px;border-right:3px solid;font-family:'JetBrains Mono',monospace;font-size:.87rem;direction:ltr;text-align:center;margin:8px 0;box-shadow:var(--sh);}
+.eq-b{border-color:var(--blue);} .eq-t{border-color:var(--teal);} .eq-a{border-color:var(--amber);}
+.eq-v{border-color:var(--violet);} .eq-g{border-color:var(--gold);} .eq-l{border-color:var(--lime);}
+.eq-main{background:linear-gradient(135deg,#f0ecff,#e0d8ff);border-radius:14px;padding:18px 28px;border:2px solid rgba(80,16,184,.2);font-family:'JetBrains Mono',monospace;font-size:.95rem;direction:ltr;text-align:center;margin:14px 0;box-shadow:var(--shm);}
+
+.ins{border-radius:14px;padding:16px 20px;display:flex;gap:11px;margin:12px 0;}
+.ins .ico{font-size:1.3rem;flex-shrink:0;margin-top:2px;}
+.ins .it{font-weight:700;font-size:.86rem;margin-bottom:3px;}
+.ins .ii{font-size:.81rem;color:var(--slate);line-height:1.85;}
+.ib{background:#eff6ff;border:1.5px solid #93c5fd;} .ib .it{color:var(--blue);}
+.it2{background:#f0fdf9;border:1.5px solid #5eead4;} .it2 .it{color:var(--teal);}
+.ia{background:#fffbeb;border:1.5px solid #fde68a;} .ia .it{color:var(--amber);}
+.iv{background:#f5f3ff;border:1.5px solid #c4b5fd;} .iv .it{color:var(--violet);}
+.ir{background:#fff1f2;border:1.5px solid #fca5a5;} .ir .it{color:var(--red);}
+.ig{background:#fefce8;border:1.5px solid #fde68a;} .ig .it{color:#854d0e;}
+
+.rdiv{height:3px;border:none;background:linear-gradient(90deg,var(--violet),var(--blue),var(--cyan),var(--teal),var(--mint),var(--gold));}
+footer{background:var(--deep);color:rgba(255,255,255,.45);text-align:center;padding:36px 20px;font-size:.88rem;line-height:1.9;}
+.fu{opacity:0;transform:translateY(22px);transition:opacity .6s ease,transform .6s ease;}
+.fu.in{opacity:1;transform:translateY(0);}
+.fu:nth-child(2){transition-delay:.07s;}.fu:nth-child(3){transition-delay:.14s;}.fu:nth-child(4){transition-delay:.21s;}
+
+/* ══ MODEL SPECTRUM ══ */
+.model-spectrum{border-radius:16px;overflow:hidden;box-shadow:var(--shm);}
+.ms-row{display:table;width:100%;}
+.ms-box{display:table-cell;padding:24px 18px;text-align:center;color:white;vertical-align:top;width:33.3%;}
+.ms-arrow{display:table-cell;width:30px;text-align:center;vertical-align:middle;font-size:1.3rem;background:#0e1c38;color:rgba(255,255,255,.4);}
+.ms1{background:linear-gradient(135deg,#1848c8,#1898d8);}
+.ms2{background:linear-gradient(135deg,#5010b8,#7020d8);}
+.ms3{background:linear-gradient(135deg,#c87800,#c85808);}
+.ms-sym{font-family:'JetBrains Mono',monospace;font-size:1.1rem;font-weight:700;margin-bottom:6px;}
+.ms-cond{font-size:.74rem;font-family:'JetBrains Mono',monospace;background:rgba(255,255,255,.12);border-radius:8px;padding:6px 10px;margin:8px auto;display:inline-block;}
+.ms-desc{font-size:.72rem;opacity:.85;margin-top:6px;line-height:1.6;}
+
+/* ══ n vs N VISUAL ══ */
+.nvn-box{background:white;border-radius:16px;padding:32px;box-shadow:var(--shm);border:1px solid var(--border);}
+.nvn-scale{position:relative;height:48px;border-radius:24px;background:#f1f5f9;margin:20px 0;overflow:hidden;}
+.nvn-fill{position:absolute;top:0;height:100%;border-radius:24px;display:flex;align-items:center;justify-content:flex-end;padding-right:12px;font-family:'JetBrains Mono',monospace;font-size:.8rem;font-weight:700;color:white;transition:width 1.4s cubic-bezier(.34,1.56,.64,1);}
+.nvn-label{position:absolute;top:50%;transform:translateY(-50%);}
+.nvn-n{right:12px;font-family:'JetBrains Mono',monospace;font-size:.8rem;font-weight:700;}
+.nvn-N{left:12px;font-family:'JetBrains Mono',monospace;font-size:.8rem;font-weight:700;}
+.nvn-slider{width:220px;accent-color:var(--violet);}
+
+/* ══ FIXED VS RANDOM TABLE ══ */
+.fvr-tbl{width:100%;border-collapse:separate;border-spacing:0;border-radius:14px;overflow:hidden;box-shadow:var(--shm);}
+.fvr-tbl thead tr{background:linear-gradient(135deg,var(--deep),var(--navy));}
+.fvr-tbl th{padding:12px 16px;color:white;font-size:.78rem;font-weight:700;text-align:center;}
+.fvr-tbl th:first-child{text-align:right;}
+.fvr-tbl tbody tr{background:white;transition:background .2s;}
+.fvr-tbl tbody tr:nth-child(even){background:#f5f8ff;}
+.fvr-tbl tbody tr:hover{background:#f0ecff;}
+.fvr-tbl td{padding:12px 16px;font-size:.82rem;border-bottom:1px solid var(--border);text-align:center;vertical-align:middle;}
+.fvr-tbl td:first-child{font-weight:700;text-align:right;}
+.fix{color:var(--amber);font-weight:700;font-family:'JetBrains Mono',monospace;}
+.ran{color:var(--teal);font-weight:700;font-family:'JetBrains Mono',monospace;}
+
+/* ══ CONSTRAINTS VISUAL ══ */
+.constr-box{background:white;border-radius:16px;padding:32px;box-shadow:var(--shm);border:1px solid var(--border);}
+.constr-row{display:flex;align-items:center;gap:14px;padding:12px 16px;border-radius:10px;margin-bottom:8px;}
+.cr-random{background:#f0fdf9;border:1.5px solid #5eead4;}
+.cr-mixed{background:#f5f3ff;border:1.5px solid #c4b5fd;}
+.cr-sym{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:.9rem;min-width:120px;direction:ltr;}
+.cr-eq{font-family:'JetBrains Mono',monospace;font-size:.8rem;direction:ltr;flex:1;}
+.cr-badge{font-size:.7rem;font-weight:700;padding:3px 9px;border-radius:50px;flex-shrink:0;}
+.cb-r{background:#d1fae5;color:#065f46;}
+.cb-m{background:#ede9fe;color:#4c1d95;}
+
+/* ══ VC COMPARISON GRID ══ */
+.vc-compare{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+.vcc-card{border-radius:14px;overflow:hidden;box-shadow:var(--shm);}
+.vcc-hdr{padding:16px 20px;color:white;display:flex;align-items:center;gap:10px;}
+.vcch-r{background:linear-gradient(135deg,var(--teal),var(--mint));}
+.vcch-m{background:linear-gradient(135deg,var(--violet),var(--purple));}
+.vcc-body{background:white;padding:18px 20px;}
+.vc-eq-r{font-family:'JetBrains Mono',monospace;font-size:.82rem;background:#f0fdf9;border-radius:8px;padding:8px 12px;direction:ltr;margin:6px 0;}
+.vc-eq-m{font-family:'JetBrains Mono',monospace;font-size:.82rem;background:#f5f3ff;border-radius:8px;padding:8px 12px;direction:ltr;margin:6px 0;}
+
+/* ══ CONVERSION FORMULA VISUAL ══ */
+.conv-box{background:white;border-radius:16px;padding:32px;box-shadow:var(--shm);border:1px solid var(--border);}
+.conv-formula{background:var(--deep);border-radius:12px;padding:20px 24px;margin:14px 0;}
+.conv-line{font-family:'JetBrains Mono',monospace;font-size:.88rem;direction:ltr;text-align:center;color:#a0c8f0;margin:4px 0;}
+.conv-line .kw{color:#c4b5fd;}
+.conv-line .op{color:#86efac;}
+.conv-line .num{color:#fde047;}
+.conv-example{border-radius:12px;padding:18px 22px;margin-top:14px;}
+.ce-random{background:#f0fdf9;border:1.5px solid #5eead4;}
+.ce-mixed{background:#f5f3ff;border:1.5px solid #c4b5fd;}
+
+/* ══ k coefficient visual ══ */
+.k-table{width:100%;border-collapse:separate;border-spacing:0;border-radius:12px;overflow:hidden;font-size:.8rem;box-shadow:var(--shm);}
+.k-table thead tr{background:linear-gradient(135deg,var(--violet),var(--purple));}
+.k-table th{padding:11px 14px;color:white;text-align:center;font-weight:700;}
+.k-table tbody tr{background:white;}
+.k-table tbody tr:nth-child(even){background:#f5f3ff;}
+.k-table td{padding:10px 14px;border-bottom:1px solid var(--border);text-align:center;font-family:'JetBrains Mono',monospace;}
+.k-one{color:var(--teal);font-weight:700;} .k-zero{color:var(--red);font-weight:700;}
+.k-part{color:var(--violet);font-weight:700;}
+
+/* ══ APL EXAMPLE ══ */
+.apl-box{background:white;border-radius:16px;padding:32px;box-shadow:var(--shm);border:1px solid var(--border);}
+.apl-tbl{width:100%;border-collapse:separate;border-spacing:0;border-radius:12px;overflow:hidden;box-shadow:var(--shm);font-size:.8rem;}
+.apl-tbl thead tr{background:linear-gradient(135deg,var(--deep),var(--navy));}
+.apl-tbl th{padding:11px 14px;color:white;text-align:center;font-weight:700;font-size:.76rem;}
+.apl-tbl th:first-child{text-align:right;}
+.apl-tbl tbody tr{background:white;transition:background .2s;}
+.apl-tbl tbody tr:nth-child(even){background:#f5f8ff;}
+.apl-tbl tbody tr:hover{background:#f0ecff;}
+.apl-tbl td{padding:10px 14px;border-bottom:1px solid var(--border);text-align:center;font-family:'JetBrains Mono',monospace;font-size:.78rem;}
+.apl-tbl td:first-child{font-family:'Cairo',sans-serif;font-weight:700;text-align:right;}
+.apl-tbl .row-p{background:#eff6ff !important;}
+.apl-bars{display:flex;flex-direction:column;gap:7px;margin-top:14px;}
+.ab-row{display:flex;align-items:center;gap:10px;}
+.ab-lbl{font-family:'JetBrains Mono',monospace;font-size:.78rem;font-weight:700;min-width:65px;direction:ltr;}
+.ab-bg{flex:1;background:#f1f5f9;border-radius:50px;height:22px;overflow:hidden;}
+.ab-bar{height:100%;border-radius:50px;display:flex;align-items:center;padding:0 8px;font-size:.68rem;font-weight:700;color:white;direction:ltr;justify-content:flex-end;min-width:30px;transition:width 1.4s cubic-bezier(.34,1.56,.64,1);}
+.ab-num{font-size:.76rem;font-weight:700;direction:ltr;min-width:44px;}
+
+/* ══ CONTENT DOMAIN VISUAL ══ */
+.domain-box{border-radius:14px;overflow:hidden;box-shadow:var(--shm);}
+.domain-hdr{background:linear-gradient(135deg,#8b4500,#c87800);color:white;padding:16px 22px;display:flex;align-items:center;gap:10px;}
+.domain-body{background:white;padding:20px 22px;}
+.domain-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin:12px 0;}
+.dg-cell{border-radius:10px;padding:12px 6px;text-align:center;border:2px solid;}
+.dg-fixed{background:#fefce8;border-color:#fde68a;}
+.dg-label{font-size:.72rem;font-weight:700;margin-bottom:4px;}
+.dg-items{display:flex;flex-direction:column;gap:3px;margin-top:6px;}
+.dg-item{border-radius:5px;height:8px;background:#d1fae5;border:1px solid #5eead4;}
+
+/* EXERCISES */
+.ex-card{background:white;border-radius:var(--r);padding:22px;box-shadow:var(--sh);border:1px solid var(--border);border-right:4px solid var(--violet);}
+.ex-num{display:inline-block;background:var(--violet);color:white;font-size:.8rem;font-weight:700;padding:3px 10px;border-radius:50px;margin-bottom:10px;}
+.ex-text{font-size:.84rem;color:var(--slate);line-height:1.9;}
+.ex-hint{margin-top:10px;background:#f5f3ff;border-radius:8px;padding:10px 14px;font-size:.78rem;color:var(--violet);}
+
+@media(max-width:860px){
+  .g2,.g3,.vc-compare{grid-template-columns:1fr;}
+  .ms-row{display:flex;flex-direction:column;}
+  .ms-box{width:100%;} .ms-arrow{transform:rotate(90deg);display:block;padding:8px;text-align:center;}
+  .sec{padding:50px 20px;} .hero{padding:60px 20px;}
+  .nav{padding:0 14px;} .domain-grid{grid-template-columns:repeat(3,1fr);}
+}
+
+/* COMPREHENSIVE MOBILE RESPONSIVE FIXES */
+*, *::before, *::after { box-sizing: border-box; }
+html { max-width: 100%; }
+body { max-width: 100%; }
+img, svg, canvas, video, iframe { max-width: 100%; height: auto; }
+table { max-width: 100%; }
+
+.table-wrap {
+  width: 100%; max-width: 100%;
+  overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 12px;
+}
+.tbl-wrap { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.score-matrix-wrap { overflow-x: auto; }
+
+pre, code { white-space: pre-wrap; word-break: break-word; max-width: 100%; }
+
+/* Page bottom navigation */
+.page-nav-bottom {
+  display: flex; flex-wrap: wrap; gap: 12px;
+  justify-content: center; align-items: center;
+  padding: 28px 20px; text-align: center;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  margin-top: 40px;
+}
+.page-nav-bottom a {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 12px 28px; border-radius: 50px;
+  font-size: 0.95rem; font-weight: 700;
+  text-decoration: none; min-height: 48px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.page-nav-bottom a:hover { transform: translateY(-2px); }
+
+@media (max-width: 768px) {
+  .page-nav-bottom { padding: 18px 14px; gap: 8px; }
+  .page-nav-bottom a { font-size: 0.88rem; padding: 10px 18px; }
+}
+@media (max-width: 480px) {
+  .page-nav-bottom a { font-size: 0.82rem; padding: 8px 14px; min-height: 44px; width: 100%; justify-content: center; }
+}
+
+/* Overflow fixes */
+.eq-row { flex-wrap: wrap; gap: 8px; }
+.eq-formula { min-width: 0; }
+.sym-featured { flex-wrap: wrap; gap: 12px; }
+
+@media (max-width: 768px) {
+  /* Navigation */
+  .nav, .top-nav {
+    padding: 0 14px !important;
+    height: auto !important;
+    min-height: 52px;
+    flex-wrap: wrap !important;
+    gap: 4px;
+  }
+  .nav-links { flex-wrap: wrap !important; gap: 2px !important; overflow-x: visible !important; }
+  .nav a, .nav-link, .nl {
+    font-size: 0.78rem !important;
+    padding: 5px 9px !important;
+    white-space: normal !important;
+    height: auto !important;
+    min-height: 30px;
+    display: inline-flex !important;
+    align-items: center;
+  }
+  .nav-logo, .nav-brand { font-size: 0.85rem !important; white-space: normal !important; }
+
+  /* Hero */
+  .hero {
+    min-height: auto !important;
+    padding: 44px 14px !important;
+  }
+  .hero h1, .hero-t, .hero-title {
+    font-size: clamp(1.6rem, 7vw, 2.8rem) !important;
+    line-height: 1.25 !important;
+  }
+  .hero h2, .hero-sub, .hero-subtitle-line {
+    font-size: clamp(1.15rem, 4vw, 1.8rem) !important;
+  }
+  .hero p, .hero-desc { font-size: 0.95rem !important; }
+  .hero-content, .hero-c { max-width: 100% !important; width: 100% !important; }
+  .hero::before, .hero::after,
+  .hero-aura { width: 280px !important; height: 280px !important; opacity: 0.2 !important; }
+  .hero-ring, .hero-ring-2, .hr1, .hr2 { display: none !important; }
+  .hero-mesh, .hero-grid { opacity: 0.08 !important; }
+  .hero-badge, .hero-eyebrow { font-size: 0.68rem !important; padding: 5px 14px; }
+  .hero-meta { flex-wrap: wrap !important; gap: 8px; justify-content: center; }
+  .hero-meta-item { padding: 10px 14px; min-width: 0; flex: 1 1 40%; }
+  .hero-cards { gap: 10px; justify-content: center; }
+  .hero-pills { flex-wrap: wrap !important; gap: 8px; }
+  .hcard { min-width: 0 !important; padding: 14px 16px; }
+  .scroll-hint { display: none !important; }
+  .chapter-deco { display: none !important; }
+
+  /* Sections */
+  .section, .sec { padding: 44px 14px !important; }
+  .section-inner, .sec-inner, .sec-in { max-width: 100% !important; }
+  .section-header, .sec-header { margin-bottom: 28px; }
+
+  /* Grids */
+  .scenario-grid, .crossed-grid, .concepts-grid, .gstudy-layout,
+  .matrix-grid, .sym-grid-2, .sym-grid-3, .sym-card-grid,
+  .authors-grid, .design-compare, .asm-grid, .expect-grid,
+  .rel-grid, .vp-grid, .g2, .g3, .g4, .compare-grid,
+  .ms-grid, .concepts-grid { grid-template-columns: 1fr !important; gap: 16px !important; }
+
+  .hero-cards { grid-template-columns: 1fr 1fr !important; }
+
+  /* Flex */
+  .tree-row { flex-wrap: wrap !important; justify-content: center; }
+  .var-row { flex-wrap: wrap !important; gap: 6px; }
+  .step-item { flex-wrap: wrap !important; gap: 14px; }
+  .step-content { width: 100% !important; order: 1; }
+  .step-num { order: 0; }
+  .decomp, .decomp-live, .flow-row { flex-direction: column !important; align-items: center !important; }
+  .decomp-op, .dl-op, .fn-arrow { transform: rotate(90deg); }
+  .crow { flex-direction: column !important; }
+  .concept-row { flex-wrap: wrap; }
+
+  /* Padding */
+  .family-bg, .universe-card, .scenario-bg, .var-section-bg,
+  .source-card, .guide-card, .interactive-box, .score-matrix-wrap,
+  .assumption-wrap, .lm-box, .ins, .highlight-box, .warn-box,
+  .crossed-card, .concept-card, .section-card, .cbox {
+    padding: 20px 14px !important;
+  }
+  .intro-callout { padding: 18px 16px; }
+  .source-card { gap: 14px; }
+  .tree-connector { height: 20px; }
+  .tree-node { min-width: 120px !important; font-size: 0.82rem !important; padding: 10px 14px !important; }
+  .section-divider, .div { margin: 0 14px; }
+
+  /* Fixed widths */
+  .var-label { min-width: 50px !important; font-size: 0.78rem !important; }
+  .var-desc { min-width: 0 !important; flex: 1 1 100% !important; }
+  .var-value { min-width: 40px !important; }
+  .sym-featured-glyph { width: 44px !important; height: 44px !important; }
+
+  /* Tables */
+  .table-wrap {
+    margin: 0 -14px; padding: 0 14px;
+    width: calc(100% + 28px); border-radius: 0;
+  }
+  .tbl-wrap { margin: 0 -14px; padding: 0 14px; }
+
+  .prog-bar { z-index: 9999; }
+}
+
+@media (max-width: 480px) {
+  .hero { padding: 32px 10px !important; }
+  .hero h1, .hero-t, .hero-title { font-size: clamp(1.3rem, 8vw, 2rem) !important; }
+  .hero h2, .hero-sub { font-size: clamp(1rem, 5vw, 1.5rem) !important; }
+  .hero p, .hero-desc { font-size: 0.9rem !important; }
+  .nav, .top-nav { padding: 0 8px !important; min-height: 44px; gap: 2px !important; }
+  .nav a, .nav-link, .nl { font-size: 0.7rem !important; padding: 4px 7px !important; }
+
+  .section, .sec { padding: 28px 10px !important; }
+
+  .hero-cards { grid-template-columns: 1fr !important; }
+  .hero-pills { gap: 6px; }
+  .pill { padding: 8px 10px; }
+
+  .table-wrap {
+    margin: 0 -10px; padding: 0 10px;
+    width: calc(100% + 20px);
+  }
+  table { font-size: 0.72rem !important; }
+  td, th { padding: 5px 7px !important; }
+
+  .hero-card, .concept-card, .crossed-card, .scenario-item,
+  .step-content, .coeff-card, .card, .design-card, .sym-card,
+  .exp-card, .author-card, .hcard { padding: 12px !important; }
+
+  .tree-node { min-width: 100px !important; font-size: 0.78rem !important; }
+  .hero-meta-item { padding: 8px 10px; }
+
+  .btn, .btn-primary, .btn-ghost {
+    width: 100%; justify-content: center; min-height: 44px;
+  }
+}
+
+/* â•â•â•â•â•â• ADDITIONAL OVERFLOW FIXES â•â•â•â•â•â• */
+[style*="min-width:200px"], [style*="min-width: 200px"], [style*="min-width:220px"], [style*="min-width: 220px"],
+[style*="min-width:280px"], [style*="min-width: 280px"], [style*="min-width:500px"], [style*="min-width: 500px"] {
+  min-width: 0 !important;
+}
+[style*="width:480px"], [style*="width: 480px"], [style*="width:400px"], [style*="width: 400px"] {
+  max-width: 100% !important;
+  width: auto !important;
+}
+.flex-item, .sym-grid-2 > .sym-featured, .eq-row { flex-wrap: wrap; }
+.score-matrix { min-width: 0 !important; }
+.hcard, .pill { min-width: 0 !important; }
+.dt-node { max-width: 100% !important; }
+
+@media (max-width: 768px) {
+  .mat { grid-template-columns: repeat(auto-fill, minmax(32px, 1fr)) !important; }
+  .mc { width: 32px !important; height: 32px !important; font-size: 0.6rem !important; }
+  .hcard { min-width: 0 !important; }
+  .hero-meta-num { font-size: 1.5rem !important; }
+  .hero-meta-lbl { font-size: 0.68rem !important; }
+  .hero-meta-item { flex: 1 1 42% !important; }
+  .pill { min-width: 0 !important; flex: 1 1 30% !important; }
+}
+
+@media (max-width: 480px) {
+  .mat { grid-template-columns: repeat(auto-fill, minmax(28px, 1fr)) !important; }
+  .mc { width: 28px !important; height: 28px !important; font-size: 0.55rem !important; }
+}
+
+/* ==================================================
+   FINAL REAL MOBILE LAYOUT REBUILD
+   Must be the last CSS block in the file
+   ================================================== */
+*, *::before, *::after { box-sizing: border-box !important; }
+html, body {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  min-width: 0 !important;
+}
+img, svg, canvas, video, iframe {
+  max-width: 100% !important;
+  height: auto !important;
+}
+table { max-width: 100% !important; }
+
+/* Force all major containers to viewport width */
+@media (max-width: 768px) {
+  html, body {
+    overflow-x: clip !important;
+    min-width: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .hero,
+  .section,
+  .sec,
+  .container,
+  .wrapper,
+  .content,
+  .main,
+  .page,
+  .page-wrap,
+  .layout,
+  .shell,
+  .panel,
+  .chapter,
+  .chapter-wrap,
+  .story,
+  .story-wrap,
+  .book-page,
+  .section-dark,
+  .section-mid,
+  .intro-section,
+  .source-section,
+  .guide-section,
+  .sec-dark,
+  .sec-alt,
+  .sec-inner,
+  .section-inner,
+  .section-header,
+  .sec-header,
+  .family-bg,
+  .universe-card,
+  .scenario-bg,
+  .var-section-bg,
+  .source-card,
+  .index-card,
+  .guide-card,
+  .intro-body,
+  .interactive-box,
+  .score-matrix-wrap,
+  .assumption-wrap,
+  .lm-box,
+  .cbox,
+  .comparison-wrap,
+  .steps-flow,
+  .highlight-box,
+  .warn-box,
+  .insight-box,
+  .history-wrap {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+    transform: none !important;
+    left: auto !important;
+    right: auto !important;
+    box-sizing: border-box !important;
+  }
+
+  .hero {
+    min-height: auto !important;
+    height: auto !important;
+    padding-top: 36px !important;
+    padding-bottom: 36px !important;
+    text-align: center !important;
+    overflow: hidden !important;
+  }
+
+  .hero-content,
+  .hero-inner,
+  .hero-wrap,
+  .hero-text,
+  .hero-c,
+  .hero-content {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+    text-align: center !important;
+    transform: none !important;
+    position: relative !important;
+  }
+
+  .hero h1,
+  .hero-title,
+  .hero-t,
+  .hero-ta,
+  h1 {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    font-size: clamp(1.55rem, 8vw, 2.3rem) !important;
+    line-height: 1.25 !important;
+    text-align: center !important;
+    white-space: normal !important;
+    overflow-wrap: break-word !important;
+    word-break: normal !important;
+  }
+
+  .hero-sub,
+  .hero-subtitle-line,
+  .hero-s,
+  .hero-d,
+  .hero-desc,
+  .sec-lead,
+  .slead,
+  .section-desc,
+  .subtitle,
+  .lead {
+    max-width: 100% !important;
+    white-space: normal !important;
+    overflow-wrap: break-word !important;
+    width: 100% !important;
+  }
+
+  .grid,
+  .cards,
+  .hero-cards,
+  .hero-meta,
+  .hero-pills,
+  .scenario-grid,
+  .crossed-grid,
+  .concepts-grid,
+  .gstudy-layout,
+  .matrix-grid,
+  .design-compare,
+  .authors-grid,
+  .rel-grid,
+  .vp-grid,
+  .g2,
+  .g3,
+  .g4,
+  .asm-grid,
+  .expect-grid,
+  .sym-grid-2,
+  .sym-grid-3,
+  .sym-card-grid,
+  .compare-grid,
+  .ms-grid,
+  .crow {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    gap: 16px !important;
+    transform: none !important;
+  }
+
+  .hero-cards {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+  }
+
+  .card,
+  .hero-card,
+  .glass-card,
+  .info-card,
+  .concept-card,
+  .step-card,
+  .source-card,
+  .index-card,
+  .guide-card,
+  .hcard,
+  .pill,
+  .tree-node,
+  .dt-node,
+  .matrix-card,
+  .panel-card,
+  .design-card,
+  .design-header,
+  .design-body,
+  .crossed-card,
+  .scenario-item,
+  .step-content,
+  .author-card,
+  .sym-card,
+  .sym-featured,
+  .var-section-bg,
+  .intro-callout,
+  .eq-row,
+  .eq-main {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    transform: none !important;
+  }
+
+  [style*="min-width"],
+  [style*="width: 480"],
+  [style*="width:480"],
+  [style*="width: 400"],
+  [style*="width:400"] {
+    max-width: 100% !important;
+    min-width: 0 !important;
+    width: auto !important;
+  }
+
+  .nav,
+  .top-nav,
+  .page-nav,
+  .page-nav-bottom {
+    width: 100% !important;
+    max-width: 100% !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    white-space: normal !important;
+    overflow: visible !important;
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
+
+  .nav-links {
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    gap: 4px !important;
+    overflow: visible !important;
+    width: auto !important;
+  }
+
+  .nav a,
+  .nav-link,
+  .nl,
+  .top-nav a,
+  .page-nav a,
+  .page-nav-bottom a {
+    max-width: 100% !important;
+    white-space: normal !important;
+    text-align: center !important;
+    min-height: 36px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 4px 10px !important;
+    font-size: 0.75rem !important;
+  }
+
+  .nav-logo,
+  .nav-brand {
+    font-size: 0.82rem !important;
+    white-space: normal !important;
+    max-width: 100% !important;
+    overflow: visible !important;
+  }
+
+  /* Hide all decorative overlays, rings, meshes */
+  .hero::before,
+  .hero::after,
+  .hero-ring,
+  .hero-ring-2,
+  .hr1,
+  .hr2,
+  .hero-mesh,
+  .hero-grid,
+  .hero-aura,
+  .chapter-deco,
+  .decor,
+  .bg-shape,
+  .section-divider,
+  .rainbow,
+  .div,
+  .scroll-hint,
+  .starfield {
+    display: none !important;
+  }
+
+  /* Section dividers must not cause overflow */
+  .section-divider,
+  .div-a,
+  .div-r,
+  .div-s,
+  .div-v,
+  .div-g {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    max-width: 100% !important;
+  }
+
+  .table-wrap,
+  .tbl-wrap {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  /* Hero-specific containers */
+  .hero-badge,
+  .hero-eyebrow {
+    display: inline-flex !important;
+    max-width: 100% !important;
+    white-space: normal !important;
+  }
+
+  .hero-meta {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .hero-meta-item {
+    flex: 1 1 42% !important;
+    min-width: 0 !important;
+    max-width: 48% !important;
+  }
+
+  .hcard,
+  .pill {
+    min-width: 0 !important;
+    flex: 1 1 42% !important;
+    max-width: 48% !important;
+  }
+
+  .decomp-block,
+  .decomp-live .dl-block {
+    min-width: 0 !important;
+    flex: 1 1 auto !important;
+  }
+
+  /* Family tree and diagrams */
+  .family-bg {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  /* Force flex containers to wrap */
+  .concept-row,
+  .badge-row,
+  .hero-actions {
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+  }
+
+  .btn,
+  .btn-primary,
+  .btn-ghost,
+  .calc-btn {
+    min-height: 44px !important;
+    padding: 12px 24px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  html, body {
+    min-width: 0 !important;
+    width: 100% !important;
+  }
+
+  .hero,
+  .section,
+  .sec,
+  .container,
+  .wrapper,
+  .content,
+  .main,
+  .page,
+  .page-wrap {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+  }
+
+  .hero {
+    padding-top: 28px !important;
+    padding-bottom: 28px !important;
+  }
+
+  .hero h1,
+  .hero-title,
+  .hero-t,
+  .hero-ta,
+  h1 {
+    font-size: clamp(1.35rem, 8.5vw, 2rem) !important;
+    line-height: 1.28 !important;
+  }
+
+  h2 {
+    font-size: clamp(1.2rem, 6.5vw, 1.65rem) !important;
+  }
+
+  h3 {
+    font-size: clamp(1rem, 5.5vw, 1.35rem) !important;
+  }
+
+  .card,
+  .hero-card,
+  .glass-card,
+  .info-card,
+  .concept-card,
+  .step-card,
+  .source-card,
+  .crossed-card,
+  .scenario-item,
+  .design-card {
+    padding: 14px 10px !important;
+  }
+
+  .nav,
+  .top-nav {
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+  }
+
+  .nav a,
+  .nav-link,
+  .nl {
+    padding: 3px 6px !important;
+    font-size: 0.68rem !important;
+  }
+
+  .hero-meta-item {
+    flex: 1 1 100% !important;
+    max-width: 100% !important;
+  }
+
+  .hcard {
+    flex: 1 1 100% !important;
+    max-width: 100% !important;
+  }
+
+  .hero-cards {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    flex-direction: column !important;
+    align-items: center !important;
+  }
+}
+
+/* === PAGE NAV TOP === */
+.page-nav-top {
+  direction: rtl;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  width: min(100% - 24px, 1100px);
+  margin: 14px auto;
+  padding: 10px;
+  border-radius: 16px;
+  background: rgba(15, 52, 96, 0.88);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.14);
+  backdrop-filter: blur(8px);
+  position: relative;
+  z-index: 10;
+}
+.page-nav-top a,
+.page-nav-top a:visited {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 8px 18px;
+  border-radius: 999px;
+  text-decoration: none;
+  font-weight: 700;
+  color: #ffffff;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.18);
+  transition: background 0.2s, transform 0.2s;
+}
+.page-nav-top a:hover {
+  background: rgba(0, 180, 216, 0.28);
+  transform: translateY(-2px);
+}
+@media (max-width: 480px) {
+  .page-nav-top {
+    width: calc(100% - 20px);
+    gap: 8px;
+    padding: 8px;
+  }
+  .page-nav-top a {
+    flex: 1 1 auto;
+    min-width: 90px;
+    padding: 8px 12px;
+    font-size: 0.9rem;
+  }
+}
+</style>
+</head>
+<body>
+<nav class="page-nav-top" aria-label="تنقل الصفحة العلوي"><a href="index.html" class="nav-home">الرئيسية</a></nav>
+
+<div class="pgbar"><div class="pgf" id="pgf"></div></div>
+
+<nav class="nav">
+  <div class="nav-logo">🗺️ §3.5 نماذج أخرى</div>
+  <div class="nav-links">
+<a href="3.4.html">السابق</a><a href="index.html">الرئيسية</a><a href="4.1.html">التالي</a>
+
+    <a href="#models"   class="nl active" data-s="models">طيف النماذج</a>
+    <a href="#why"      class="nl" data-s="why">لماذا نحتاجها؟</a>
+    <a href="#mixed"    class="nl" data-s="mixed">النموذج المختلط</a>
+    <a href="#constr"   class="nl" data-s="constr">القيود</a>
+    <a href="#vc-def"   class="nl" data-s="vc-def">تعريفات σ²(α|H)</a>
+    <a href="#ems-m"    class="nl" data-s="ems-m">EMS للنموذج M</a>
+    <a href="#convert"  class="nl" data-s="convert">تحويل النماذج</a>
+    <a href="#apl"      class="nl" data-s="apl">مثال APL</a>
+    <a href="#ex"       class="nl" data-s="ex">التدريبات</a>
+  </div>
+
+
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="top">
+  <div class="hero-glow"></div>
+  <div class="hero-badge">[ § 3.5 · مكوّنات التباين لنماذج أخرى ]</div>
+  <h1>عندما لا يكون<br>كل شيء <em>عشوائياً</em></h1>
+  <p class="hero-sub">بعض الأوجه ثابتة (n = N) وبعضها عشوائي (N → ∞) — كيف تتغير مكوّنات التباين ومعادلات EMS وتفسير النتائج؟</p>
+  <div class="hero-chips">
+    <div class="hchip"><div class="hs" style="color:#c4b5fd;">N→∞</div><div class="hl">وجه عشوائي</div></div>
+    <div class="hchip"><div class="hs" style="color:#fde047;">n=N</div><div class="hl">وجه ثابت</div></div>
+    <div class="hchip"><div class="hs" style="color:#86efac;">σ²(α|H)</div><div class="hl">المختلط</div></div>
+    <div class="hchip"><div class="hs" style="color:#fca5a5;">k(α|β)</div><div class="hl">معامل EMS</div></div>
+  </div>
+</section>
+<hr class="rdiv">
+
+<!-- ═══ SECTION 1: طيف النماذج ═══ -->
+<section class="sec sec-alt" id="models">
+<div class="sec-inner">
+  <div class="cx fu">
+    <span class="tag tv">المفهوم الجوهري</span>
+    <h2 class="st">ثلاثة نماذج — كل شيء يتحدد بعلاقة n بـ N</h2>
+    <p class="sd cmx">n = حجم العينة في دراسة G · N = حجم الكون الحقيقي — العلاقة بينهما تُحدِّد نوع النموذج</p>
+  </div>
+
+  <!-- Model Spectrum - using table layout to avoid line issues -->
+  <div class="model-spectrum fu">
+    <div class="ms-row">
+      <div class="ms-box ms1">
+        <div class="ms-sym">النموذج العشوائي</div>
+        <div class="ms-cond">n &lt; N → ∞</div>
+        <div class="ms-desc">جميع الأوجه لها أكوان لا نهائية — السحب عشوائي من كون ضخم جداً</div>
+        <div style="margin-top:10px;font-size:.72rem;opacity:.8;">مثال: أشخاص + فقرات عشوائية</div>
+      </div>
+      <div class="ms-arrow">→</div>
+      <div class="ms-box ms2">
+        <div class="ms-sym">النموذج المختلط</div>
+        <div class="ms-cond">بعضها: n = N &lt; ∞<br>بعضها: N → ∞</div>
+        <div class="ms-desc">وجه أو أكثر ثابت — يستنفد كامل الكون. أوجه أخرى عشوائية كالمعتاد</div>
+        <div style="margin-top:10px;font-size:.72rem;opacity:.8;">مثال: فئات محتوى ثابتة + فقرات عشوائية</div>
+      </div>
+      <div class="ms-arrow">→</div>
+      <div class="ms-box ms3">
+        <div class="ms-sym">الكون المحدود</div>
+        <div class="ms-cond">n &lt; N &lt; ∞</div>
+        <div class="ms-desc">العينة أصغر من الكون لكن الكون محدود — تصحيح مصطلح الجانب المحدود</div>
+        <div style="margin-top:10px;font-size:.72rem;opacity:.8;">نادر في نظرية التعميم</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- n vs N interactive -->
+  <div class="nvn-box fu" style="margin-top:22px;">
+    <div style="font-size:.9rem;font-weight:700;margin-bottom:16px;text-align:center;">🎛️ استكشف العلاقة بين n وN — ماذا يعني ذلك للنموذج؟</div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:8px;margin-bottom:20px;">
+      <label style="font-size:.82rem;font-weight:700;color:var(--slate);">n/N النسبة (0 = عشوائي تام · 1 = ثابت تام)</label>
+      <input type="range" class="nvn-slider" id="nvnSlider" min="0" max="100" value="0">
+      <div style="display:flex;gap:20px;font-family:'JetBrains Mono',monospace;font-size:.82rem;">
+        <span style="color:var(--violet);">n/N = <span id="nvnRatio">0%</span></span>
+        <span id="nvnModel" style="font-weight:700;color:var(--teal);">النموذج: عشوائي كامل</span>
+      </div>
+    </div>
+    <div style="position:relative;height:48px;border-radius:24px;background:#f1f5f9;overflow:hidden;">
+      <div id="nvnBar" style="position:absolute;top:0;left:0;height:100%;border-radius:24px;background:linear-gradient(90deg,var(--teal),var(--violet));transition:width .5s ease;width:0%;display:flex;align-items:center;justify-content:flex-end;padding-right:12px;font-family:'JetBrains Mono',monospace;font-size:.8rem;font-weight:700;color:white;min-width:0;"></div>
+      <div style="position:absolute;top:50%;right:14px;transform:translateY(-50%);font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--muted);">N →∞</div>
+    </div>
+    <div id="nvnExplain" style="margin-top:12px;padding:12px 16px;background:#f5f3ff;border-radius:10px;font-size:.82rem;color:var(--slate);line-height:1.85;border-right:3px solid var(--violet);"></div>
+  </div>
+</div>
+</section>
+
+<!-- ═══ SECTION 2: لماذا نحتاجها؟ ═══ -->
+<section class="sec" id="why">
+<div class="sec-inner">
+  <div class="cx fu">
+    <span class="tag tg">الدافع</span>
+    <h2 class="st">لماذا نهتم بالنماذج المختلطة؟</h2>
+    <p class="sd cmx">مكوّنات التباين العشوائية قد تكون مضلِّلة عندما يكون الكون متداخلاً في الحقيقة</p>
+  </div>
+
+  <div class="g2 fu">
+    <div class="card" style="border-top:4px solid var(--amber);">
+      <div style="font-size:.9rem;font-weight:700;color:var(--amber);margin-bottom:14px;">⚠️ المشكلة — مثال جدول المواصفات</div>
+      <div class="domain-box" style="margin-bottom:14px;">
+        <div class="domain-hdr"><div style="font-size:1.2rem;">📋</div><div style="font-weight:700;">اختبار بجدول مواصفات محدد</div></div>
+        <div class="domain-body">
+          <div style="font-size:.82rem;color:var(--slate);margin-bottom:12px;">كون الملاحظات: فقرات متداخلة داخل <strong>5 فئات محتوى ثابتة</strong></div>
+          <div class="domain-grid">
+            <div class="dg-cell dg-fixed"><div class="dg-label" style="color:var(--amber);">CR</div><div class="dg-items"><div class="dg-item"></div><div class="dg-item"></div><div class="dg-item"></div><div class="dg-item"></div></div><div style="font-size:.65rem;color:var(--muted);margin-top:4px;">8 فقرات عشوائية</div></div>
+            <div class="dg-cell dg-fixed"><div class="dg-label" style="color:var(--amber);">OK</div><div class="dg-items"><div class="dg-item"></div><div class="dg-item"></div><div class="dg-item"></div><div class="dg-item"></div></div><div style="font-size:.65rem;color:var(--muted);margin-top:4px;">8 فقرات عشوائية</div></div>
+            <div class="dg-cell dg-fixed"><div class="dg-label" style="color:var(--amber);">CE</div><div class="dg-items"><div class="dg-item"></div><div class="dg-item"></div><div class="dg-item"></div><div class="dg-item"></div></div><div style="font-size:.65rem;color:var(--muted);margin-top:4px;">8 فقرات</div></div>
+            <div class="dg-cell dg-fixed"><div class="dg-label" style="color:var(--amber);">H</div><div class="dg-items"><div class="dg-item"></div><div class="dg-item"></div><div class="dg-item"></div><div class="dg-item"></div></div><div style="font-size:.65rem;color:var(--muted);margin-top:4px;">8 فقرات</div></div>
+            <div class="dg-cell dg-fixed"><div class="dg-label" style="color:var(--amber);">GL</div><div class="dg-items"><div class="dg-item"></div><div class="dg-item"></div><div class="dg-item"></div><div class="dg-item"></div></div><div style="font-size:.65rem;color:var(--muted);margin-top:4px;">8 فقرات</div></div>
+          </div>
+          <div style="display:flex;justify-content:center;gap:12px;margin-top:8px;font-size:.72rem;">
+            <span style="display:flex;align-items:center;gap:4px;"><div style="width:12px;height:12px;border-radius:3px;background:#fde68a;border:1px solid var(--amber);"></div> ثابت: n_h = N_h = 5</span>
+            <span style="display:flex;align-items:center;gap:4px;"><div style="width:12px;height:12px;border-radius:3px;background:#d1fae5;border:1px solid #5eead4;"></div> عشوائي: N_i → ∞</span>
+          </div>
+        </div>
+      </div>
+      <div class="ins ia" style="padding:12px 14px;">
+        <div class="ico" style="font-size:1rem;">⚠️</div>
+        <div><div class="ii">إذا حسبنا σ²(h) كنموذج عشوائي ← يكون مضلِّلاً! لأن h لا يُسحب عشوائياً — الفئات الخمس هي الكون كله!</div></div>
+      </div>
+    </div>
+    <div class="card" style="border-top:4px solid var(--violet);">
+      <div style="font-size:.9rem;font-weight:700;color:var(--violet);margin-bottom:14px;">✅ الحل — تثبيت الوجه h</div>
+      <p style="font-size:.84rem;color:var(--slate);line-height:1.85;margin-bottom:14px;">
+        عندما يكون <strong>n_h = N_h</strong> — أي أن دراسة G تُمثِّل كامل مستويات الكون لـ h — فإن:
+      </p>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="background:#eff6ff;border-radius:10px;padding:12px 14px;border-right:3px solid var(--blue);">
+          <div style="font-size:.8rem;font-weight:700;color:var(--blue);margin-bottom:4px;">σ²(α) النموذج العشوائي</div>
+          <div style="font-size:.78rem;color:var(--slate);">يتجاهل أن h ثابت — يُقدِّر كأن h قد يكون مختلفاً في دراسة D</div>
+        </div>
+        <div style="background:#f5f3ff;border-radius:10px;padding:12px 14px;border-right:3px solid var(--violet);">
+          <div style="font-size:.8rem;font-weight:700;color:var(--violet);margin-bottom:4px;">σ²(α|H) النموذج المختلط</div>
+          <div style="font-size:.78rem;color:var(--slate);">يأخذ في الاعتبار أن h ثابت — أكثر دقة لهذا السياق</div>
+        </div>
+      </div>
+      <div class="ins iv" style="margin-top:12px;padding:12px 14px;">
+        <div class="ico" style="font-size:1rem;">💡</div>
+        <div><div class="ii">الفصل الرابع يستخدم σ²(α) العشوائية فقط. قراءة §3.5 يمكن تأجيلها للفصل الخامس.</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ═══ SECTION 3: النموذج المختلط ═══ -->
+<section class="sec sec-alt" id="mixed">
+<div class="sec-inner">
+  <div class="cx fu">
+    <span class="tag tv">§ 3.5.1</span>
+    <h2 class="st">تصميم p × (i:h) مع تثبيت h — التفاصيل الدقيقة</h2>
+    <p class="sd cmx">N_p → ∞ و N_i → ∞ (عشوائيان) · n_h = N_h < ∞ (h ثابت كلياً)</p>
+  </div>
+
+  <div class="vc-compare fu" style="margin-bottom:22px;">
+    <div class="vcc-card">
+      <div class="vcc-hdr vcch-r"><div style="font-size:1.4rem;">🎲</div><div><div style="font-weight:700;font-size:.95rem;">النموذج العشوائي (المعتاد)</div><div style="font-size:.74rem;opacity:.85;">N_h → ∞</div></div></div>
+      <div class="vcc-body">
+        <div style="font-size:.82rem;font-weight:700;color:var(--teal);margin-bottom:8px;">متوسطات الدرجات:</div>
+        <div class="vc-eq-r">μ = E_p E_i E_h X_pih</div>
+        <div class="vc-eq-r">μ_p = E_i E_h X_pih</div>
+        <div class="vc-eq-r">μ_h = E_p E_i X_pih</div>
+        <div class="ins it2" style="margin-top:10px;padding:11px 14px;">
+          <div class="ico" style="font-size:1rem;">📌</div>
+          <div><div class="ii">القيمة المتوقعة E_h تُأخذ على كون لا نهائي من مستويات h</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="vcc-card">
+      <div class="vcc-hdr vcch-m"><div style="font-size:1.4rem;">🔒</div><div><div style="font-weight:700;font-size:.95rem;">النموذج المختلط (h ثابت)</div><div style="font-size:.74rem;opacity:.85;">n_h = N_h < ∞</div></div></div>
+      <div class="vcc-body">
+        <div style="font-size:.82rem;font-weight:700;color:var(--violet);margin-bottom:8px;">متوسطات الدرجات — تتغير!</div>
+        <div class="vc-eq-m">μ = (1/n_h) Σ_h [E_p E_i X_pih] &nbsp;(3.29)</div>
+        <div class="vc-eq-m">μ_p = (1/n_h) Σ_h [E_i X_pih] &nbsp;(3.30)</div>
+        <div class="vc-eq-r">μ_h = E_p E_i X_pih &nbsp;←&nbsp; لا تتغير</div>
+        <div class="ins iv" style="margin-top:10px;padding:11px 14px;">
+          <div class="ico" style="font-size:1rem;">⚡</div>
+          <div><div class="ii">μ و μ_p يتحولان من توقع E_h إلى متوسط مجموع (1/n_h)Σ_h — الفارق الجوهري!</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Why μ_h stays unchanged -->
+  <div class="card fu" style="background:linear-gradient(135deg,#f5f3ff,#ede9fe);border-color:#c4b5fd;">
+    <div style="font-size:.9rem;font-weight:700;color:var(--violet);margin-bottom:12px;">🔑 لماذا μ_h و μ_ph و μ_i:h تبقى كما هي في النموذج المختلط؟</div>
+    <div class="g2">
+      <div>
+        <p style="font-size:.83rem;color:var(--slate);line-height:1.85;">
+          لأن تعريفها لا يتضمن التوقع عبر h. فمثلاً:<br>
+          μ_h = E_p E_i X_pih — نأخذ التوقع على p وi فقط، وليس على h.
+        </p>
+      </div>
+      <div>
+        <p style="font-size:.83rem;color:var(--slate);line-height:1.85;">
+          لذا لا يهم إذا كان h عشوائياً أم ثابتاً في تعريف μ_h. الذي يتغير هو تعريف μ (الذي كان يأخذ توقعاً على h).
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ═══ SECTION 4: القيود ═══ -->
+<section class="sec" id="constr">
+<div class="sec-inner">
+  <div class="cx fu">
+    <span class="tag ta">القيود — ما الذي يتغير؟</span>
+    <h2 class="st">قيود النموذج المختلط vs العشوائي</h2>
+    <p class="sd cmx">في النموذج المختلط نضيف قيوداً إضافية على الآثار الثابتة — وهي ليست افتراضات بل نتائج حتمية من التعريفات</p>
+  </div>
+
+  <div class="constr-box fu">
+    <div style="font-size:.88rem;font-weight:700;margin-bottom:16px;text-align:center;">المعادلة 3.31 — قيود النموذج المختلط p × (i:h) مع تثبيت h</div>
+    <div class="constr-row cr-random">
+      <div class="cr-sym" style="color:var(--teal);">E ν_p = 0</div>
+      <div class="cr-eq">التوقع على جميع الأشخاص</div>
+      <div class="cr-badge cb-r">عشوائي</div>
+    </div>
+    <div class="constr-row cr-random">
+      <div class="cr-sym" style="color:var(--teal);">E ν_i:h = 0</div>
+      <div class="cr-eq">التوقع على جميع الفقرات داخل h</div>
+      <div class="cr-badge cb-r">عشوائي</div>
+    </div>
+    <div class="constr-row cr-random">
+      <div class="cr-sym" style="color:var(--teal);">E ν_pi:h = 0</div>
+      <div class="cr-eq">التوقع على p و i داخل h</div>
+      <div class="cr-badge cb-r">عشوائي</div>
+    </div>
+    <div class="constr-row cr-mixed">
+      <div class="cr-sym" style="color:var(--violet);">Σ_h ν_h = 0</div>
+      <div class="cr-eq">مجموع آثار الوجه h على مستوياته الـ N_h = صفر</div>
+      <div class="cr-badge cb-m">ثابت ← مجموع صفر!</div>
+    </div>
+    <div class="constr-row cr-mixed">
+      <div class="cr-sym" style="color:var(--violet);">Σ_h ν_ph = 0</div>
+      <div class="cr-eq">لكل شخص p: مجموع التأثيرات ph على مستويات h = صفر</div>
+      <div class="cr-badge cb-m">ثابت ← مجموع صفر!</div>
+    </div>
+
+    <div class="g2" style="margin-top:20px;">
+      <div class="ins ib" style="margin:0;padding:14px 16px;">
+        <div class="ico">🎯</div>
+        <div>
+          <div class="it">القيود مجموع الصفر — من أين تأتي؟</div>
+          <div class="ii">هي نتيجة طبيعية من كيفية تعريف متوسطات الدرجات في النموذج المختلط. ليست افتراضات إضافية بل حقائق رياضية مشتقة.</div>
+        </div>
+      </div>
+      <div class="ins iv" style="margin:0;padding:14px 16px;">
+        <div class="ico">⚠️</div>
+        <div>
+          <div class="it">تحذير مهم</div>
+          <div class="ii">بعض البرامج الإحصائية لا تستخدم هذه القيود — نتائجها لا تنطبق على نظرية التعميم مع الأوجه الثابتة!</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ═══ SECTION 5: تعريفات σ²(α|H) ═══ -->
+<section class="sec sec-alt" id="vc-def">
+<div class="sec-inner">
+  <div class="cx fu">
+    <span class="tag tv">§ 3.5.1 — الجدول 3.6</span>
+    <h2 class="st">مكوّنات التباين في النموذج المختلط σ²(α|H)</h2>
+    <p class="sd cmx">نفس الأسماء — لكن التعريفات تختلف! القسمة على (N_h−1) للآثار الثابتة والقسمة على N_h للعشوائية داخل الثابت</p>
+  </div>
+
+  <div class="card fu" style="overflow-x:auto;padding:28px;">
+    <div style="font-size:.88rem;font-weight:700;margin-bottom:16px;text-align:center;">الجدول 3.6 — تعريفات σ²(α|H) وEMS لتصميم p × (i:h) مع تثبيت h</div>
+    <div class="table-wrap"><table class="fvr-tbl">
+      <thead><tr>
+        <th style="text-align:right;">الأثر α</th>
+        <th>النوع</th>
+        <th>تعريف σ²(α|H)</th>
+        <th>EMS(α|H)</th>
+      </tr></thead>
+      <tbody>
+        <tr>
+          <td>p</td>
+          <td><span class="ran">عشوائي</span></td>
+          <td style="font-family:'JetBrains Mono',monospace;font-size:.78rem;direction:ltr;text-align:right;">E ν_p²</td>
+          <td style="font-family:'JetBrains Mono',monospace;font-size:.76rem;direction:ltr;text-align:right;">σ²(pi:h|H) + n_i n_h σ²(p|H)</td>
+        </tr>
+        <tr>
+          <td>h</td>
+          <td><span class="fix">ثابت = صيغة تربيعية!</span></td>
+          <td style="font-family:'JetBrains Mono',monospace;font-size:.78rem;direction:ltr;text-align:right;">Σ_h ν_h² / (n_h − 1)</td>
+          <td style="font-family:'JetBrains Mono',monospace;font-size:.76rem;direction:ltr;text-align:right;">σ²(pi:h|H) + n_i σ²(ph|H) + n_p σ²(i:h|H) + n_p n_i σ²(h|H)</td>
+        </tr>
+        <tr>
+          <td>i:h</td>
+          <td><span class="ran">عشوائي (داخل الثابت)</span></td>
+          <td style="font-family:'JetBrains Mono',monospace;font-size:.78rem;direction:ltr;text-align:right;">Σ_h [E ν_i:h²] / n_h</td>
+          <td style="font-family:'JetBrains Mono',monospace;font-size:.76rem;direction:ltr;text-align:right;">σ²(pi:h|H) + n_p σ²(i:h|H)</td>
+        </tr>
+        <tr>
+          <td>ph</td>
+          <td><span class="ran">عشوائي</span></td>
+          <td style="font-family:'JetBrains Mono',monospace;font-size:.78rem;direction:ltr;text-align:right;">Σ_h [E ν_ph²] / (n_h − 1)</td>
+          <td style="font-family:'JetBrains Mono',monospace;font-size:.76rem;direction:ltr;text-align:right;">σ²(pi:h|H) + n_i σ²(ph|H)</td>
+        </tr>
+        <tr>
+          <td>pi:h</td>
+          <td><span class="ran">عشوائي</span></td>
+          <td style="font-family:'JetBrains Mono',monospace;font-size:.78rem;direction:ltr;text-align:right;">Σ_h [E ν_pi:h²] / n_h</td>
+          <td style="font-family:'JetBrains Mono',monospace;font-size:.76rem;direction:ltr;text-align:right;">σ²(pi:h|H)</td>
+        </tr>
+      </tbody>
+    </table></div>
+
+    <div class="g2" style="margin-top:18px;">
+      <div class="ins iv" style="margin:0;padding:13px 15px;">
+        <div class="ico" style="font-size:1rem;">🔑</div>
+        <div>
+          <div class="it">الفارق الرئيسي في القسمة</div>
+          <div class="ii">الأثر الثابت h → ÷ (n_h−1) مثل تباين عينة. الأثر العشوائي داخل الثابت (i:h, pi:h) → ÷ n_h. هذا متسق مع درجات الحرية!</div>
+        </div>
+      </div>
+      <div class="ins ia" style="margin:0;padding:13px 15px;">
+        <div class="ico" style="font-size:1rem;">📌</div>
+        <div>
+          <div class="it">σ²(h|H) هي صيغة تربيعية</div>
+          <div class="ii">في الأدبيات التقليدية تُسمى "صيغة تربيعية" لأنها تتعلق بأثر ثابت. نظرية التعميم تُسميها مكوّن تباين لأنها تأخذ شكل تباين.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ═══ SECTION 6: EMS للنموذج العام M ═══ -->
+<section class="sec" id="ems-m">
+<div class="sec-inner">
+  <div class="cx fu">
+    <span class="tag tb">§ 3.5.2</span>
+    <h2 class="st">EMS للنموذج العام M — معامل k(α|β)</h2>
+    <p class="sd cmx">المعادلة 3.32 تُعمِّم المعادلة 3.24 لتشمل جميع النماذج — الفرق الوحيد هو معامل k(α|β)</p>
+  </div>
+
+  <div class="g2 fu">
+    <div class="card" style="border-top:4px solid var(--blue);">
+      <div style="font-size:.88rem;font-weight:700;color:var(--blue);margin-bottom:12px;">النموذج العشوائي (المعادلة 3.24)</div>
+      <div class="eq-main" style="font-size:.88rem;">EMS(β) = Σ π(α̂) · σ²(α)</div>
+      <div style="font-size:.8rem;color:var(--slate);margin-top:8px;">k(α|β) = 1 دائماً لجميع الأوجه العشوائية</div>
+    </div>
+    <div class="card" style="border-top:4px solid var(--violet);">
+      <div style="font-size:.88rem;font-weight:700;color:var(--violet);margin-bottom:12px;">النموذج العام M (المعادلة 3.32)</div>
+      <div class="eq-main" style="font-size:.88rem;">EMS(β) = Σ k(α|β) · π(α̂) · σ²(α|M)</div>
+      <div style="font-size:.8rem;color:var(--slate);margin-top:8px;">k(α|β) يتغير حسب النموذج!</div>
+    </div>
+  </div>
+
+  <!-- k coefficient explanation -->
+  <div class="card fu" style="margin-top:22px;padding:28px;">
+    <div style="font-size:.9rem;font-weight:700;margin-bottom:16px;text-align:center;">المعادلة 3.33 — تعريف k(α|β)</div>
+    <div style="background:var(--deep);border-radius:12px;padding:18px 24px;font-family:'JetBrains Mono',monospace;font-size:.86rem;direction:ltr;text-align:center;color:#a0c8f0;margin-bottom:18px;">
+      k(α|β) = Π (1 − n_j/N_j) للأدلة الرئيسية j في α <span style="color:rgba(255,255,255,.4);">// الموجودة في α وليست في β</span><br>
+      <span style="color:#c4b5fd;">[ k(α|β) = 1 إذا كانت α = β ]</span>
+    </div>
+    <div class="table-wrap"><table class="k-table">
+      <thead><tr>
+        <th>النموذج</th>
+        <th>n/N للأدلة الرئيسية خارج β</th>
+        <th>k(α|β)</th>
+        <th>المعنى</th>
+      </tr></thead>
+      <tbody>
+        <tr>
+          <td class="ran">عشوائي كامل</td>
+          <td style="font-family:'JetBrains Mono',monospace;">n &lt; N → ∞</td>
+          <td class="k-one">1</td>
+          <td style="font-family:'Cairo',sans-serif;font-size:.8rem;">يساهم كل α بالكامل في EMS(β)</td>
+        </tr>
+        <tr>
+          <td class="fix">ثابت كامل</td>
+          <td style="font-family:'JetBrains Mono',monospace;">n = N → (1−n/N) = 0</td>
+          <td class="k-zero">0</td>
+          <td style="font-family:'Cairo',sans-serif;font-size:.8rem;">α يُلغى من EMS — h لا يُضيف تقلباً!</td>
+        </tr>
+        <tr>
+          <td style="color:var(--violet);font-weight:700;">مختلط</td>
+          <td style="font-family:'JetBrains Mono',monospace;">n &lt; N &lt; ∞</td>
+          <td class="k-part">(1 − n/N)</td>
+          <td style="font-family:'Cairo',sans-serif;font-size:.8rem;">تصحيح جزئي — كون محدود</td>
+        </tr>
+      </tbody>
+    </table></div>
+    <div class="ins ib" style="margin-top:14px;">
+      <div class="ico">💡</div>
+      <div>
+        <div class="it">نتيجة مباشرة: عندما h ثابت (k=0) تختفي بعض حدود EMS</div>
+        <div class="ii">لأن h ثابت → k(α|β) = (1 − N_h/N_h) = 0 لأي α يحتوي h كدليل خارج β. لذا يُحذف أي حد EMS يتضمن h خارج β!</div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ═══ SECTION 7: التحويل بين النماذج ═══ -->
+<section class="sec sec-alt" id="convert">
+<div class="sec-inner">
+  <div class="cx fu">
+    <span class="tag tl">§ 3.5.3</span>
+    <h2 class="st">تحويل σ²(α) → σ²(α|M) — المعادلة 3.34</h2>
+    <p class="sd cmx">ميزة رائعة: يمكن حساب مكوّنات أي نموذج انطلاقاً من مكوّنات النموذج العشوائي مباشرةً!</p>
+  </div>
+
+  <div class="conv-box fu">
+    <div style="font-size:.9rem;font-weight:700;margin-bottom:14px;text-align:center;">المعادلة 3.34 — القانون الذهبي للتحويل</div>
+    <div class="conv-formula">
+      <div class="conv-line"><span class="kw">σ²(α|M)</span> = Σ <span class="op">[</span> <span class="num">σ²(β)</span> / <span class="kw">Π(β|α)</span> <span class="op">]</span></div>
+      <div style="color:rgba(255,255,255,.4);font-size:.76rem;text-align:center;margin-top:6px;">// المجموع على جميع β التي تحتوي كل أدلة α على الأقل</div>
+    </div>
+    <div style="background:#f6f8ff;border-radius:12px;padding:16px 20px;margin-bottom:18px;">
+      <div style="font-size:.84rem;font-weight:700;color:var(--deep);margin-bottom:8px;">تعريف Π(β|α) — المعادلة 3.35</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:.82rem;direction:ltr;color:var(--slate);">
+        Π(β|α) = حاصل ضرب N_j لجميع الأدلة في β وليست في α<br>
+        [Π(β|α) = 1 إذا كانت α = β]
+      </div>
+    </div>
+
+    <!-- Worked example -->
+    <div style="font-size:.88rem;font-weight:700;margin-bottom:14px;">📐 تطبيق: حساب σ²(p|H) من σ²(α) في p × (i:h) مع N_h=5</div>
+
+    <div style="overflow-x:auto;margin-bottom:16px;">
+    <div class="table-wrap"><table style="width:100%;border-collapse:collapse;font-size:.8rem;">
+      <thead><tr style="background:linear-gradient(135deg,var(--deep),var(--navy));color:white;">
+        <th style="padding:10px 12px;text-align:right;">β (يحتوي α=p)</th>
+        <th style="padding:10px 12px;">σ²(β) العشوائي</th>
+        <th style="padding:10px 12px;">Π(β|α) = N للأدلة في β\α</th>
+        <th style="padding:10px 12px;">σ²(β)/Π(β|α)</th>
+      </tr></thead>
+      <tbody>
+        <tr style="background:white;"><td style="padding:9px 12px;font-family:'JetBrains Mono',monospace;font-weight:700;">p</td><td style="padding:9px 12px;text-align:center;font-family:'JetBrains Mono',monospace;">σ²(p)</td><td style="padding:9px 12px;text-align:center;font-family:'JetBrains Mono',monospace;">1 (β=α)</td><td style="padding:9px 12px;text-align:center;font-family:'JetBrains Mono',monospace;color:var(--teal);font-weight:700;">σ²(p)</td></tr>
+        <tr style="background:#f5f8ff;"><td style="padding:9px 12px;font-family:'JetBrains Mono',monospace;font-weight:700;">ph</td><td style="padding:9px 12px;text-align:center;font-family:'JetBrains Mono',monospace;">σ²(ph)</td><td style="padding:9px 12px;text-align:center;font-family:'JetBrains Mono',monospace;">N_h = 5</td><td style="padding:9px 12px;text-align:center;font-family:'JetBrains Mono',monospace;color:var(--violet);font-weight:700;">σ²(ph)/5</td></tr>
+        <tr style="background:white;"><td style="padding:9px 12px;font-family:'JetBrains Mono',monospace;font-weight:700;">pi:h</td><td style="padding:9px 12px;text-align:center;font-family:'JetBrains Mono',monospace;">σ²(pi:h)</td><td style="padding:9px 12px;text-align:center;font-family:'JetBrains Mono',monospace;">N_i × N_h → ∞</td><td style="padding:9px 12px;text-align:center;font-family:'JetBrains Mono',monospace;color:var(--muted);">≈ 0 (N_i→∞)</td></tr>
+      </tbody>
+    </table></div>
+    </div>
+
+    <div class="conv-example ce-mixed">
+      <div style="font-size:.84rem;font-weight:700;color:var(--violet);margin-bottom:8px;">النتيجة:</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:.9rem;direction:ltr;color:var(--deep);">σ²(p|H) = σ²(p) + [σ²(ph) / N_h] + [σ²(pi:h) / (N_i × N_h)]</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:.9rem;direction:ltr;color:var(--violet);margin-top:6px;">= σ²(p) + [σ²(ph) / n_h]</div>
+      <div style="font-size:.76rem;color:var(--muted);margin-top:4px;direction:rtl;">لأن N_h = n_h و N_i → ∞ فيُلغي الحد الأخير</div>
+    </div>
+
+    <div class="ins iv" style="margin-top:14px;">
+      <div class="ico">⭐</div>
+      <div>
+        <div class="it">الفائدة العملية من المعادلة 3.34</div>
+        <div class="ii">بدلاً من حل نظام معادلات EMS في النموذج M — يكفي حساب مكوّنات النموذج العشوائي ثم تطبيق المعادلة 3.34 مباشرةً. أبسط وأكثر شفافية!</div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ═══ SECTION 8: مثال APL ═══ -->
+<section class="sec" id="apl">
+<div class="sec-inner">
+  <div class="cx fu">
+    <span class="tag tg">§ 3.5.4 — مثال واقعي</span>
+    <h2 class="st">برنامج APL — جدول مواصفات حقيقي</h2>
+    <p class="sd cmx">608 مفحوصاً · 5 مجالات ثابتة · 8 فقرات عشوائية في كل مجال — نموذج مختلط مثالي</p>
+  </div>
+
+  <!-- APL context -->
+  <div class="domain-box fu" style="margin-bottom:22px;">
+    <div class="domain-hdr"><div style="font-size:1.4rem;">🏛️</div><div><div style="font-weight:700;font-size:1rem;">مسح الكفاية الوظيفية APL</div><div style="font-size:.76rem;opacity:.85;">Adult Performance Level — المنطقة الجنوبية 1977</div></div></div>
+    <div class="domain-body">
+      <div class="domain-grid">
+        <div class="dg-cell dg-fixed"><div class="dg-label" style="color:var(--amber);">CR</div><div style="font-size:.68rem;color:var(--muted);">موارد المجتمع</div><div style="font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--teal);margin-top:6px;">8 فقرات</div></div>
+        <div class="dg-cell dg-fixed"><div class="dg-label" style="color:var(--amber);">OK</div><div style="font-size:.68rem;color:var(--muted);">المعرفة المهنية</div><div style="font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--teal);margin-top:6px;">8 فقرات</div></div>
+        <div class="dg-cell dg-fixed"><div class="dg-label" style="color:var(--amber);">CE</div><div style="font-size:.68rem;color:var(--muted);">الاقتصاد</div><div style="font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--teal);margin-top:6px;">8 فقرات</div></div>
+        <div class="dg-cell dg-fixed"><div class="dg-label" style="color:var(--amber);">H</div><div style="font-size:.68rem;color:var(--muted);">الصحة</div><div style="font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--teal);margin-top:6px;">8 فقرات</div></div>
+        <div class="dg-cell dg-fixed"><div class="dg-label" style="color:var(--amber);">GL</div><div style="font-size:.68rem;color:var(--muted);">الحكومة والقانون</div><div style="font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--teal);margin-top:6px;">8 فقرات</div></div>
+      </div>
+      <div style="text-align:center;font-size:.78rem;color:var(--slate);">nh = Nh = 5 (ثابت) · ni = 8 &lt; Ni→∞ (عشوائي) · np = 608</div>
+      <div style="display:flex;justify-content:center;gap:16px;margin-top:10px;font-size:.76rem;font-family:'JetBrains Mono',monospace;">
+        <span style="color:var(--teal);">X̄(CR)=.75</span>
+        <span style="color:var(--teal);">X̄(OK)=.64</span>
+        <span style="color:var(--teal);">X̄(CE)=.63</span>
+        <span style="color:var(--teal);">X̄(H)=.67</span>
+        <span style="color:var(--teal);">X̄(GL)=.57</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- APL ANOVA table -->
+  <div class="apl-box fu">
+    <div style="font-size:.9rem;font-weight:700;margin-bottom:14px;">الجدول 3.7 — دراسة G لمسح APL (المنطقة الجنوبية)</div>
+    <div style="overflow-x:auto;">
+    <div class="table-wrap"><table class="apl-tbl">
+      <thead><tr><th style="text-align:right;">الأثر</th><th>df</th><th>π(ᾰ)</th><th>SS</th><th>MS</th><th>σ̂²(α|H)</th></tr></thead>
+      <tbody>
+        <tr class="apl-tbl row-p"><td>p — أشخاص</td><td>607</td><td>40</td><td>1014.46</td><td>1.6713</td><td style="color:var(--blue);font-weight:700;">.0378</td></tr>
+        <tr><td>h — مجالات (ثابت) ᵃ</td><td>4</td><td>4864</td><td>88.28</td><td>22.069</td><td style="color:var(--amber);font-weight:700;">.0013</td></tr>
+        <tr><td>i:h — فقرات|مجال</td><td>35</td><td>608</td><td>556.01</td><td>15.886</td><td style="color:var(--teal);font-weight:700;">.0259</td></tr>
+        <tr><td>ph — شخص×مجال</td><td>2428</td><td>8</td><td>484.32</td><td>.1995</td><td style="color:var(--violet);font-weight:700;">.0051</td></tr>
+        <tr style="background:#fff1f2;"><td>pi:h — شخص×فقرة|مجال</td><td>21245</td><td>1</td><td>3375.24</td><td>.1589</td><td style="color:var(--red);font-weight:700;">.1589</td></tr>
+      </tbody>
+    </table></div>
+    <div style="font-size:.74rem;color:var(--muted);margin-top:6px;padding-right:4px;">ᵃ σ̂²(h|H) بالمعنى الدقيق صيغة تربيعية، ليس مكوّن تباين</div>
+    </div>
+
+    <!-- Bars -->
+    <div style="font-size:.84rem;font-weight:700;margin-top:18px;margin-bottom:10px;">📊 مقارنة المكوّنات بصرياً</div>
+    <div class="apl-bars" id="aplBars">
+      <div class="ab-row"><div class="ab-lbl" style="color:var(--blue);">σ²(p|H)</div><div class="ab-bg"><div class="ab-bar" style="background:linear-gradient(90deg,#1848c8,#1898d8);width:0%;" data-w="21%">.0378</div></div><div class="ab-num" style="color:var(--blue);">.0378</div><div style="font-size:.72rem;color:var(--muted);">الأكبر ← جيد!</div></div>
+      <div class="ab-row"><div class="ab-lbl" style="color:var(--amber);">σ²(h|H)</div><div class="ab-bg"><div class="ab-bar" style="background:linear-gradient(90deg,#c87800,#c85808);width:0%;" data-w="1%">.0013</div></div><div class="ab-num" style="color:var(--amber);">.0013</div><div style="font-size:.72rem;color:var(--muted);">صغير جداً ← المجالات متشابهة الصعوبة</div></div>
+      <div class="ab-row"><div class="ab-lbl" style="color:var(--teal);">σ²(i:h|H)</div><div class="ab-bg"><div class="ab-bar" style="background:linear-gradient(90deg,#008070,#00b878);width:0%;" data-w="14%">.0259</div></div><div class="ab-num" style="color:var(--teal);">.0259</div><div style="font-size:.72rem;color:var(--muted);">صعوبة الفقرات تتفاوت</div></div>
+      <div class="ab-row"><div class="ab-lbl" style="color:var(--violet);">σ²(ph|H)</div><div class="ab-bg"><div class="ab-bar" style="background:linear-gradient(90deg,#5010b8,#7020d8);width:0%;" data-w="3%">.0051</div></div><div class="ab-num" style="color:var(--violet);">.0051</div><div style="font-size:.72rem;color:var(--muted);">تفاعل محدود ← الأشخاص متسقون عبر المجالات</div></div>
+      <div class="ab-row"><div class="ab-lbl" style="color:var(--red);">σ²(pi:h|H)</div><div class="ab-bg"><div class="ab-bar" style="background:linear-gradient(90deg,#b81018,#a81048);width:0%;" data-w="88%">.1589</div></div><div class="ab-num" style="color:var(--red);">.1589</div><div style="font-size:.72rem;color:var(--muted);">الأكبر! ← خطأ متبقٍّ + تفاعل شخص×فقرة</div></div>
+    </div>
+
+    <!-- Calculation verification -->
+    <div style="margin-top:20px;background:#f5f3ff;border-radius:12px;padding:18px;border:1.5px solid #c4b5fd;">
+      <div style="font-size:.86rem;font-weight:700;color:var(--violet);margin-bottom:10px;">✅ التحقق من σ̂²(p|H) بطريقتين</div>
+      <div class="g2">
+        <div>
+          <div style="font-size:.8rem;font-weight:700;color:var(--blue);margin-bottom:6px;">طريقة EMS مباشرةً:</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:.8rem;direction:ltr;background:white;border-radius:8px;padding:10px;line-height:1.8;">σ̂²(p|H) = [MS(p) − MS(pi:h)] / (nᵢ·nₕ)<br>= [1.6713 − .1589] / (8 × 5)<br>= 1.5124 / 40 = <strong style="color:var(--violet);">.0378</strong></div>
+        </div>
+        <div>
+          <div style="font-size:.8rem;font-weight:700;color:var(--teal);margin-bottom:6px;">طريقة التحويل (المعادلة 3.34):</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:.8rem;direction:ltr;background:white;border-radius:8px;padding:10px;line-height:1.8;">σ̂²(p|H) = σ̂²(p) + σ̂²(ph)/nₕ<br>= .0368 + .0051/5<br>= .0368 + .0010 = <strong style="color:var(--teal);">.0378 ✓</strong></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Interpretation -->
+    <div class="ins ig" style="margin-top:14px;">
+      <div class="ico">📖</div>
+      <div>
+        <div class="it">قراءة النتائج — ماذا يعني كل رقم؟</div>
+        <div class="ii">
+          <strong>σ̂²(p|H)=.0378 > σ̂²(i:h|H)=.0259</strong> ← قدرة الأشخاص تتفاوت أكثر من صعوبة الفقرات. 
+          <strong>σ̂²(h|H)=.0013 صغير جداً</strong> ← المجالات الخمسة متشابهة الصعوبة (متوسطاتها .57–.75).
+          <strong>σ̂²(ph|H)=.0051 صغير</strong> ← الأشخاص المتميزون في مجال يتميزون عادةً في المجالات الأخرى أيضاً!
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ═══ SECTION 9: التدريبات ═══ -->
+<section class="sec sec-alt" id="ex">
+<div class="sec-inner">
+  <div class="cx fu">
+    <span class="tag ts">§ 3.6 — التدريبات المختارة</span>
+    <h2 class="st">تدريبات مُختارة مع التوجيه</h2>
+    <p class="sd cmx">النجمة (*) تشير إلى إجابات في ملحق الكتاب — ركّز على فهم بنية التصميم أولاً</p>
+  </div>
+
+  <div class="g2 fu">
+    <div class="ex-card">
+      <span class="ex-num">3.1 ★</span>
+      <div class="ex-text">10 فقرات جمع + 10 فقرات طرح × 25 طفلاً × 3 صفوف. قدِّم الرمز، مخطط فن، والنموذج الخطي.</div>
+      <div class="ex-hint">💡 الأطفال متداخلون داخل الصفوف: (p:c) × i. صف مخطط فن: دائرة i تتقاطع مع دائرة c التي تحتوي دائرة p.</div>
+    </div>
+    <div class="ex-card">
+      <span class="ex-num">3.2 ★</span>
+      <div class="ex-text">30 طالباً × 3 نصوص × فقرات حقائق وفقرات استدلال لكل نص. ما التمثيل الرمزي؟</div>
+      <div class="ex-hint">💡 الفقرات متداخلة داخل نوع السؤال (f,r) داخل النص (t): p × ((i:(f,r)):t) — تصميم متداخل من مستويين!</div>
+    </div>
+    <div class="ex-card">
+      <span class="ex-num">3.4 ★</span>
+      <div class="ex-text">باستخدام الخوارزمية (§3.4.4) حدِّد مقدِّرات σ²(p) وσ²(h) لتصميم p × (i:h).</div>
+      <div class="ex-hint">💡 σ²(p): A={h} فقط → σ̂²(p)=[MS(p)−MS(ph)] / nᵢnₕ. σ²(h): A={p} فقط → σ̂²(h)=[MS(h)−MS(ph)] / nₚnᵢ.</div>
+    </div>
+    <div class="ex-card">
+      <span class="ex-num">3.5 ★</span>
+      <div class="ex-text">14 طالباً داخل صفّين داخل 42 معلماً × 11 فقرة. تصميم: (p:c:t) × i. قدِّم ANOVA الكامل.</div>
+      <div class="ex-hint">💡 ابدأ بحساب T(μ) = n_total × X̄². ثم حاسب T لكل مكوّن باستخدام المتوسطات المعطاة. df للمكوّنات المتداخلة: (n_أولي−1)×n_تداخل.</div>
+    </div>
+    <div class="ex-card">
+      <span class="ex-num">3.7 ★</span>
+      <div class="ex-text">في p × (i:h) مع n_p&lt;N_p&lt;∞، n_i&lt;N_i&lt;∞، n_h&lt;N_h&lt;∞. (أ) EMS لـ p وph وpi:h؟ (ب) σ²(ph|M)؟</div>
+      <div class="ex-hint">💡 k(α|β) = (1−n_j/N_j) لكل دليل رئيسي خارج β. لـ EMS(p): k(ph|p) = (1−n_h/N_h). ثم σ²(ph|M) = σ²(ph) + σ²(pi:h)/N_i.</div>
+    </div>
+    <div class="ex-card">
+      <span class="ex-num">3.8</span>
+      <div class="ex-text">البيانات رقم 1 مع افتراض أشخاص 1–5 في صف 1 وأشخاص 6–10 في صف 2. ما التصميم؟ احسب ANOVA.</div>
+      <div class="ex-hint">💡 التصميم: (p:c) × i — أشخاص متداخلون داخل صفوف، مع 12 فقرة متقاطعة. df(c)=1، df(p:c)=8، df(i)=11، df(ci)=11، df(pi:c)=88.</div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- FINAL SUMMARY -->
+<section class="sec sec-dark">
+<div class="sec-inner">
+  <div class="cx fu">
+    <span class="tag ts">خلاصة §3.5</span>
+    <h2 class="st wh">خمسة مبادئ جوهرية عن النماذج المختلطة</h2>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:14px;" class="fu">
+    <div class="dcard"><h4 style="color:#c4b5fd;font-size:.87rem;margin-bottom:6px;">n = N → الوجه ثابت → k = 0</h4><p style="font-size:.8rem;color:rgba(255,255,255,.68);">عندما تستنفد دراسة G جميع مستويات الكون لوجه ما — لا تقلب إضافي → معامله في EMS يُصبح صفراً</p></div>
+    <div class="dcard"><h4 style="color:#6ee7b7;font-size:.87rem;margin-bottom:6px;">Σ_h ν_h = 0 — القيد الجوهري</h4><p style="font-size:.8rem;color:rgba(255,255,255,.68);">مجموع آثار الوجه الثابت = صفر. ليس افتراضاً — نتيجة حتمية من كيفية تعريف متوسطات الدرجات في النموذج المختلط</p></div>
+    <div class="dcard"><h4 style="color:#fde047;font-size:.87rem;margin-bottom:6px;">σ²(α|H) ≠ σ²(α) — تعريفات مختلفة</h4><p style="font-size:.8rem;color:rgba(255,255,255,.68);">الأثر الثابت: ÷(N_h−1). العشوائي داخل الثابت: ÷N_h. هذا متسق مع قواعد درجات الحرية المقابلة</p></div>
+    <div class="dcard"><h4 style="color:#86efac;font-size:.87rem;margin-bottom:6px;">σ²(α|M) = Σ σ²(β)/Π(β|α) — التحويل</h4><p style="font-size:.8rem;color:rgba(255,255,255,.68);">من أي نموذج عشوائي → أي نموذج M. يكفي حساب النموذج العشوائي ثم التحويل بالمعادلة 3.34</p></div>
+    <div class="dcard" style="grid-column:span 2;"><h4 style="color:#fca5a5;font-size:.87rem;margin-bottom:6px;">⚠️ تحذير: بعض البرامج الإحصائية لا تدعم نظرية التعميم مع الأوجه الثابتة</h4><p style="font-size:.8rem;color:rgba(255,255,255,.68);">البرامج التي لا تستخدم قيود مجموع الصفر للآثار الثابتة تُعطي نتائج مختلفة غير متوافقة مع نظرية التعميم. تأكد دائماً من أن البرنامج يستخدم نفس الإطار!</p></div>
+  </div>
+</div>
+</section>
+
+<hr class="rdiv">
+<footer>
+  <p style="font-size:1rem;color:white;margin-bottom:8px;">📖 <strong>Generalizability Theory</strong> — Robert L. Brennan</p>
+  <p>الفصل الثالث — §3.5: مكوّنات التباين لنماذج أخرى (3.5.1–3.5.4) · §3.6: التدريبات</p>
+  <p style="margin-top:10px;font-size:.76rem;opacity:.4;">الدليل البصري | نظرية التعميم في القياس التربوي</p>
+</footer>
+
+<script>
+window.addEventListener('scroll',()=>{
+  const p=window.scrollY/(document.body.scrollHeight-window.innerHeight)*100;
+  document.getElementById('pgf').style.width=p+'%';
+  const ss=['models','why','mixed','constr','vc-def','ems-m','convert','apl','ex'];
+  let cur='models';
+  ss.forEach(s=>{const el=document.getElementById(s);if(el&&el.getBoundingClientRect().top<110)cur=s;});
+  document.querySelectorAll('.nl').forEach(l=>l.classList.toggle('active',l.dataset.s===cur));
+},{passive:true});
+
+const io=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('in');});},{threshold:.07});
+document.querySelectorAll('.fu').forEach(el=>io.observe(el));
+
+/* APL bars */
+const vio=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting){
+  x.target.querySelectorAll('.ab-bar[data-w]').forEach(b=>{setTimeout(()=>{b.style.width=b.getAttribute('data-w');},200);});
+  vio.unobserve(x.target);
+}});},{threshold:.3});
+document.querySelectorAll('#aplBars').forEach(el=>vio.observe(el));
+
+/* n/N Slider */
+const nvnSl=document.getElementById('nvnSlider');
+function updateNvN(){
+  const v=parseInt(nvnSl.value);
+  const bar=document.getElementById('nvnBar');
+  const ratio=document.getElementById('nvnRatio');
+  const model=document.getElementById('nvnModel');
+  const explain=document.getElementById('nvnExplain');
+  ratio.textContent=v+'%';
+  bar.style.width=v+'%';
+  if(v===0){
+    model.textContent='النموذج: عشوائي كامل';model.style.color='var(--teal)';
+    explain.innerHTML='<strong>n ≪ N → ∞</strong>: الكون ضخم جداً — دراسة G عينة صغيرة منه. كل مكوّنات التباين عشوائية. k(α|β)=1 لجميع الأوجه. <strong>هذا هو النموذج الأساسي في الفصلين 3 و4.</strong>';
+    bar.style.background='linear-gradient(90deg,var(--teal),var(--mint))';
+  } else if(v===100){
+    model.textContent='النموذج: ثابت كامل';model.style.color='var(--amber)';
+    explain.innerHTML='<strong>n = N &lt; ∞</strong>: دراسة G تُمثِّل الكون كاملاً — الوجه ثابت. k=0 → حده يُلغى من EMS. Σ ν_h = 0 (قيد مجموع الصفر). <strong>مثال: جميع فئات المحتوى ممثلة في الاختبار.</strong>';
+    bar.style.background='linear-gradient(90deg,var(--amber),var(--orange))';
+  } else {
+    model.textContent='النموذج: كون محدود (n < N < ∞)';model.style.color='var(--violet)';
+    explain.innerHTML=`<strong>n/N = ${v}%</strong>: كون محدود — تصحيح مصطلح. k(α|β) = (1 − n/N) = ${(1-v/100).toFixed(2)} بدلاً من 1. <strong>نادر في نظرية التعميم، لكن المعادلة 3.32 تتعامل معه بشكل عام.</strong>`;
+    bar.style.background='linear-gradient(90deg,var(--violet),var(--purple))';
+  }
+}
+nvnSl.addEventListener('input',updateNvN);
+updateNvN();
+</script>
+
+<div class="page-nav-bottom" style="background:linear-gradient(135deg,#0a0a1a,#111827);"><a href="index.html" style="background:linear-gradient(135deg,#16213e,#0f3460);color:#fff;">&#x1F3E0; &#x627;&#x644;&#x631;&#x626;&#x64A;&#x633;&#x64A;&#x629;</a> <a href="3.4.html" style="background:linear-gradient(135deg,#4a5568,#2d3748);color:#fff;">&#x2190; &#x627;&#x644;&#x633;&#x627;&#x628;&#x642;</a> <a href="4.1.html" style="background:linear-gradient(135deg,#2b6cb0,#2c5282);color:#fff;">&#x627;&#x644;&#x62A;&#x627;&#x644;&#x64A; &#x2192;</a></div>
+</body>
+</html>

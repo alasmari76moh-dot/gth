@@ -1,0 +1,1755 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>4.1 — النماذج العشوائية وأكوان التعميم اللانهائية</title>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+:root{
+  --void:#03030d;--deep:#05050f;--cosmos:#080816;
+  --indigo:#3730a3;--indigo-lt:#818cf8;--indigo-dk:#1e1b4b;
+  --violet:#7c3aed;--violet-lt:#c4b5fd;
+  --rose:#be185d;--rose-lt:#f9a8d4;
+  --gold:#c9a84c;--gold-lt:#e8cc7a;--gold-dk:#7a6230;
+  --teal:#0d9488;--teal-lt:#5eead4;
+  --emerald:#059669;--emerald-lt:#6ee7b7;
+  --amber:#d97706;--amber-lt:#fcd34d;
+  --sky:#0284c7;--sky-lt:#7dd3fc;
+  --ivory:#f0ece0;--id:rgba(240,236,224,.76);--im:rgba(240,236,224,.46);--ig:rgba(240,236,224,.14);
+  --bi:rgba(129,140,248,.28);--bv:rgba(196,181,253,.25);--bg:rgba(201,168,76,.25);
+  --gi:0 0 24px rgba(55,48,163,.22);--gv:0 0 24px rgba(124,58,237,.2);--gt:0 0 22px rgba(13,148,136,.2);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Cairo',sans-serif;background:var(--void);color:var(--ivory);direction:rtl;line-height:1.88;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;z-index:1;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.022'/%3E%3C/svg%3E");background-size:200px;opacity:.38}
+canvas#sf{position:fixed;inset:0;z-index:0;pointer-events:none}
+
+/* NAV */
+.nav{position:sticky;top:0;z-index:1000;height:56px;padding:0 38px;display:flex;align-items:center;justify-content:space-between;background:rgba(3,3,13,.9);backdrop-filter:blur(20px);border-bottom:1px solid rgba(129,140,248,.1)}
+.nav-brand{font-family:'Amiri',serif;font-size:.88rem;color:var(--indigo-lt);display:flex;align-items:center;gap:8px}
+.nav-dot{width:6px;height:6px;border-radius:50%;background:var(--indigo-lt);box-shadow:0 0 8px var(--indigo-lt);animation:pd 3s ease-in-out infinite}
+@keyframes pd{0%,100%{opacity:.7}50%{opacity:1;box-shadow:0 0 16px var(--violet-lt)}}
+.nav-links{display:flex;gap:2px;flex-wrap:wrap}
+.nav-link{padding:4px 11px;border-radius:50px;font-size:.72rem;font-weight:600;color:var(--im);text-decoration:none;border:1px solid transparent;transition:all .25s;white-space:nowrap}
+.nav-link:hover{color:var(--indigo-lt);border-color:var(--bi);background:rgba(129,140,248,.06)}
+
+/* HERO */
+.hero{position:relative;z-index:2;min-height:82vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px 40px 55px;text-align:center;overflow:hidden}
+.hero-aura{position:absolute;width:640px;height:640px;top:50%;left:50%;transform:translate(-50%,-50%);background:radial-gradient(ellipse,rgba(55,48,163,.07) 0%,rgba(124,58,237,.04) 40%,transparent 70%);pointer-events:none;animation:ab 11s ease-in-out infinite}
+@keyframes ab{0%,100%{transform:translate(-50%,-50%) scale(1)}50%{transform:translate(-50%,-50%) scale(1.18)}}
+.hero-r{position:absolute;border-radius:50%;border:1px solid;top:50%;left:50%;pointer-events:none}
+.hr1{width:520px;height:520px;border-color:rgba(129,140,248,.07);animation:sp 65s linear infinite}
+.hr2{width:820px;height:820px;border-color:rgba(124,58,237,.04);animation:sp 100s linear infinite reverse}
+.hr1::after,.hr2::after{content:'';position:absolute;width:5px;height:5px;border-radius:50%;top:-2.5px;left:50%;transform:translateX(-50%)}
+.hr1::after{background:var(--indigo-lt);box-shadow:0 0 10px var(--indigo-lt)}
+.hr2::after{background:var(--violet-lt);box-shadow:0 0 8px var(--violet-lt)}
+@keyframes sp{from{transform:translate(-50%,-50%) rotate(0)}to{transform:translate(-50%,-50%) rotate(360deg)}}
+.hero-c{position:relative;z-index:3;max-width:800px}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,rgba(55,48,163,.14),rgba(55,48,163,.04));border:1px solid rgba(129,140,248,.3);color:var(--indigo-lt);padding:6px 20px;border-radius:50px;font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-bottom:26px;animation:fi .8s .2s both}
+@keyframes fi{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+.hero-t{font-family:'Amiri',serif;font-size:clamp(2.1rem,5vw,4rem);font-weight:700;line-height:1.2;margin-bottom:10px;animation:fi .8s .35s both}
+.hero-ti{background:linear-gradient(135deg,var(--indigo-lt),var(--violet-lt));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-s{font-family:'Amiri',serif;font-size:clamp(1rem,2.2vw,1.65rem);font-style:italic;color:var(--im);margin-bottom:20px;animation:fi .8s .5s both}
+.hero-d{font-size:.92rem;color:var(--im);max-width:560px;margin:0 auto 34px;line-height:1.95;animation:fi .8s .65s both}
+.hero-pills{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;animation:fi .8s .8s both}
+.pill{background:rgba(255,255,255,.024);border:1px solid rgba(255,255,255,.06);border-radius:11px;padding:13px 17px;text-align:center;transition:all .35s;cursor:default}
+.pill:hover{transform:translateY(-3px)}
+.pill-n{font-size:1.3rem;font-weight:900;line-height:1;direction:ltr}
+.pill-l{font-size:.66rem;font-weight:600;color:var(--im);margin-top:3px}
+
+/* SECTIONS */
+.sec{position:relative;z-index:2;padding:74px 50px}
+.sec-in{max-width:1100px;margin:0 auto}
+.div{position:relative;z-index:2;height:1px;margin:0 50px}
+.div-i{background:linear-gradient(90deg,transparent,var(--indigo-dk) 15%,var(--indigo-lt) 50%,var(--indigo-dk) 85%,transparent);opacity:.22}
+.div-v{background:linear-gradient(90deg,transparent,rgba(124,58,237,.4) 15%,var(--violet-lt) 50%,rgba(124,58,237,.4) 85%,transparent);opacity:.2}
+.div-t{background:linear-gradient(90deg,transparent,rgba(13,148,136,.4) 15%,var(--teal-lt) 50%,rgba(13,148,136,.4) 85%,transparent);opacity:.2}
+.div-r{background:linear-gradient(90deg,transparent,rgba(190,24,93,.4) 15%,var(--rose-lt) 50%,rgba(190,24,93,.4) 85%,transparent);opacity:.2}
+.div-g{background:linear-gradient(90deg,transparent,var(--gold-dk) 15%,var(--gold-lt) 50%,var(--gold-dk) 85%,transparent);opacity:.18}
+.stag{font-size:.68rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.stag::before{content:'';display:inline-block;width:24px;height:1px}
+.stag-i{color:var(--indigo-lt)}.stag-i::before{background:linear-gradient(90deg,transparent,var(--indigo-lt))}
+.stag-v{color:var(--violet-lt)}.stag-v::before{background:linear-gradient(90deg,transparent,var(--violet-lt))}
+.stag-t{color:var(--teal-lt)}.stag-t::before{background:linear-gradient(90deg,transparent,var(--teal-lt))}
+.stag-r{color:var(--rose-lt)}.stag-r::before{background:linear-gradient(90deg,transparent,var(--rose-lt))}
+.stag-g{color:var(--gold-lt)}.stag-g::before{background:linear-gradient(90deg,transparent,var(--gold-lt))}
+.stag-num{opacity:.55;font-size:.63rem}
+.stit{font-family:'Amiri',serif;font-size:clamp(1.75rem,3vw,2.7rem);font-weight:700;color:var(--ivory);line-height:1.25;margin-bottom:14px}
+.stit .ai{color:var(--indigo-lt)}.stit .av{color:var(--violet-lt)}.stit .at{color:var(--teal-lt)}.stit .ar{color:var(--rose-lt)}.stit .ag{color:var(--gold-lt)}
+.slead{font-size:.93rem;color:var(--im);max-width:660px;line-height:1.95;margin-bottom:42px}
+.fu{opacity:0;transform:translateY(28px);transition:opacity .7s cubic-bezier(.22,1,.36,1),transform .7s cubic-bezier(.22,1,.36,1)}
+.fu.in{opacity:1;transform:none}
+.fu:nth-child(2){transition-delay:.08s}.fu:nth-child(3){transition-delay:.16s}.fu:nth-child(4){transition-delay:.24s}
+
+/* TEXT */
+.para{font-size:.92rem;color:var(--id);line-height:2.05;margin-bottom:20px;text-align:justify}
+.para strong{color:var(--ivory);font-weight:600}
+.para em{color:var(--indigo-lt);font-style:normal}
+.para:first-of-type::first-letter{font-family:'Amiri',serif;font-size:3.6rem;font-weight:700;color:var(--indigo-lt);float:right;margin-left:8px;margin-top:-4px;line-height:.88;text-shadow:0 0 20px rgba(129,140,248,.3)}
+
+/* EQUATIONS */
+.eq{background:rgba(0,0,0,.5);border:1px solid rgba(129,140,248,.14);border-radius:11px;padding:16px 20px;margin:10px 0;direction:ltr;position:relative;transition:all .3s}
+.eq:hover{border-color:rgba(129,140,248,.34);background:rgba(129,140,248,.04)}
+.eq-line{font-family:'Georgia',serif;font-size:1.05rem;color:var(--indigo-lt);text-align:center;letter-spacing:.02em}
+.eq-sub{font-size:.74rem;color:var(--im);text-align:center;direction:rtl;margin-top:6px}
+.eq-num{position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:.66rem;color:rgba(129,140,248,.5);font-weight:700}
+
+/* RULE BOX */
+.rule{background:linear-gradient(135deg,rgba(201,168,76,.08),rgba(201,168,76,.02));border:1px solid rgba(201,168,76,.2);border-radius:13px;padding:22px 26px;margin:20px 0}
+.rule-t{font-size:.84rem;font-weight:700;color:var(--gold-lt);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.rule-t::before{content:'⊕';color:var(--gold-lt)}
+.rule-num{font-size:.68rem;letter-spacing:.1em;color:var(--gold-dk);font-weight:700;text-transform:uppercase;margin-bottom:6px}
+.rule-body{font-family:'Georgia',serif;font-size:.9rem;color:var(--id);direction:ltr;background:rgba(0,0,0,.3);border-radius:7px;padding:10px 14px;margin-top:8px;text-align:center}
+.rule-ar{font-size:.84rem;color:var(--id);line-height:1.85;margin-top:10px;direction:rtl}
+
+/* INSIGHT */
+.ins{border-radius:13px;padding:22px 26px;margin:20px 0;position:relative;overflow:hidden}
+.ins-i{background:linear-gradient(135deg,rgba(55,48,163,.08),rgba(55,48,163,.02));border:1px solid rgba(129,140,248,.2)}
+.ins-v{background:linear-gradient(135deg,rgba(124,58,237,.08),rgba(124,58,237,.02));border:1px solid rgba(196,181,253,.2)}
+.ins-t{background:linear-gradient(135deg,rgba(13,148,136,.08),rgba(13,148,136,.02));border:1px solid rgba(94,234,212,.2)}
+.ins-g{background:linear-gradient(135deg,rgba(201,168,76,.08),rgba(201,168,76,.02));border:1px solid rgba(201,168,76,.2)}
+.ins-r{background:linear-gradient(135deg,rgba(190,24,93,.07),rgba(190,24,93,.01));border:1px solid rgba(249,168,212,.2)}
+.ins::before{content:'';position:absolute;top:0;right:0;width:130px;height:130px;border-radius:50%;pointer-events:none}
+.ins-i::before{background:radial-gradient(rgba(129,140,248,.08),transparent 70%)}
+.ins-v::before{background:radial-gradient(rgba(196,181,253,.08),transparent 70%)}
+.ins-t::before{background:radial-gradient(rgba(94,234,212,.08),transparent 70%)}
+.ins-tag{font-size:.64rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.ins-tag::after{content:'';flex:1;height:1px;background:currentColor;opacity:.2}
+.ins-i .ins-tag{color:var(--indigo-lt)}
+.ins-v .ins-tag{color:var(--violet-lt)}
+.ins-t .ins-tag{color:var(--teal-lt)}
+.ins-g .ins-tag{color:var(--gold-lt)}
+.ins-r .ins-tag{color:var(--rose-lt)}
+.ins-text{font-family:'Amiri',serif;font-size:1.02rem;color:var(--ivory);line-height:1.9}
+
+/* CALLOUT */
+.callout{margin:28px 0;padding:22px 30px;border-radius:0 12px 12px 0;position:relative}
+.callout-i{background:rgba(55,48,163,.05);border-right:3px solid var(--indigo-lt)}
+.callout-v{background:rgba(124,58,237,.05);border-right:3px solid var(--violet-lt)}
+.callout::before{content:'❝';font-family:'Georgia',serif;font-size:3rem;opacity:.12;position:absolute;top:4px;right:12px;line-height:1}
+.callout-i::before{color:var(--indigo-lt)}
+.callout-v::before{color:var(--violet-lt)}
+.callout p{font-family:'Amiri',serif;font-size:1.04rem;color:var(--ivory);line-height:1.9;font-style:italic}
+
+/* NOTE */
+.note{padding:11px 16px;background:rgba(255,255,255,.022);border:1px solid rgba(255,255,255,.06);border-radius:8px;font-size:.78rem;color:var(--im);line-height:1.8;margin:8px 0}
+
+/* TABLES */
+.tbl-wrap{overflow-x:auto;margin:18px 0}
+.tbl{width:100%;border-collapse:separate;border-spacing:0 4px;direction:ltr;max-width:100%}
+.tbl thead th{font-size:.67rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:0 14px 10px;border-bottom:1px solid rgba(129,140,248,.15);color:rgba(129,140,248,.6);text-align:center}
+.tbl thead th:first-child{text-align:right}
+.tbl tbody tr{transition:background .2s}
+.tbl tbody tr:hover td{background:rgba(129,140,248,.05)}
+.tbl tbody td{padding:10px 14px;background:rgba(255,255,255,.022);font-size:.8rem;color:var(--id);border-top:1px solid rgba(255,255,255,.03);border-bottom:1px solid rgba(255,255,255,.03)}
+.tbl tbody td:first-child{font-family:'Georgia',serif;color:var(--indigo-lt);border-right:2px solid rgba(129,140,248,.2);border-radius:0 8px 8px 0;direction:ltr}
+.tbl tbody td:last-child{border-radius:8px 0 0 8px}
+.tbl-f{font-family:'Georgia',serif;font-size:.78rem;direction:ltr}
+.ct{color:#6ee7b7 !important;font-weight:700}.cd{color:#f87171 !important;font-weight:700}.cb{color:var(--gold-lt) !important;font-weight:700}
+
+/* CHARTS */
+.chart-box{background:linear-gradient(135deg,rgba(5,5,15,.9),rgba(8,8,22,1));border-radius:18px;padding:26px;margin:22px 0}
+.chart-box-i{border:1px solid rgba(55,48,163,.2)}
+.chart-box-v{border:1px solid rgba(124,58,237,.2)}
+.chart-box-t{border:1px solid rgba(13,148,136,.2)}
+.chart-box-g{border:1px solid rgba(201,168,76,.2)}
+.chart-title{font-size:.85rem;font-weight:700;margin-bottom:18px;display:flex;align-items:center;gap:8px}
+.chart-title-i{color:var(--indigo-lt)}.chart-title-v{color:var(--violet-lt)}.chart-title-t{color:var(--teal-lt)}.chart-title-g{color:var(--gold-lt)}
+.chart-sub{font-size:.72rem;color:var(--im);margin-bottom:14px}
+
+/* CONTROLS */
+.ctrl-row{display:flex;flex-wrap:wrap;gap:18px;margin-bottom:18px}
+.cg{display:flex;flex-direction:column;gap:5px;flex:1;min-width:150px}
+.cl{font-size:.72rem;font-weight:700;color:var(--im);letter-spacing:.04em}
+.cv{font-size:1.4rem;font-weight:900;font-family:'Cairo',sans-serif;line-height:1}
+input[type=range]{-webkit-appearance:none;appearance:none;height:3px;border-radius:2px;outline:none;width:100%;cursor:pointer}
+input[type=range].ri{background:rgba(129,140,248,.25)}
+input[type=range].ri::-webkit-slider-thumb{-webkit-appearance:none;width:15px;height:15px;border-radius:50%;background:var(--indigo-lt);border:2px solid #fff;box-shadow:0 0 7px var(--indigo-lt);cursor:pointer;transition:all .2s}
+input[type=range].rv{background:rgba(124,58,237,.25)}
+input[type=range].rv::-webkit-slider-thumb{-webkit-appearance:none;width:15px;height:15px;border-radius:50%;background:var(--violet-lt);border:2px solid #fff;box-shadow:0 0 7px var(--violet-lt);cursor:pointer}
+input[type=range].rt{background:rgba(13,148,136,.25)}
+input[type=range].rt::-webkit-slider-thumb{-webkit-appearance:none;width:15px;height:15px;border-radius:50%;background:var(--teal-lt);border:2px solid #fff;box-shadow:0 0 7px var(--teal-lt);cursor:pointer}
+
+/* METRICS */
+.met-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px;margin:14px 0}
+.met{background:rgba(255,255,255,.024);border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:13px;text-align:center}
+.met-sym{font-family:'Georgia',serif;font-size:.82rem;direction:ltr;margin-bottom:3px;color:var(--im)}
+.met-val{font-size:1.5rem;font-weight:900;font-family:'Cairo',sans-serif;line-height:1;transition:all .25s}
+.met-lbl{font-size:.62rem;color:var(--ig);margin-top:3px}
+
+/* DESIGN TABS */
+.tabs{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.tab{padding:7px 18px;border-radius:50px;font-size:.75rem;font-weight:600;border:1px solid;cursor:pointer;transition:all .3s}
+.tab-i{border-color:rgba(129,140,248,.3);color:var(--indigo-lt)}
+.tab-i.on{background:rgba(129,140,248,.12);border-color:rgba(129,140,248,.6)}
+.tab-v{border-color:rgba(196,181,253,.3);color:var(--violet-lt)}
+.tab-v.on{background:rgba(196,181,253,.1);border-color:rgba(196,181,253,.6)}
+.tab-t{border-color:rgba(94,234,212,.3);color:var(--teal-lt)}
+.tab-t.on{background:rgba(94,234,212,.08);border-color:rgba(94,234,212,.6)}
+.panel{display:none}.panel.on{display:block}
+.panel-in{border:1px solid rgba(255,255,255,.07);border-radius:13px;padding:20px 24px;margin-top:2px}
+
+/* EQ ROW */
+.eqr{display:flex;align-items:baseline;gap:10px;padding:8px 13px;background:rgba(0,0,0,.3);border-radius:7px;margin:5px 0;direction:ltr;transition:all .25s}
+.eqr:hover{background:rgba(129,140,248,.05)}
+.eqr-s{font-family:'Georgia',serif;font-size:.88rem;min-width:130px;color:var(--indigo-lt)}
+.eqr-e{color:var(--im);font-size:.9rem}
+.eqr-v{font-size:1.05rem;font-weight:700;font-family:'Cairo',sans-serif;color:var(--gold-lt)}
+.eqr-d{font-size:.72rem;color:var(--im);direction:rtl;margin-right:auto}
+
+/* VENN CANVAS */
+.venn-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:20px 0}
+
+/* DESIGN COMPARE CARDS */
+.dcards{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:20px 0}
+.dcard{border-radius:14px;padding:20px;transition:all .4s}
+.dcard-i{background:rgba(55,48,163,.07);border:1px solid rgba(129,140,248,.2)}
+.dcard-v{background:rgba(124,58,237,.06);border:1px solid rgba(196,181,253,.2)}
+.dcard:hover{transform:translateY(-4px)}
+.dcard-i:hover{box-shadow:var(--gi)}
+.dcard-v:hover{box-shadow:var(--gv)}
+.dcard-head{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px}
+.dcard-i .dcard-head{color:var(--indigo-lt)}
+.dcard-v .dcard-head{color:var(--violet-lt)}
+.dcard-formula{font-family:'Georgia',serif;font-size:1.1rem;text-align:center;padding:10px;background:rgba(0,0,0,.35);border-radius:8px;margin-bottom:10px;direction:ltr}
+.dcard-i .dcard-formula{color:var(--indigo-lt)}
+.dcard-v .dcard-formula{color:var(--violet-lt)}
+
+/* SN GAUGE */
+.sn-gauge-wrap{display:flex;flex-direction:column;align-items:center;gap:12px}
+.sn-arc{position:relative;width:180px;height:90px}
+
+/* CALC */
+.calc{background:linear-gradient(135deg,rgba(8,7,22,.95),rgba(6,5,18,1));border:1px solid rgba(129,140,248,.18);border-radius:17px;padding:28px;margin:20px 0}
+.calc-t{font-size:.86rem;font-weight:700;color:var(--indigo-lt);margin-bottom:18px;display:flex;align-items:center;gap:8px}
+.ms-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px;margin-bottom:18px}
+.ms-inp{display:flex;flex-direction:column;gap:4px}
+.ms-lbl{font-size:.7rem;color:var(--im);font-family:'Georgia',serif;direction:ltr}
+input[type=number]{background:rgba(255,255,255,.038);border:1px solid rgba(129,140,248,.22);border-radius:7px;padding:7px 11px;color:var(--ivory);font-size:.88rem;font-family:'Cairo',sans-serif;width:100%;outline:none;transition:border-color .2s;direction:ltr;text-align:center}
+input[type=number]:focus{border-color:rgba(129,140,248,.55)}
+.calc-btn{margin-top:6px;padding:9px 26px;background:linear-gradient(135deg,rgba(55,48,163,.3),rgba(55,48,163,.12));border:1px solid rgba(129,140,248,.45);border-radius:50px;color:var(--indigo-lt);font-size:.82rem;font-weight:700;cursor:pointer;transition:all .3s;font-family:'Cairo',sans-serif}
+.calc-btn:hover{background:linear-gradient(135deg,rgba(55,48,163,.5),rgba(55,48,163,.22));box-shadow:var(--gi)}
+.calc-out{margin-top:14px}
+.cres-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+.cres{border-radius:10px;padding:14px 18px}
+.cres-i{background:rgba(55,48,163,.07);border:1px solid rgba(129,140,248,.2)}
+.cres-v{background:rgba(124,58,237,.06);border:1px solid rgba(196,181,253,.18)}
+.cres-head{font-size:.66rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px}
+.cres-i .cres-head{color:var(--indigo-lt)}
+.cres-v .cres-head{color:var(--violet-lt)}
+
+/* SIGNAL-NOISE INTERACTIVE */
+.sn-wrap{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start}
+
+/* FOOTER */
+.footer{position:relative;z-index:2;padding:40px;border-top:1px solid rgba(129,140,248,.08);text-align:center;background:var(--void)}
+.footer-t{font-family:'Amiri',serif;font-size:1.05rem;color:var(--indigo-lt);margin-bottom:6px}
+.footer-s{font-size:.76rem;color:var(--im)}
+.footer-c{font-size:.64rem;color:var(--ig);margin-top:12px;letter-spacing:.08em}
+
+@media(max-width:760px){.sec{padding:50px 18px}.div{margin:0 18px}.venn-grid,.dcards,.cres-grid,.sn-wrap{grid-template-columns:1fr}.ms-grid{grid-template-columns:1fr 1fr}}
+
+/* COMPREHENSIVE MOBILE RESPONSIVE FIXES */
+*, *::before, *::after { box-sizing: border-box; }
+html { max-width: 100%; }
+body { max-width: 100%; }
+img, svg, canvas, video, iframe { max-width: 100%; height: auto; }
+table { max-width: 100%; }
+
+.table-wrap {
+  width: 100%; max-width: 100%;
+  overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 12px;
+}
+.tbl-wrap { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.score-matrix-wrap { overflow-x: auto; }
+
+pre, code { white-space: pre-wrap; word-break: break-word; max-width: 100%; }
+
+/* Page bottom navigation */
+.page-nav-bottom {
+  display: flex; flex-wrap: wrap; gap: 12px;
+  justify-content: center; align-items: center;
+  padding: 28px 20px; text-align: center;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  margin-top: 40px;
+}
+.page-nav-bottom a {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 12px 28px; border-radius: 50px;
+  font-size: 0.95rem; font-weight: 700;
+  text-decoration: none; min-height: 48px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.page-nav-bottom a:hover { transform: translateY(-2px); }
+
+@media (max-width: 768px) {
+  .page-nav-bottom { padding: 18px 14px; gap: 8px; }
+  .page-nav-bottom a { font-size: 0.88rem; padding: 10px 18px; }
+}
+@media (max-width: 480px) {
+  .page-nav-bottom a { font-size: 0.82rem; padding: 8px 14px; min-height: 44px; width: 100%; justify-content: center; }
+}
+
+/* Overflow fixes */
+.eq-row { flex-wrap: wrap; gap: 8px; }
+.eq-formula { min-width: 0; }
+.sym-featured { flex-wrap: wrap; gap: 12px; }
+
+@media (max-width: 768px) {
+  /* Navigation */
+  .nav, .top-nav {
+    padding: 0 14px !important;
+    height: auto !important;
+    min-height: 52px;
+    flex-wrap: wrap !important;
+    gap: 4px;
+  }
+  .nav-links { flex-wrap: wrap !important; gap: 2px !important; overflow-x: visible !important; }
+  .nav a, .nav-link, .nl {
+    font-size: 0.78rem !important;
+    padding: 5px 9px !important;
+    white-space: normal !important;
+    height: auto !important;
+    min-height: 30px;
+    display: inline-flex !important;
+    align-items: center;
+  }
+  .nav-logo, .nav-brand { font-size: 0.85rem !important; white-space: normal !important; }
+
+  /* Hero */
+  .hero {
+    min-height: auto !important;
+    padding: 44px 14px !important;
+  }
+  .hero h1, .hero-t, .hero-title {
+    font-size: clamp(1.6rem, 7vw, 2.8rem) !important;
+    line-height: 1.25 !important;
+  }
+  .hero h2, .hero-sub, .hero-subtitle-line {
+    font-size: clamp(1.15rem, 4vw, 1.8rem) !important;
+  }
+  .hero p, .hero-desc { font-size: 0.95rem !important; }
+  .hero-content, .hero-c { max-width: 100% !important; width: 100% !important; }
+  .hero::before, .hero::after,
+  .hero-aura { width: 280px !important; height: 280px !important; opacity: 0.2 !important; }
+  .hero-ring, .hero-ring-2, .hr1, .hr2 { display: none !important; }
+  .hero-mesh, .hero-grid { opacity: 0.08 !important; }
+  .hero-badge, .hero-eyebrow { font-size: 0.68rem !important; padding: 5px 14px; }
+  .hero-meta { flex-wrap: wrap !important; gap: 8px; justify-content: center; }
+  .hero-meta-item { padding: 10px 14px; min-width: 0; flex: 1 1 40%; }
+  .hero-cards { gap: 10px; justify-content: center; }
+  .hero-pills { flex-wrap: wrap !important; gap: 8px; }
+  .hcard { min-width: 0 !important; padding: 14px 16px; }
+  .scroll-hint { display: none !important; }
+  .chapter-deco { display: none !important; }
+
+  /* Sections */
+  .section, .sec { padding: 44px 14px !important; }
+  .section-inner, .sec-inner, .sec-in { max-width: 100% !important; }
+  .section-header, .sec-header { margin-bottom: 28px; }
+
+  /* Grids */
+  .scenario-grid, .crossed-grid, .concepts-grid, .gstudy-layout,
+  .matrix-grid, .sym-grid-2, .sym-grid-3, .sym-card-grid,
+  .authors-grid, .design-compare, .asm-grid, .expect-grid,
+  .rel-grid, .vp-grid, .g2, .g3, .g4, .compare-grid,
+  .ms-grid, .concepts-grid { grid-template-columns: 1fr !important; gap: 16px !important; }
+
+  .hero-cards { grid-template-columns: 1fr 1fr !important; }
+
+  /* Flex */
+  .tree-row { flex-wrap: wrap !important; justify-content: center; }
+  .var-row { flex-wrap: wrap !important; gap: 6px; }
+  .step-item { flex-wrap: wrap !important; gap: 14px; }
+  .step-content { width: 100% !important; order: 1; }
+  .step-num { order: 0; }
+  .decomp, .decomp-live, .flow-row { flex-direction: column !important; align-items: center !important; }
+  .decomp-op, .dl-op, .fn-arrow { transform: rotate(90deg); }
+  .crow { flex-direction: column !important; }
+  .concept-row { flex-wrap: wrap; }
+
+  /* Padding */
+  .family-bg, .universe-card, .scenario-bg, .var-section-bg,
+  .source-card, .guide-card, .interactive-box, .score-matrix-wrap,
+  .assumption-wrap, .lm-box, .ins, .highlight-box, .warn-box,
+  .crossed-card, .concept-card, .section-card, .cbox {
+    padding: 20px 14px !important;
+  }
+  .intro-callout { padding: 18px 16px; }
+  .source-card { gap: 14px; }
+  .tree-connector { height: 20px; }
+  .tree-node { min-width: 120px !important; font-size: 0.82rem !important; padding: 10px 14px !important; }
+  .section-divider, .div { margin: 0 14px; }
+
+  /* Fixed widths */
+  .var-label { min-width: 50px !important; font-size: 0.78rem !important; }
+  .var-desc { min-width: 0 !important; flex: 1 1 100% !important; }
+  .var-value { min-width: 40px !important; }
+  .sym-featured-glyph { width: 44px !important; height: 44px !important; }
+
+  /* Tables */
+  .table-wrap {
+    margin: 0 -14px; padding: 0 14px;
+    width: calc(100% + 28px); border-radius: 0;
+  }
+  .tbl-wrap { margin: 0 -14px; padding: 0 14px; }
+
+  .prog-bar { z-index: 9999; }
+}
+
+@media (max-width: 480px) {
+  .hero { padding: 32px 10px !important; }
+  .hero h1, .hero-t, .hero-title { font-size: clamp(1.3rem, 8vw, 2rem) !important; }
+  .hero h2, .hero-sub { font-size: clamp(1rem, 5vw, 1.5rem) !important; }
+  .hero p, .hero-desc { font-size: 0.9rem !important; }
+  .nav, .top-nav { padding: 0 8px !important; min-height: 44px; gap: 2px !important; }
+  .nav a, .nav-link, .nl { font-size: 0.7rem !important; padding: 4px 7px !important; }
+
+  .section, .sec { padding: 28px 10px !important; }
+
+  .hero-cards { grid-template-columns: 1fr !important; }
+  .hero-pills { gap: 6px; }
+  .pill { padding: 8px 10px; }
+
+  .table-wrap {
+    margin: 0 -10px; padding: 0 10px;
+    width: calc(100% + 20px);
+  }
+  table { font-size: 0.72rem !important; }
+  td, th { padding: 5px 7px !important; }
+
+  .hero-card, .concept-card, .crossed-card, .scenario-item,
+  .step-content, .coeff-card, .card, .design-card, .sym-card,
+  .exp-card, .author-card, .hcard { padding: 12px !important; }
+
+  .tree-node { min-width: 100px !important; font-size: 0.78rem !important; }
+  .hero-meta-item { padding: 8px 10px; }
+
+  .btn, .btn-primary, .btn-ghost {
+    width: 100%; justify-content: center; min-height: 44px;
+  }
+}
+
+/* â•â•â•â•â•â• ADDITIONAL OVERFLOW FIXES â•â•â•â•â•â• */
+[style*="min-width:200px"], [style*="min-width: 200px"], [style*="min-width:220px"], [style*="min-width: 220px"],
+[style*="min-width:280px"], [style*="min-width: 280px"], [style*="min-width:500px"], [style*="min-width: 500px"] {
+  min-width: 0 !important;
+}
+[style*="width:480px"], [style*="width: 480px"], [style*="width:400px"], [style*="width: 400px"] {
+  max-width: 100% !important;
+  width: auto !important;
+}
+.flex-item, .sym-grid-2 > .sym-featured, .eq-row { flex-wrap: wrap; }
+.score-matrix { min-width: 0 !important; }
+.hcard, .pill { min-width: 0 !important; }
+.dt-node { max-width: 100% !important; }
+
+@media (max-width: 768px) {
+  .mat { grid-template-columns: repeat(auto-fill, minmax(32px, 1fr)) !important; }
+  .mc { width: 32px !important; height: 32px !important; font-size: 0.6rem !important; }
+  .hcard { min-width: 0 !important; }
+  .hero-meta-num { font-size: 1.5rem !important; }
+  .hero-meta-lbl { font-size: 0.68rem !important; }
+  .hero-meta-item { flex: 1 1 42% !important; }
+  .pill { min-width: 0 !important; flex: 1 1 30% !important; }
+}
+
+@media (max-width: 480px) {
+  .mat { grid-template-columns: repeat(auto-fill, minmax(28px, 1fr)) !important; }
+  .mc { width: 28px !important; height: 28px !important; font-size: 0.55rem !important; }
+}
+
+/* ==================================================
+   FINAL REAL MOBILE LAYOUT REBUILD
+   Must be the last CSS block in the file
+   ================================================== */
+*, *::before, *::after { box-sizing: border-box !important; }
+html, body {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  min-width: 0 !important;
+}
+img, svg, canvas, video, iframe {
+  max-width: 100% !important;
+  height: auto !important;
+}
+table { max-width: 100% !important; }
+
+/* Force all major containers to viewport width */
+@media (max-width: 768px) {
+  html, body {
+    overflow-x: clip !important;
+    min-width: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .hero,
+  .section,
+  .sec,
+  .container,
+  .wrapper,
+  .content,
+  .main,
+  .page,
+  .page-wrap,
+  .layout,
+  .shell,
+  .panel,
+  .chapter,
+  .chapter-wrap,
+  .story,
+  .story-wrap,
+  .book-page,
+  .section-dark,
+  .section-mid,
+  .intro-section,
+  .source-section,
+  .guide-section,
+  .sec-dark,
+  .sec-alt,
+  .sec-inner,
+  .section-inner,
+  .section-header,
+  .sec-header,
+  .family-bg,
+  .universe-card,
+  .scenario-bg,
+  .var-section-bg,
+  .source-card,
+  .index-card,
+  .guide-card,
+  .intro-body,
+  .interactive-box,
+  .score-matrix-wrap,
+  .assumption-wrap,
+  .lm-box,
+  .cbox,
+  .comparison-wrap,
+  .steps-flow,
+  .highlight-box,
+  .warn-box,
+  .insight-box,
+  .history-wrap {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+    transform: none !important;
+    left: auto !important;
+    right: auto !important;
+    box-sizing: border-box !important;
+  }
+
+  .hero {
+    min-height: auto !important;
+    height: auto !important;
+    padding-top: 36px !important;
+    padding-bottom: 36px !important;
+    text-align: center !important;
+    overflow: hidden !important;
+  }
+
+  .hero-content,
+  .hero-inner,
+  .hero-wrap,
+  .hero-text,
+  .hero-c,
+  .hero-content {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+    text-align: center !important;
+    transform: none !important;
+    position: relative !important;
+  }
+
+  .hero h1,
+  .hero-title,
+  .hero-t,
+  .hero-ta,
+  h1 {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    font-size: clamp(1.55rem, 8vw, 2.3rem) !important;
+    line-height: 1.25 !important;
+    text-align: center !important;
+    white-space: normal !important;
+    overflow-wrap: break-word !important;
+    word-break: normal !important;
+  }
+
+  .hero-sub,
+  .hero-subtitle-line,
+  .hero-s,
+  .hero-d,
+  .hero-desc,
+  .sec-lead,
+  .slead,
+  .section-desc,
+  .subtitle,
+  .lead {
+    max-width: 100% !important;
+    white-space: normal !important;
+    overflow-wrap: break-word !important;
+    width: 100% !important;
+  }
+
+  .grid,
+  .cards,
+  .hero-cards,
+  .hero-meta,
+  .hero-pills,
+  .scenario-grid,
+  .crossed-grid,
+  .concepts-grid,
+  .gstudy-layout,
+  .matrix-grid,
+  .design-compare,
+  .authors-grid,
+  .rel-grid,
+  .vp-grid,
+  .g2,
+  .g3,
+  .g4,
+  .asm-grid,
+  .expect-grid,
+  .sym-grid-2,
+  .sym-grid-3,
+  .sym-card-grid,
+  .compare-grid,
+  .ms-grid,
+  .crow {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    gap: 16px !important;
+    transform: none !important;
+  }
+
+  .hero-cards {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+  }
+
+  .card,
+  .hero-card,
+  .glass-card,
+  .info-card,
+  .concept-card,
+  .step-card,
+  .source-card,
+  .index-card,
+  .guide-card,
+  .hcard,
+  .pill,
+  .tree-node,
+  .dt-node,
+  .matrix-card,
+  .panel-card,
+  .design-card,
+  .design-header,
+  .design-body,
+  .crossed-card,
+  .scenario-item,
+  .step-content,
+  .author-card,
+  .sym-card,
+  .sym-featured,
+  .var-section-bg,
+  .intro-callout,
+  .eq-row,
+  .eq-main {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    transform: none !important;
+  }
+
+  [style*="min-width"],
+  [style*="width: 480"],
+  [style*="width:480"],
+  [style*="width: 400"],
+  [style*="width:400"] {
+    max-width: 100% !important;
+    min-width: 0 !important;
+    width: auto !important;
+  }
+
+  .nav,
+  .top-nav,
+  .page-nav,
+  .page-nav-bottom {
+    width: 100% !important;
+    max-width: 100% !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    white-space: normal !important;
+    overflow: visible !important;
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
+
+  .nav-links {
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    gap: 4px !important;
+    overflow: visible !important;
+    width: auto !important;
+  }
+
+  .nav a,
+  .nav-link,
+  .nl,
+  .top-nav a,
+  .page-nav a,
+  .page-nav-bottom a {
+    max-width: 100% !important;
+    white-space: normal !important;
+    text-align: center !important;
+    min-height: 36px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 4px 10px !important;
+    font-size: 0.75rem !important;
+  }
+
+  .nav-logo,
+  .nav-brand {
+    font-size: 0.82rem !important;
+    white-space: normal !important;
+    max-width: 100% !important;
+    overflow: visible !important;
+  }
+
+  /* Hide all decorative overlays, rings, meshes */
+  .hero::before,
+  .hero::after,
+  .hero-ring,
+  .hero-ring-2,
+  .hr1,
+  .hr2,
+  .hero-mesh,
+  .hero-grid,
+  .hero-aura,
+  .chapter-deco,
+  .decor,
+  .bg-shape,
+  .section-divider,
+  .rainbow,
+  .div,
+  .scroll-hint,
+  .starfield {
+    display: none !important;
+  }
+
+  /* Section dividers must not cause overflow */
+  .section-divider,
+  .div-a,
+  .div-r,
+  .div-s,
+  .div-v,
+  .div-g {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    max-width: 100% !important;
+  }
+
+  .table-wrap,
+  .tbl-wrap {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  /* Hero-specific containers */
+  .hero-badge,
+  .hero-eyebrow {
+    display: inline-flex !important;
+    max-width: 100% !important;
+    white-space: normal !important;
+  }
+
+  .hero-meta {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .hero-meta-item {
+    flex: 1 1 42% !important;
+    min-width: 0 !important;
+    max-width: 48% !important;
+  }
+
+  .hcard,
+  .pill {
+    min-width: 0 !important;
+    flex: 1 1 42% !important;
+    max-width: 48% !important;
+  }
+
+  .decomp-block,
+  .decomp-live .dl-block {
+    min-width: 0 !important;
+    flex: 1 1 auto !important;
+  }
+
+  /* Family tree and diagrams */
+  .family-bg {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  /* Force flex containers to wrap */
+  .concept-row,
+  .badge-row,
+  .hero-actions {
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+  }
+
+  .btn,
+  .btn-primary,
+  .btn-ghost,
+  .calc-btn {
+    min-height: 44px !important;
+    padding: 12px 24px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  html, body {
+    min-width: 0 !important;
+    width: 100% !important;
+  }
+
+  .hero,
+  .section,
+  .sec,
+  .container,
+  .wrapper,
+  .content,
+  .main,
+  .page,
+  .page-wrap {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+  }
+
+  .hero {
+    padding-top: 28px !important;
+    padding-bottom: 28px !important;
+  }
+
+  .hero h1,
+  .hero-title,
+  .hero-t,
+  .hero-ta,
+  h1 {
+    font-size: clamp(1.35rem, 8.5vw, 2rem) !important;
+    line-height: 1.28 !important;
+  }
+
+  h2 {
+    font-size: clamp(1.2rem, 6.5vw, 1.65rem) !important;
+  }
+
+  h3 {
+    font-size: clamp(1rem, 5.5vw, 1.35rem) !important;
+  }
+
+  .card,
+  .hero-card,
+  .glass-card,
+  .info-card,
+  .concept-card,
+  .step-card,
+  .source-card,
+  .crossed-card,
+  .scenario-item,
+  .design-card {
+    padding: 14px 10px !important;
+  }
+
+  .nav,
+  .top-nav {
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+  }
+
+  .nav a,
+  .nav-link,
+  .nl {
+    padding: 3px 6px !important;
+    font-size: 0.68rem !important;
+  }
+
+  .hero-meta-item {
+    flex: 1 1 100% !important;
+    max-width: 100% !important;
+  }
+
+  .hcard {
+    flex: 1 1 100% !important;
+    max-width: 100% !important;
+  }
+
+  .hero-cards {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    flex-direction: column !important;
+    align-items: center !important;
+  }
+}
+
+/* === PAGE NAV TOP === */
+.page-nav-top {
+  direction: rtl;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  width: min(100% - 24px, 1100px);
+  margin: 14px auto;
+  padding: 10px;
+  border-radius: 16px;
+  background: rgba(15, 52, 96, 0.88);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.14);
+  backdrop-filter: blur(8px);
+  position: relative;
+  z-index: 10;
+}
+.page-nav-top a,
+.page-nav-top a:visited {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 8px 18px;
+  border-radius: 999px;
+  text-decoration: none;
+  font-weight: 700;
+  color: #ffffff;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.18);
+  transition: background 0.2s, transform 0.2s;
+}
+.page-nav-top a:hover {
+  background: rgba(0, 180, 216, 0.28);
+  transform: translateY(-2px);
+}
+@media (max-width: 480px) {
+  .page-nav-top {
+    width: calc(100% - 20px);
+    gap: 8px;
+    padding: 8px;
+  }
+  .page-nav-top a {
+    flex: 1 1 auto;
+    min-width: 90px;
+    padding: 8px 12px;
+    font-size: 0.9rem;
+  }
+}
+</style>
+</head>
+<body>
+<nav class="page-nav-top" aria-label="تنقل الصفحة العلوي"><a href="index.html" class="nav-home">الرئيسية</a></nav>
+
+<canvas id="sf"></canvas>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-brand"><div class="nav-dot"></div>نظرية إمكانية التعميم — الفصل 4</div>
+  <div class="nav-links">
+<a href="3.5.html">السابق</a><a href="index.html">الرئيسية</a><a href="4.2.html">التالي</a>
+
+    <a class="nav-link" href="#intro">مقدمة</a>
+    <a class="nav-link" href="#s411">4.1.1 درجة الكون</a>
+    <a class="nav-link" href="#s412">4.1.2 مكونات D</a>
+    <a class="nav-link" href="#s413">4.1.3 الخطأ</a>
+    <a class="nav-link" href="#s414">4.1.4 المعاملات</a>
+    <a class="nav-link" href="#s415">4.1.5 مخططات فن</a>
+    <a class="nav-link" href="#s416">4.1.6 القواعد</a>
+    <a class="nav-link" href="#s417">4.1.7 التصاميم</a>
+    <a class="nav-link" href="#calc">الحاسبة</a>
+  </div>
+
+
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-aura"></div>
+  <div class="hero-r hr1"></div>
+  <div class="hero-r hr2"></div>
+  <div class="hero-c">
+    <div class="hero-badge">الفصل الرابع — القسم 4.1</div>
+    <h1 class="hero-t"><span class="hero-ti">أكوان التعميم متعددة الأوجه</span><br>وتصاميم دراسة D</h1>
+    <p class="hero-s">Multi-Facet Universes of Generalization · D-Study Designs</p>
+    <p class="hero-d">قواعد ومعادلات لتقدير تباين درجة الكون وتباينات الخطأ والمعاملات في النماذج العشوائية والمختلطة — مع رسوم تفاعلية حقيقية لتصميمَي p×I×H و p×(I:H)</p>
+    <div class="hero-pills">
+      <div class="pill" style="border-color:rgba(129,140,248,.2)"><div class="pill-n" style="color:var(--indigo-lt)">p×I×H</div><div class="pill-l">تصميم متقاطع</div></div>
+      <div class="pill" style="border-color:rgba(196,181,253,.2)"><div class="pill-n" style="color:var(--violet-lt)">p×(I:H)</div><div class="pill-l">تصميم متداخل</div></div>
+      <div class="pill" style="border-color:rgba(94,234,212,.2)"><div class="pill-n" style="color:var(--teal-lt)">σ²(ᾱ)</div><div class="pill-l">مكونات D</div></div>
+      <div class="pill" style="border-color:rgba(201,168,76,.2)"><div class="pill-n" style="color:var(--gold-lt)">S/N</div><div class="pill-l">نسبة الإشارة</div></div>
+      <div class="pill" style="border-color:rgba(249,168,212,.2)"><div class="pill-n" style="color:var(--rose-lt)">4+</div><div class="pill-l">قواعد أساسية</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- INTRO -->
+<div class="div div-i"></div>
+<section class="sec" id="intro">
+<div class="sec-in">
+  <div class="stag stag-i fu"><span class="stag-num">4.1</span> مقدمة الفصل</div>
+  <h2 class="stit fu">صميم نظرية إمكانية <span class="ai">التعميم</span></h2>
+  <p class="slead fu">يقع مضمون هذا الفصل في صميم النظرية — التمييز بين الأوجه الثابتة والعشوائية يؤثر في كل من تباين درجة الكون وتباينات الخطأ.</p>
+
+  <p class="para fu">يفترض هذا الفصل أن جميع الأوجه في كون الملاحظات المقبولة <strong>لا نهائية في الحجم</strong>، وبناءً على ذلك جرى تقدير مكوّنات التباين في دراسة G وفق نموذج عشوائي. وانطلاقاً من هذه الافتراضات، يقدّم الفصل إجراءاتٍ وقواعدَ لتقدير: تباين درجة الكون، وتباينات الخطأ، ومعاملات التعميم، في دراسات D ذات النماذج العشوائية والمختلطة لأي عدد من الأوجه.</p>
+
+  <p class="para fu">ينبغي للباحث أن يميّز بدقة بين الأوجه الثابتة والعشوائية، وأن يراعي أحجام عينات دراسة D وبنية تصميمها — لأن <em>كليهما يؤثر في تباينات الخطأ</em>. ويعكس تصميم دراسة D الطريقة التي يُبنى بها إجراء القياس، وليس بالضرورة الطريقة التي يُبنى بها كون التعميم.</p>
+
+  <!-- Two design models side by side -->
+  <div class="dcards fu">
+    <div class="dcard dcard-i">
+      <div class="dcard-head">التصميم المتقاطع الكامل</div>
+      <div class="dcard-formula">X̄<sub>pIH</sub> = μ + νₚ + ν<sub>I</sub> + ν<sub>H</sub> + ν<sub>pI</sub> + ν<sub>pH</sub> + ν<sub>IH</sub> + ν<sub>pIH</sub></div>
+      <div style="font-size:.78rem;color:var(--im);line-height:1.75">7 مكوّنات عشوائية — كل شرط من I يُزاوَج مع كل شرط من H. يُسمح لأي محكّم بتقويم أي فقرة.</div>
+      <div style="margin-top:8px;font-size:.72rem;color:var(--indigo-lt);direction:ltr">المعادلة 4.1</div>
+    </div>
+    <div class="dcard dcard-v">
+      <div class="dcard-head">التصميم المتداخل (I داخل H)</div>
+      <div class="dcard-formula">X̄<sub>pIH</sub> = μ + νₚ + ν<sub>H</sub> + ν<sub>I:H</sub> + ν<sub>pH</sub> + ν<sub>pI:H</sub></div>
+      <div style="font-size:.78rem;color:var(--im);line-height:1.75">5 مكوّنات فقط — مجموعة مختلفة من الفقرات I لكل محكّم H. يُختار لأسباب عملية أو لرفع الكفاءة.</div>
+      <div style="margin-top:8px;font-size:.72rem;color:var(--violet-lt);direction:ltr">المعادلة 4.2</div>
+    </div>
+  </div>
+
+  <div class="ins ins-i fu">
+    <div class="ins-tag">الفرق الجوهري بين دراستَي G وD</div>
+    <p class="ins-text">في تصاميم دراسة D يُستخدم <strong style="color:var(--indigo-lt)">حرف كبير</strong> إذا ارتبط الدليل بوجهٍ في كون التعميم — هذا الاصطلاح يؤكد أن النماذج الخطية لدراسة D مخصَّصة لتحليل <em>متوسطات</em> الدرجات لا الشروط المفردة.</p>
+  </div>
+</div>
+</section>
+
+<!-- 4.1.1 UNIVERSE SCORE -->
+<div class="div div-v"></div>
+<section class="sec" id="s411" style="background:linear-gradient(180deg,rgba(8,6,22,.9),var(--void))">
+<div class="sec-in">
+  <div class="stag stag-v fu"><span class="stag-num">4.1.1</span> درجة الكون وتباينها</div>
+  <h2 class="stit fu"><span class="av">درجة الكون</span> — التعريف الرسمي</h2>
+  <p class="slead fu">درجة كون الشخص هي درجته المتوقعة عبر جميع التطبيقات المتوازية عشوائياً لإجراء القياس.</p>
+
+  <div class="eq fu"><div class="eq-num">4.3</div>
+    <div class="eq-line">μₚ = E<sub>R</sub> X<sub>pR</sub></div>
+    <div class="eq-sub">حيث R = مجموعة جميع الأوجه العشوائية في كون التعميم</div>
+  </div>
+  <div class="eq fu" style="border-color:rgba(196,181,253,.2)">
+    <div class="eq-line">للتصميم p×I×H: μₚ = E<sub>I</sub> E<sub>H</sub> X<sub>pIH</sub></div>
+    <div class="eq-sub">درجة الكون = القيمة المتوقعة لمتوسط الدرجات عبر جميع I وH في كون التعميم</div>
+  </div>
+
+  <!-- Parallel forms analogy -->
+  <div class="callout callout-v fu">
+    <p>مجموعة التطبيقات المتوازية عشوائياً لإجراء القياس تماثل مجموعة <strong>الصور المتوازية الكلاسيكية</strong> في النظرية التقليدية — وهذه المجموعة تستنفد جميع الشروط في كون التعميم.</p>
+  </div>
+
+  <!-- Universe score variance -->
+  <div class="eq fu"><div class="eq-num">4.4</div>
+    <div class="eq-line">σ²(p) = E<sub>p</sub>(μₚ − E<sub>p</sub>μₚ)² = E<sub>p</sub> νₚ²</div>
+    <div class="eq-sub">تباين درجة الكون — يساوي القيمة المتوقعة للتغاير بين التطبيقات المتوازية</div>
+  </div>
+  <div class="eq fu"><div class="eq-num">4.5</div>
+    <div class="eq-line">σ²(p) = E σ(X<sub>pR</sub>, X<sub>pR′</sub>)</div>
+    <div class="eq-sub">التغاير بين درجات شخصين في تطبيقين عشوائيين R وR′ — مؤخوذ عبر الأشخاص والتطبيقات</div>
+  </div>
+
+  <div class="rule fu">
+    <div class="rule-num">القاعدة 4.1.1</div>
+    <div class="rule-t">تباين درجة الكون</div>
+    <div class="rule-body">σ²(p) هو تباين درجة الكون</div>
+    <div class="rule-ar">في النماذج العشوائية عندما تكون الأشخاص موضوعات القياس. تباين درجة الكون لا يعتمد على أحجام عينات دراسة D ولا على بنية تصميمها — بعكس تباينات الخطأ التي تعتمد على كليهما.</div>
+  </div>
+
+  <!-- Interactive Universe Score Visualization -->
+  <div class="chart-box chart-box-v fu">
+    <div class="chart-title chart-title-v">◈ درجة الكون مقابل التطبيقات المتوازية — تصور تفاعلي</div>
+    <div class="chart-sub">اضبط عدد التطبيقات المتوازية وانظر كيف يتقارب المتوسط نحو درجة الكون الحقيقية (σ²(τ) = σ²(p))</div>
+    <div class="ctrl-row">
+      <div class="cg"><div class="cl">عدد التطبيقات المتوازية</div><div class="cv" id="nAppsV" style="color:var(--violet-lt)">10</div><input type="range" class="rv" id="nApps" min="1" max="50" value="10"></div>
+      <div class="cg"><div class="cl">تباين درجة الكون σ²(p)</div><div class="cv" id="tauV" style="color:var(--gold-lt)">.30</div><input type="range" class="rt" id="tauSlider" min="10" max="60" value="30"></div>
+      <div class="cg"><div class="cl">تباين الخطأ النسبي σ²(δ)</div><div class="cv" id="deltaSmV" style="color:var(--rose-lt)">.12</div><input type="range" class="ri" id="deltaSm" min="2" max="40" value="12"></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+      <div><div style="font-size:.72rem;color:var(--violet-lt);margin-bottom:6px;font-weight:700">توزيع درجات الكون وحدود الخطأ</div><div class="ch-wrap"><canvas id="uniScoreChart" style="height:200px"></canvas></div></div>
+      <div>
+        <div style="font-size:.72rem;color:var(--gold-lt);margin-bottom:6px;font-weight:700">المؤشرات المحسوبة</div>
+        <div class="met-row" id="uniMetrics"></div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- 4.1.2 D-STUDY COMPONENTS -->
+<div class="div div-i"></div>
+<section class="sec" id="s412">
+<div class="sec-in">
+  <div class="stag stag-i fu"><span class="stag-num">4.1.2</span> مكوّنات التباين في دراسة D</div>
+  <h2 class="stit fu">قاعدة <span class="ai">القسمة</span> — من G إلى D</h2>
+  <p class="slead fu">مكوّنات تباين دراسة D تُشتقّ من مكوّنات G بقسمة كل مكوّن على حاصل ضرب أحجام عينات الأوجه الداخلة فيه.</p>
+
+  <div class="eq fu"><div class="eq-num">4.6</div>
+    <div class="eq-line">σ²(ᾱ) = σ²(α) / d(ᾱ)</div>
+    <div class="eq-sub">التحويل الأساسي من G إلى D</div>
+  </div>
+  <div class="rule fu">
+    <div class="rule-t">تعريف d(ᾱ)</div>
+    <div class="rule-body">d(ᾱ) = { 1 إذا كانت ᾱ = p | حاصل ضرب n′ لجميع المؤشرات في ᾱ ما عدا p } (4.7)</div>
+    <div class="rule-ar">مثال: d(pIH) = n′ᵢ × n′ₕ (نضرب حجمَي عينتَي I وH ونستثني p). بينما d(pH) = n′ₕ فقط لأن H هو المؤشر الوحيد غير p.</div>
+  </div>
+
+  <!-- d(alpha) examples interactive -->
+  <div class="chart-box chart-box-i fu">
+    <div class="chart-title chart-title-i">◈ حساب d(ᾱ) — مثال للتصميم p × I × H</div>
+    <div class="ctrl-row">
+      <div class="cg"><div class="cl">n′ᵢ (حجم عينة I)</div><div class="cv" id="niV" style="color:var(--indigo-lt)">4</div><input type="range" class="ri" id="niSlider" min="1" max="15" value="4"></div>
+      <div class="cg"><div class="cl">n′ₕ (حجم عينة H)</div><div class="cv" id="nhV" style="color:var(--violet-lt)">3</div><input type="range" class="rv" id="nhSlider" min="1" max="10" value="3"></div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px" id="dAlphaGrid"></div>
+  </div>
+
+  <!-- Tables 4.1 and 4.2 -->
+  <h3 class="fu" style="font-family:'Amiri',serif;font-size:1.25rem;color:var(--ivory);margin:28px 0 12px">الجدول 4.1 — مكوّنات σ²(ᾱ) لتصميم p × I × H</h3>
+  <div class="tbl-wrap fu">
+    <div class="table-wrap"><table class="tbl">
+      <thead><tr><th style="text-align:right">σ²(ᾱ)</th><th>I,H عشوائيان → يدخل في</th><th>H ثابت</th><th>I ثابت</th></tr></thead>
+      <tbody>
+        <tr><td>σ²(p)</td><td class="ct">τ</td><td class="ct">τ</td><td class="ct">τ</td></tr>
+        <tr><td>σ²(I)=σ²(i)/n′ᵢ</td><td class="cd">Δ</td><td class="cd">Δ</td><td style="color:var(--ig)">—</td></tr>
+        <tr><td>σ²(H)=σ²(h)/n′ₕ</td><td class="cd">Δ</td><td style="color:var(--ig)">—</td><td class="cd">Δ</td></tr>
+        <tr><td>σ²(pI)=σ²(pi)/n′ᵢ</td><td class="cb">Δ،δ</td><td class="cb">Δ،δ</td><td class="ct">τ</td></tr>
+        <tr><td>σ²(pH)=σ²(ph)/n′ₕ</td><td class="cb">Δ،δ</td><td class="ct">τ</td><td class="cb">Δ،δ</td></tr>
+        <tr><td>σ²(IH)=σ²(ih)/n′ᵢn′ₕ</td><td class="cd">Δ</td><td class="cd">Δ</td><td class="cd">Δ</td></tr>
+        <tr><td>σ²(pIH)=σ²(pih)/n′ᵢn′ₕ</td><td class="cb">Δ،δ</td><td class="cb">Δ،δ</td><td class="cb">Δ،δ</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <h3 class="fu" style="font-family:'Amiri',serif;font-size:1.25rem;color:var(--ivory);margin:28px 0 12px">الجدول 4.2 — مكوّنات σ²(ᾱ) لتصميم p × (I:H)</h3>
+  <div class="tbl-wrap fu">
+    <div class="table-wrap"><table class="tbl">
+      <thead><tr><th style="text-align:right">σ²(ᾱ)</th><th>I,H عشوائيان → يدخل في</th><th>H ثابت</th></tr></thead>
+      <tbody>
+        <tr><td>σ²(p)</td><td class="ct">τ</td><td class="ct">τ</td></tr>
+        <tr><td>σ²(H)=σ²(h)/n′ₕ</td><td class="cd">Δ</td><td style="color:var(--ig)">—</td></tr>
+        <tr><td>σ²(I:H)=σ²(i:h)/n′ᵢn′ₕ</td><td class="cd">Δ</td><td class="cd">Δ</td></tr>
+        <tr><td>σ²(pH)=σ²(ph)/n′ₕ</td><td class="cb">Δ،δ</td><td class="ct">τ</td></tr>
+        <tr><td>σ²(pI:H)=σ²(pi:h)/n′ᵢn′ₕ</td><td class="cb">Δ،δ</td><td class="cb">Δ،δ</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+  <div style="display:flex;gap:10px;flex-wrap:wrap;font-size:.7rem;margin:8px 0" class="fu">
+    <span style="padding:3px 10px;background:rgba(110,231,183,.07);border:1px solid rgba(110,231,183,.2);border-radius:5px;color:#6ee7b7">τ = يدخل في تباين درجة الكون</span>
+    <span style="padding:3px 10px;background:rgba(248,113,113,.07);border:1px solid rgba(248,113,113,.18);border-radius:5px;color:#f87171">Δ = خطأ مطلق فقط</span>
+    <span style="padding:3px 10px;background:rgba(201,168,76,.06);border:1px solid rgba(201,168,76,.18);border-radius:5px;color:var(--gold-lt)">Δ،δ = كلا الخطأين</span>
+    <span style="padding:3px 10px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:5px;color:var(--ig)">— = لا يدخل في أي نوع خطأ</span>
+  </div>
+</div>
+</section>
+
+<!-- 4.1.3 ERROR VARIANCES -->
+<div class="div div-r"></div>
+<section class="sec" id="s413" style="background:linear-gradient(180deg,rgba(10,4,18,.9),var(--void))">
+<div class="sec-in">
+  <div class="stag stag-r fu"><span class="stag-num">4.1.3</span> تباينات الخطأ</div>
+  <h2 class="stit fu">ثلاثة أنواع من <span class="ar">الخطأ</span></h2>
+  <p class="slead fu">الخطأ المطلق، والخطأ النسبي، وخطأ تقدير المتوسط — مع قواعد صريحة لاشتقاق كل منها مباشرةً من الجداول.</p>
+
+  <!-- Absolute error -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:20px 0" class="fu">
+    <div style="background:rgba(190,24,93,.06);border:1px solid rgba(249,168,212,.2);border-radius:14px;padding:22px">
+      <div style="font-size:.66rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--rose-lt);margin-bottom:10px">خطأ مطلق — للمحك المرجعي</div>
+      <div style="font-family:'Georgia',serif;font-size:1.7rem;color:var(--rose-lt);direction:ltr;margin-bottom:10px">σ²(Δ)</div>
+      <div style="font-family:'Georgia',serif;font-size:.82rem;direction:ltr;background:rgba(0,0,0,.3);border-radius:7px;padding:8px 12px;margin-bottom:10px;color:var(--id)">
+        Δₚ = X̄ₚ − μₚ = ν<sub>I</sub>+ν<sub>H</sub>+ν<sub>pI</sub>+ν<sub>pH</sub>+ν<sub>IH</sub>+ν<sub>pIH</sub>
+      </div>
+      <div style="font-size:.77rem;color:var(--im)">الفرق بين الدرجة الملحوظة ودرجة الكون. يتضمن جميع مصادر التباين ما عدا σ²(p).</div>
+    </div>
+    <div style="background:rgba(13,148,136,.06);border:1px solid rgba(94,234,212,.2);border-radius:14px;padding:22px">
+      <div style="font-size:.66rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--teal-lt);margin-bottom:10px">خطأ نسبي — للترتيب بين الأشخاص</div>
+      <div style="font-family:'Georgia',serif;font-size:1.7rem;color:var(--teal-lt);direction:ltr;margin-bottom:10px">σ²(δ)</div>
+      <div style="font-family:'Georgia',serif;font-size:.82rem;direction:ltr;background:rgba(0,0,0,.3);border-radius:7px;padding:8px 12px;margin-bottom:10px;color:var(--id)">
+        δₚ = (X̄ₚ−μ<sub>IH</sub>) − (μₚ−μ) = ν<sub>pI</sub>+ν<sub>pH</sub>+ν<sub>pIH</sub>
+      </div>
+      <div style="font-size:.77rem;color:var(--im)">تأثيرات التفاعل مع p فقط. يشبه تباين الخطأ في النظرية الكلاسيكية.</div>
+    </div>
+  </div>
+
+  <!-- Rules for errors -->
+  <div class="rule fu">
+    <div class="rule-num">القاعدة 4.1.2</div>
+    <div class="rule-t">تباين الخطأ المطلق σ²(Δ)</div>
+    <div class="rule-body">σ²(Δ) = مجموع جميع σ²(ᾱ) ما عدا σ²(p)</div>
+    <div class="rule-ar">للتصميم p×I×H: σ²(Δ) = σ²(I)+σ²(H)+σ²(pI)+σ²(pH)+σ²(IH)+σ²(pIH)</div>
+  </div>
+  <div class="rule fu">
+    <div class="rule-num">القاعدة 4.1.3</div>
+    <div class="rule-t">تباين الخطأ النسبي σ²(δ)</div>
+    <div class="rule-body">σ²(δ) = مجموع جميع σ²(ᾱ) التي يتضمن ᾱ فيها p ومؤشراً آخر واحداً على الأقل</div>
+    <div class="rule-ar">للتصميم p×I×H: σ²(δ) = σ²(pI)+σ²(pH)+σ²(pIH) — تفاعلات p فقط. والفرق: σ²(Δ) − σ²(δ) = σ²(I)+σ²(H)+σ²(IH) وهو σ²(μ<sub>IH</sub>).</div>
+  </div>
+
+  <!-- Comparison p×I×H vs p×(I:H) for error variances -->
+  <div class="ins ins-t fu">
+    <div class="ins-tag">نتيجة مهمة — التصميم المتداخل أكثر كفاءة</div>
+    <p class="ins-text">مع ثبات أحجام العينات، يكون σ²(δ) أصغر في التصميم p×(I:H) منه في p×I×H. السبب: σ²(pi) يُقسَّم على n′ᵢ×n′ₕ في التصميم المتداخل، لكنه يُقسَّم على n′ᵢ فقط في المتقاطع. <strong style="color:var(--teal-lt)">معاينة مزيد من شروط الأوجه تخفض الخطأ.</strong></p>
+  </div>
+
+  <!-- σ²(X̄) -->
+  <h3 class="fu" style="font-family:'Amiri',serif;font-size:1.2rem;color:var(--ivory);margin:28px 0 12px">خطأ تقدير المتوسط σ²(X̄)</h3>
+  <div class="eq fu"><div class="eq-num">4.20</div>
+    <div class="eq-line">σ²(X̄) = [σ²(p) + σ²(δ)] / n′ₚ + [σ²(Δ) − σ²(δ)]</div>
+    <div class="eq-sub">تباين الخطأ عند استخدام المتوسط الكلي X̄ تقديراً للمتوسط في المجتمع والكون μ</div>
+  </div>
+  <div class="note fu">يتضمن σ²(X̄) تباين درجة الكون σ²(p) مقسوماً على n′ₚ — لذلك فإن زيادة حجم عينة الأشخاص يقلل هذا المكوّن. بديلاً: يمكن الحصول على σ²(X̄) بقسمة كل σ²(α) على حاصل ضرب أحجام عينات دراسة D لجميع الأدلة في α ثم جمعها.</div>
+
+  <!-- Interactive Error Comparison Chart -->
+  <div class="chart-box chart-box-r fu" style="border-color:rgba(190,24,93,.2)">
+    <div class="chart-title" style="color:var(--rose-lt)">◈ مقارنة تباينات الخطأ — التصميمان p×I×H و p×(I:H) تفاعلياً</div>
+    <div class="chart-sub">غيِّر n′ᵢ وn′ₕ وشاهد الفرق بين تباينات الخطأ للتصميمين</div>
+    <div class="ctrl-row">
+      <div class="cg"><div class="cl">n′ᵢ</div><div class="cv" id="niE" style="color:var(--indigo-lt)">4</div><input type="range" class="ri" id="niESlider" min="1" max="15" value="4"></div>
+      <div class="cg"><div class="cl">n′ₕ</div><div class="cv" id="nhE" style="color:var(--violet-lt)">3</div><input type="range" class="rv" id="nhESlider" min="1" max="10" value="3"></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+      <div><div style="font-size:.72rem;color:var(--rose-lt);margin-bottom:6px;font-weight:700">تباينات الخطأ σ²(Δ) وσ²(δ)</div><div class="ch-wrap"><canvas id="errChart" style="height:210px"></canvas></div></div>
+      <div>
+        <div style="font-size:.72rem;color:var(--teal-lt);margin-bottom:6px;font-weight:700">تفكيك مكونات الخطأ المطلق</div>
+        <div class="ch-wrap"><canvas id="errBreakChart" style="height:210px"></canvas></div>
+      </div>
+    </div>
+    <div id="errCompInfo" style="margin-top:10px;font-size:.78rem;color:var(--im)"></div>
+  </div>
+</div>
+</section>
+
+<!-- 4.1.4 COEFFICIENTS -->
+<div class="div div-g"></div>
+<section class="sec" id="s414">
+<div class="sec-in">
+  <div class="stag stag-g fu"><span class="stag-num">4.1.4</span> المعاملات ونسب الإشارة</div>
+  <h2 class="stit fu">Eρ² و Φ و <span class="ag">نسب S/N</span></h2>
+  <p class="slead fu">معاملان يتراوحان بين 0 و1، وصياغتهما بنسب الإشارة إلى الضوضاء تكشف البنية الجوهرية لكل منهما.</p>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:20px 0" class="fu">
+    <div style="background:rgba(55,48,163,.07);border:1px solid rgba(129,140,248,.22);border-radius:14px;padding:22px">
+      <div style="font-size:.66rem;font-weight:700;letter-spacing:.1em;color:var(--indigo-lt);text-transform:uppercase;margin-bottom:8px">معامل التعميم</div>
+      <div style="font-family:'Georgia',serif;font-size:1.6rem;color:var(--indigo-lt);direction:ltr;margin-bottom:10px">Eρ²</div>
+      <div class="eq-line" style="font-size:.9rem;direction:ltr;background:rgba(0,0,0,.3);border-radius:7px;padding:8px;margin-bottom:8px">Eρ² = σ²(p) / [σ²(p) + σ²(δ)]</div>
+      <div style="font-size:.76rem;color:var(--im)">يستخدم <strong style="color:var(--ivory)">الخطأ النسبي σ²(δ)</strong>. مناسب للمقارنات النسبية والترتيب. نظير معامل الثبات في النظرية الكلاسيكية.</div>
+      <div class="eq-line" style="font-size:.8rem;direction:ltr;background:rgba(0,0,0,.3);border-radius:7px;padding:6px;margin-top:8px">ES²(p) = σ²(p)+σ²(δ) هو التباين الملحوظ المتوقع (مقام Eρ²)</div>
+    </div>
+    <div style="background:rgba(201,168,76,.07);border:1px solid rgba(201,168,76,.22);border-radius:14px;padding:22px">
+      <div style="font-size:.66rem;font-weight:700;letter-spacing:.1em;color:var(--gold-lt);text-transform:uppercase;margin-bottom:8px">مؤشر الاعتمادية (فاي)</div>
+      <div style="font-family:'Georgia',serif;font-size:1.6rem;color:var(--gold-lt);direction:ltr;margin-bottom:10px">Φ</div>
+      <div class="eq-line" style="font-size:.9rem;direction:ltr;background:rgba(0,0,0,.3);border-radius:7px;padding:8px;margin-bottom:8px">Φ = σ²(p) / [σ²(p) + σ²(Δ)]</div>
+      <div style="font-size:.76rem;color:var(--im)">يستخدم <strong style="color:var(--ivory)">الخطأ المطلق σ²(Δ)</strong>. مناسب للتفسيرات المطلقة والمرجعية للمحك. دائماً Φ ≤ Eρ².</div>
+    </div>
+  </div>
+
+  <!-- Signal to Noise ratios -->
+  <h3 class="fu" style="font-family:'Amiri',serif;font-size:1.2rem;color:var(--ivory);margin:28px 0 12px">نسب الإشارة إلى الضوضاء</h3>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px" class="fu">
+    <div>
+      <div class="eq"><div class="eq-num">4.24</div><div class="eq-line">S/N(δ) = σ²(p) / σ²(δ)</div><div class="eq-sub">نسبة الإشارة إلى الضوضاء النسبية — مرتبطة بـ Eρ²</div></div>
+      <div class="eq"><div class="eq-line" style="font-size:.88rem">Eρ² = S/N(δ) / [1 + S/N(δ)] &nbsp;&nbsp; S/N(δ) = Eρ² / [1 − Eρ²]</div></div>
+    </div>
+    <div>
+      <div class="eq"><div class="eq-num">4.25</div><div class="eq-line">S/N(Δ) = σ²(p) / σ²(Δ)</div><div class="eq-sub">نسبة الإشارة إلى الضوضاء المطلقة — مرتبطة بـ Φ</div></div>
+      <div class="eq"><div class="eq-line" style="font-size:.88rem">Φ = S/N(Δ) / [1 + S/N(Δ)] &nbsp;&nbsp; S/N(Δ) = Φ / [1 − Φ]</div></div>
+    </div>
+  </div>
+
+  <!-- Interactive SN and coefficients chart -->
+  <div class="chart-box chart-box-g fu">
+    <div class="chart-title chart-title-g">◈ العلاقة بين نسب S/N والمعاملات — رسم تفاعلي</div>
+    <div class="chart-sub">نسبة الإشارة إلى الضوضاء تتراوح من 0 إلى ∞، بينما المعاملات من 0 إلى 1</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+      <div><div style="font-size:.72rem;color:var(--indigo-lt);margin-bottom:6px;font-weight:700">منحنى Eρ² مقابل S/N(δ)</div><div class="ch-wrap"><canvas id="snChart1" style="height:200px"></canvas></div></div>
+      <div><div style="font-size:.72rem;color:var(--gold-lt);margin-bottom:6px;font-weight:700">مقارنة Eρ² وΦ مع تغيّر n′ᵢ وn′ₕ</div><div class="ch-wrap"><canvas id="snChart2" style="height:200px"></canvas></div></div>
+    </div>
+    <div class="ctrl-row" style="margin-top:14px">
+      <div class="cg"><div class="cl">n′ᵢ (المحور الأفقي max)</div><div class="cv" id="snNiV" style="color:var(--indigo-lt)">12</div><input type="range" class="ri" id="snNiSlider" min="2" max="20" value="12"></div>
+      <div class="cg"><div class="cl">n′ₕ ثابت عند</div><div class="cv" id="snNhV" style="color:var(--violet-lt)">3</div><input type="range" class="rv" id="snNhSlider" min="1" max="8" value="3"></div>
+    </div>
+    <div id="snInfo" style="margin-top:10px;font-size:.78rem;color:var(--im)"></div>
+  </div>
+
+  <!-- ES²(p) Rule -->
+  <div class="rule fu">
+    <div class="rule-num">القاعدة 4.1.4</div>
+    <div class="rule-t">التباين الملحوظ المتوقع ES²(p)</div>
+    <div class="rule-body">ES²(p) = مجموع جميع σ²(ᾱ) التي تتضمن p</div>
+    <div class="rule-ar">= σ²(p) + σ²(δ). القيمة المتوقعة — عبر التطبيقات المتوازية R — للتباين الملحوظ عبر الأشخاص. هو مقام معامل التعميم Eρ².</div>
+  </div>
+</div>
+</section>
+
+<!-- 4.1.5 VENN DIAGRAMS -->
+<div class="div div-v"></div>
+<section class="sec" id="s415" style="background:linear-gradient(180deg,rgba(8,6,22,.9),var(--void))">
+<div class="sec-in">
+  <div class="stag stag-v fu"><span class="stag-num">4.1.5</span> مخططات فن</div>
+  <h2 class="stit fu">التمثيل <span class="av">البصري</span> لمكونات التباين</h2>
+  <p class="slead fu">مخططات فن توفّر منظوراً بصرياً للمكوّنات الإضافية التي تدخل في σ²(Δ) مقارنةً بـ σ²(δ).</p>
+
+  <div class="venn-grid fu">
+    <div class="chart-box chart-box-i" style="padding:20px">
+      <div class="chart-title chart-title-i" style="font-size:.78rem">التصميم p × I × H</div>
+      <canvas id="vennCross" style="width:100%;height:220px"></canvas>
+    </div>
+    <div class="chart-box chart-box-v" style="padding:20px">
+      <div class="chart-title chart-title-v" style="font-size:.78rem">التصميم p × (I:H)</div>
+      <canvas id="vennNested" style="width:100%;height:220px"></canvas>
+    </div>
+  </div>
+
+  <p class="para fu">يمثّل مخطط فن الكامل (الركن العلوي الأيسر) <strong>التباين الكلي</strong>: E(X̄ₚ−μ)² = E<sub>R</sub>E<sub>p</sub>(X<sub>pR</sub>−μ)². يُظهر الجزء خارج دائرة p مكوّنات σ²(Δ) الإضافية التي لا تدخل في σ²(δ) — وهي تأثيرات ثابتة لجميع الأشخاص.</p>
+
+  <p class="para fu">عند مقارنة التصميمين: σ²(I:H) = σ²(I) + σ²(IH) وσ²(pI:H) = σ²(pI) + σ²(pIH)، لذلك المساحات في الشكل 4.2 تمثّل <em>اتحاد مساحتين</em> في الشكل 4.1.</p>
+</div>
+</section>
+
+<!-- 4.1.6 GENERAL RULES -->
+<div class="div div-t"></div>
+<section class="sec" id="s416">
+<div class="sec-in">
+  <div class="stag stag-t fu"><span class="stag-num">4.1.6</span> قواعد لأي موضوع قياس</div>
+  <h2 class="stit fu">تناظر النظرية — <span class="at">أي وجه</span> يمكن أن يكون موضوع قياس</h2>
+  <p class="slead fu">يشير Cardinet وزملاؤه (1976) إلى هذه الخاصية بوصفها «تناظر» نظرية إمكانية التعميم — الفصول والمرضى والمدارس كلها تصلح موضوعات قياس.</p>
+
+  <p class="para fu">في معظم التطبيقات يكون <em>الأشخاص</em> موضوعات القياس. لكن في دراسات التقويم قد تكون <strong>الفصول الدراسية</strong> هي موضوعات القياس بينما يرتبط الأشخاص بكون التعميم. ومهما يكن نوع موضوعات القياس، فإن جميع المعادلات تنطبق متى استُبدل p بالرمز المناسب.</p>
+
+  <!-- Table 4.3 -->
+  <h3 class="fu" style="font-family:'Amiri',serif;font-size:1.2rem;color:var(--ivory);margin:22px 0 12px">الجدول 4.3 — قواعد ومعادلات دراسات D في النموذج العشوائي (لأي موضوع قياس τ)</h3>
+  <div class="tbl-wrap fu">
+    <div class="table-wrap"><table class="tbl" style="direction:rtl">
+      <thead><tr><th>البند</th><th style="text-align:right">الصيغة / القاعدة</th></tr></thead>
+      <tbody>
+        <tr><td style="font-family:'Cairo',sans-serif;direction:rtl;color:var(--teal-lt)">تعريف الرموز</td><td class="tbl-f" style="direction:rtl;text-align:right">τ = موضوعات القياس &nbsp;|&nbsp; R = جميع الأوجه العشوائية في كون التعميم</td></tr>
+        <tr><td style="font-family:'Cairo',sans-serif;direction:rtl;color:var(--teal-lt)">مكوّنات D</td><td class="tbl-f" style="text-align:center">σ²(ᾱ) = σ²(α) / d(ᾱ|τ)</td></tr>
+        <tr><td style="font-family:'Cairo',sans-serif;direction:rtl;color:var(--teal-lt)">d(ᾱ|τ)</td><td class="tbl-f" style="direction:rtl;text-align:right">1 إذا ᾱ=τ &nbsp;|&nbsp; حاصل ضرب n′ لجميع مؤشرات ᾱ ما عدا τ</td></tr>
+        <tr><td style="font-family:'Cairo',sans-serif;direction:rtl;color:var(--indigo-lt)">القاعدة 4.1.1</td><td class="tbl-f" style="direction:rtl;text-align:right">σ²(τ) هو تباين درجة الكون</td></tr>
+        <tr><td style="font-family:'Cairo',sans-serif;direction:rtl;color:var(--rose-lt)">القاعدة 4.1.2</td><td class="tbl-f" style="direction:rtl;text-align:right">σ²(Δ) = مجموع جميع σ²(ᾱ) باستثناء σ²(τ)</td></tr>
+        <tr><td style="font-family:'Cairo',sans-serif;direction:rtl;color:var(--teal-lt)">القاعدة 4.1.3</td><td class="tbl-f" style="direction:rtl;text-align:right">σ²(δ) = مجموع σ²(ᾱ) التي تتضمن τ ومؤشراً آخر</td></tr>
+        <tr><td style="font-family:'Cairo',sans-serif;direction:rtl;color:var(--amber-lt,#fcd34d)">σ²(X̄)</td><td class="tbl-f">σ²(X̄) = [σ²(τ)+σ²(δ)]/n′τ + [σ²(Δ)−σ²(δ)]</td></tr>
+        <tr><td style="font-family:'Cairo',sans-serif;direction:rtl;color:var(--indigo-lt)">Eρ²</td><td class="tbl-f">Eρ² = σ²(τ) / [σ²(τ) + σ²(δ)]</td></tr>
+        <tr><td style="font-family:'Cairo',sans-serif;direction:rtl;color:var(--gold-lt)">Φ</td><td class="tbl-f">Φ = σ²(τ) / [σ²(τ) + σ²(Δ)]</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</div>
+</section>
+
+<!-- 4.1.7 DIFFERENT DESIGNS -->
+<div class="div div-i"></div>
+<section class="sec" id="s417" style="background:linear-gradient(180deg,rgba(8,6,22,.9),var(--void))">
+<div class="sec-in">
+  <div class="stag stag-i fu"><span class="stag-num">4.1.7</span> بُنى تصاميم D المختلفة عن G</div>
+  <h2 class="stit fu">تصميم G ≠ تصميم D — <span class="ai">خطوات التحويل</span></h2>
+  <p class="slead fu">عندما تختلف بنية تصميمَي G وD، لا بد من تحويل مكوّنات G إلى نظام الشروط المفردة أولاً، ثم تطبيق القاعدة.</p>
+
+  <div class="ins ins-i fu">
+    <div class="ins-tag">قاعدة التأثيرات المتداخلة</div>
+    <p class="ins-text">التأثيرات التي تُعدّ متداخلة هي جميع التأثيرات التي تتضمن فقط مؤشرات التأثير المتداخل، وتشتمل أيضاً على المؤشر الأولي في ذلك التأثير المتداخل.</p>
+  </div>
+
+  <!-- Nested effects rules with interactive examples -->
+  <div class="chart-box chart-box-i fu">
+    <div class="chart-title chart-title-i">◈ تحويل المكوّنات: G متقاطع بالكامل → D متداخل</div>
+    <div class="tabs">
+      <button class="tab tab-i on" onclick="showDesign('da',this)">G: p×i×h → D: p×(I:H)</button>
+      <button class="tab tab-v" onclick="showDesign('db',this)">G: p×(i:h) → D: p×(I:H)</button>
+      <button class="tab tab-t" onclick="showDesign('dc',this)">G: p×(i:h) → D: I:H:p</button>
+    </div>
+    <div id="da" class="panel on">
+      <div class="panel-in" style="border-color:rgba(129,140,248,.2)">
+        <div style="font-family:'Amiri',serif;font-size:1.1rem;color:var(--ivory);margin-bottom:12px">G: p×i×h (متقاطع) → D: p×(I:H) (I متداخل في H)</div>
+        <div class="eqr" style="margin-bottom:4px"><span class="eqr-s">σ²(i:h)</span><span class="eqr-e">=</span><span class="eqr-v">σ²(i) + σ²(ih)</span><span class="eqr-d">جمع مكوّني G المتقاطع</span></div>
+        <div class="eqr"><span class="eqr-s">σ²(pi:h)</span><span class="eqr-e">=</span><span class="eqr-v">σ²(pi) + σ²(pih)</span><span class="eqr-d">جمع تفاعلات p المقابلة</span></div>
+        <div style="margin-top:12px;font-size:.8rem;color:var(--im)">ثم تطبيق المعادلة 4.7: σ²(I:H) = σ²(i:h)/(n′ᵢn′ₕ) وσ²(pI:H) = σ²(pi:h)/(n′ᵢn′ₕ)</div>
+      </div>
+    </div>
+    <div id="db" class="panel">
+      <div class="panel-in" style="border-color:rgba(196,181,253,.2)">
+        <div style="font-family:'Amiri',serif;font-size:1.1rem;color:var(--ivory);margin-bottom:12px">G: p×(i:h) → D: p×(I:H) — بُنيتاهما متطابقتان جوهرياً</div>
+        <div class="eqr"><span class="eqr-s">σ²(H)</span><span class="eqr-e">=</span><span class="eqr-v">σ²(h)/n′ₕ</span><span class="eqr-d">تطبيق مباشر للقاعدة</span></div>
+        <div class="eqr"><span class="eqr-s">σ²(I:H)</span><span class="eqr-e">=</span><span class="eqr-v">σ²(i:h)/(n′ᵢn′ₕ)</span><span class="eqr-d">القسمة على حاصل الضربين</span></div>
+        <div class="eqr"><span class="eqr-s">σ²(pH)</span><span class="eqr-e">=</span><span class="eqr-v">σ²(ph)/n′ₕ</span><span class="eqr-d">تفاعل p×h</span></div>
+        <div class="eqr"><span class="eqr-s">σ²(pI:H)</span><span class="eqr-e">=</span><span class="eqr-v">σ²(pi:h)/(n′ᵢn′ₕ)</span><span class="eqr-d">تفاعل p×(i:h)</span></div>
+      </div>
+    </div>
+    <div id="dc" class="panel">
+      <div class="panel-in" style="border-color:rgba(94,234,212,.2)">
+        <div style="font-family:'Amiri',serif;font-size:1.1rem;color:var(--ivory);margin-bottom:12px">G: p×(i:h) → D: I:H:p — التطبيق التصاعدي لقاعدة التأثيرات المتداخلة</div>
+        <div style="direction:ltr;font-family:'Georgia',serif;font-size:.82rem;background:rgba(0,0,0,.3);border-radius:7px;padding:10px 14px;margin-bottom:10px;color:var(--id)">
+          i:h:p ⇒ (i, ih, pi, pih)<br>
+          i:h ⇒ (i, ih) &nbsp;&nbsp; pi:h ⇒ (pi, pih)<br>
+          ∴ σ²(i:h:p) = σ²(i:h) + σ²(pi:h)
+        </div>
+        <div style="font-size:.78rem;color:var(--im)">النتيجة: التأثير i:h:p يتضمن جميع التأثيرات التي تتضمن i وh وp معاً.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ins ins-g fu">
+    <div class="ins-tag">الخطوات العامة عند اختلاف بنيتَي G وD</div>
+    <p class="ins-text">
+      (1) استخدام قاعدة التأثيرات المتداخلة للتعبير عن كل تأثير في G بدلالة التصميم المتقاطع بالكامل.<br>
+      (2) تطبيق نفس القاعدة لتصميم D (بالشروط المفردة) بدلالة التصميم المتقاطع بالكامل.<br>
+      (3) تحديد أيّ تأثيرات G تكون متداخلة في التأثيرات المقابلة في D، ثم تطبيق المعادلة 4.7.
+    </p>
+  </div>
+</div>
+</section>
+
+<!-- FULL CALCULATOR -->
+<div class="div div-g"></div>
+<section class="sec" id="calc">
+<div class="sec-in">
+  <div class="stag stag-g fu">الحاسبة الشاملة</div>
+  <h2 class="stit fu">احسب <span class="ag">دراسة D</span> لتصميمَي p×I×H و p×(I:H)</h2>
+  <p class="slead fu">أدخل مكوّنات دراسة G وأحجام عينات دراسة D — تحصل على جميع المؤشرات فورياً للتصميمَين معاً.</p>
+
+  <div class="calc fu">
+    <div class="calc-t">⟨σ²⟩ مكوّنات دراسة G — التصميم p×i×h</div>
+    <div class="ms-grid">
+      <div class="ms-inp"><div class="ms-lbl">σ²(p)</div><input type="number" id="gp" value="0.300" step="0.001"></div>
+      <div class="ms-inp"><div class="ms-lbl">σ²(i)</div><input type="number" id="gi" value="0.050" step="0.001"></div>
+      <div class="ms-inp"><div class="ms-lbl">σ²(h)</div><input type="number" id="gh" value="0.080" step="0.001"></div>
+      <div class="ms-inp"><div class="ms-lbl">σ²(pi)</div><input type="number" id="gpi" value="0.140" step="0.001"></div>
+      <div class="ms-inp"><div class="ms-lbl">σ²(ph)</div><input type="number" id="gph" value="0.100" step="0.001"></div>
+      <div class="ms-inp"><div class="ms-lbl">σ²(ih)</div><input type="number" id="gih" value="0.020" step="0.001"></div>
+      <div class="ms-inp"><div class="ms-lbl">σ²(pih)</div><input type="number" id="gpih" value="0.180" step="0.001"></div>
+    </div>
+    <div class="calc-t" style="margin-top:16px">أحجام عينات دراسة D</div>
+    <div class="ms-grid">
+      <div class="ms-inp"><div class="ms-lbl">n′ᵢ (حجم عينة I)</div><input type="number" id="dn_i" value="4" min="1"></div>
+      <div class="ms-inp"><div class="ms-lbl">n′ₕ (حجم عينة H)</div><input type="number" id="dn_h" value="2" min="1"></div>
+    </div>
+    <button class="calc-btn" onclick="runCalc()">احسب النتائج للتصميمَين ⟹</button>
+    <div class="calc-out" id="calcOut"></div>
+  </div>
+</div>
+</section>
+
+<div class="div div-i"></div>
+<footer class="footer">
+  <div class="footer-t">Generalizability Theory — Robert L. Brennan (2001)</div>
+  <div class="footer-s">الفصل 4 — القسم 4.1: النماذج العشوائية وأكوان التعميم اللانهائية (4.1.1 – 4.1.7)</div>
+  <div class="footer-c">دليل بصري تعليمي متكامل مع رسوم تفاعلية حقيقية النتائج</div>
+</footer>
+
+<script>
+/* ═══ STARFIELD ═══ */
+(()=>{
+  const c=document.getElementById('sf'),x=c.getContext('2d');let W,H,S=[];
+  function rz(){W=c.width=innerWidth;H=c.height=innerHeight}
+  function init(){S=[];const N=Math.floor(W*H/6000);
+    for(let i=0;i<N;i++)S.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*.85+.12,sp:Math.random()*.014+.003,tw:Math.random()*Math.PI*2,ts:Math.random()*.009+.003,br:Math.random(),col:Math.random()>.9?`rgba(129,140,248,`:`rgba(${210+Math.random()*45|0},${215+Math.random()*40|0},255,`});
+    for(let i=0;i<10;i++)S.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.7+1,sp:Math.random()*.005+.001,tw:Math.random()*Math.PI*2,ts:.005,br:.8,col:Math.random()>.5?`rgba(55,48,163,`:`rgba(196,181,253,`});
+  }
+  function draw(){x.clearRect(0,0,W,H);S.forEach(s=>{s.tw+=s.ts;const a=(s.br*.6+.4)*(.5+.5*Math.sin(s.tw));x.beginPath();x.arc(s.x,s.y,s.r,0,Math.PI*2);x.fillStyle=s.col+a.toFixed(2)+')';x.fill();s.y-=s.sp;if(s.y<0){s.y=H+2;s.x=Math.random()*W}});requestAnimationFrame(draw)}
+  rz();init();draw();addEventListener('resize',()=>{rz();init()});
+})();
+
+const io=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('in')}),{threshold:.06});
+document.querySelectorAll('.fu').forEach(e=>io.observe(e));
+addEventListener('scroll',()=>{const y=scrollY;document.querySelectorAll('.hr1,.hr2').forEach((r,i)=>{r.style.transform=`translate(-50%,-50%) rotate(${y*(i?.04:.06)}deg)`})});
+
+/* ═══ TABS ═══ */
+function showDesign(id,btn){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+  btn.classList.add('on');
+}
+
+/* ═══ G-STUDY DEFAULTS ═══ */
+const G0={p:.30,i:.05,h:.08,pi:.14,ph:.10,ih:.02,pih:.18};
+
+function getG(){
+  return{
+    p:+document.getElementById('gp').value||G0.p,
+    i:+document.getElementById('gi').value||G0.i,
+    h:+document.getElementById('gh').value||G0.h,
+    pi:+document.getElementById('gpi').value||G0.pi,
+    ph:+document.getElementById('gph').value||G0.ph,
+    ih:+document.getElementById('gih').value||G0.ih,
+    pih:+document.getElementById('gpih').value||G0.pih
+  };
+}
+
+function calcCross(g,ni,nh){
+  const d={
+    p:g.p, I:g.i/ni, H:g.h/nh,
+    pI:g.pi/ni, pH:g.ph/nh,
+    IH:g.ih/(ni*nh), pIH:g.pih/(ni*nh)
+  };
+  const tau=d.p;
+  const varD=d.I+d.H+d.pI+d.pH+d.IH+d.pIH;
+  const vard=d.pI+d.pH+d.pIH;
+  const erho=tau/(tau+vard),phi=tau/(tau+varD);
+  const es2p=tau+vard;
+  return{d,tau,varD,vard,erho,phi,es2p,semD:Math.sqrt(varD),semd:Math.sqrt(vard),snD:tau/varD,snd:tau/vard};
+}
+
+function calcNested(g,ni,nh){
+  // σ²(i:h)=σ²(i)+σ²(ih), σ²(pi:h)=σ²(pi)+σ²(pih)
+  const gIH=g.i+g.ih, gPIH=g.pi+g.pih;
+  const d={
+    p:g.p, H:g.h/nh,
+    'I:H':gIH/(ni*nh), pH:g.ph/nh,
+    'pI:H':gPIH/(ni*nh)
+  };
+  const tau=d.p;
+  const varD=d.H+d['I:H']+d.pH+d['pI:H'];
+  const vard=d.pH+d['pI:H'];
+  const erho=tau/(tau+vard),phi=tau/(tau+varD);
+  return{d,tau,varD,vard,erho,phi,semD:Math.sqrt(varD),semd:Math.sqrt(vard),snD:tau/varD,snd:tau/vard};
+}
+
+/* ═══ CHART: Universe Score Viz ═══ */
+let uniChart;
+function updateUniScore(){
+  const nApps=+document.getElementById('nApps').value;
+  const tau=+document.getElementById('tauSlider').value/100;
+  const delta=+document.getElementById('deltaSm').value/100;
+  document.getElementById('nAppsV').textContent=nApps;
+  document.getElementById('tauV').textContent=tau.toFixed(2);
+  document.getElementById('deltaSmV').textContent=delta.toFixed(2);
+  const erho=tau/(tau+delta);
+  const phi_=tau/(tau+delta+0.05); // approx Phi
+  document.getElementById('uniMetrics').innerHTML=`
+    <div class="met"><div class="met-sym" style="color:rgba(196,181,253,.9)">σ²(τ)=σ²(p)</div><div class="met-val" style="color:rgba(196,181,253,.9)">${tau.toFixed(2)}</div><div class="met-lbl">تباين الكون</div></div>
+    <div class="met"><div class="met-sym" style="color:rgba(94,234,212,.9)">σ²(δ)</div><div class="met-val" style="color:rgba(94,234,212,.9)">${delta.toFixed(2)}</div><div class="met-lbl">خطأ نسبي</div></div>
+    <div class="met"><div class="met-sym" style="color:rgba(129,140,248,.9)">Eρ²</div><div class="met-val" style="color:${erho>=.8?'#6ee7b7':erho>=.7?'#fcd34d':'#f87171'}">${erho.toFixed(3)}</div><div class="met-lbl">معامل G</div></div>
+    <div class="met"><div class="met-sym" style="color:rgba(249,168,212,.9)">SEM(δ)</div><div class="met-val" style="color:rgba(249,168,212,.9)">${Math.sqrt(delta).toFixed(3)}</div><div class="met-lbl">خطأ معياري</div></div>
+    <div class="met"><div class="met-sym" style="color:rgba(252,211,77,.9)">S/N(δ)</div><div class="met-val" style="color:rgba(252,211,77,.9)">${(tau/delta).toFixed(2)}</div><div class="met-lbl">نسبة الإشارة</div></div>`;
+  // Build scatter chart: persons with universe scores ± error bands
+  const persons=Array.from({length:20},(_,i)=>({
+    univScore: -0.4+i*0.04+Math.random()*0.02,
+    obs: -0.4+i*0.04+(Math.random()-0.5)*Math.sqrt(delta)*2
+  }));
+  const semVal=Math.sqrt(delta/nApps);
+  if(uniChart)uniChart.destroy();
+  uniChart=new Chart(document.getElementById('uniScoreChart'),{
+    type:'scatter',
+    data:{datasets:[
+      {label:'درجة الكون (حقيقية)',data:persons.map(p=>({x:p.univScore,y:p.univScore})),backgroundColor:'rgba(196,181,253,.8)',pointRadius:5,type:'scatter'},
+      {label:'درجة ملحوظة (تطبيق واحد)',data:persons.map(p=>({x:p.univScore,y:p.obs})),backgroundColor:'rgba(249,168,212,.6)',pointRadius:4,type:'scatter'},
+      {label:`متوسط ${nApps} تطبيقات`,data:persons.map(p=>({x:p.univScore,y:p.univScore+(Math.random()-0.5)*semVal})),backgroundColor:'rgba(94,234,212,.8)',pointRadius:4,type:'scatter'}
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:'rgba(240,236,224,.45)',font:{size:10},boxWidth:16}}},scales:{x:{title:{display:true,text:'درجة الكون الحقيقية',color:'rgba(196,181,253,.6)',font:{size:11}},grid:{color:'rgba(255,255,255,.04)'},ticks:{color:'rgba(240,236,224,.4)',font:{size:10}}},y:{title:{display:true,text:'الدرجة الملحوظة',color:'rgba(249,168,212,.6)',font:{size:11}},grid:{color:'rgba(255,255,255,.04)'},ticks:{color:'rgba(240,236,224,.4)',font:{size:10}}}}}
+  });
+}
+['nApps','tauSlider','deltaSm'].forEach(id=>document.getElementById(id).addEventListener('input',updateUniScore));
+
+/* ═══ d(alpha) GRID ═══ */
+function updateDAlpha(){
+  const ni=+document.getElementById('niSlider').value;
+  const nh=+document.getElementById('nhSlider').value;
+  document.getElementById('niV').textContent=ni;
+  document.getElementById('nhV').textContent=nh;
+  const items=[
+    {a:'p',d:1,col:'rgba(129,140,248,.8)'},
+    {a:'I',d:ni,col:'rgba(249,168,212,.8)'},
+    {a:'H',d:nh,col:'rgba(196,181,253,.8)'},
+    {a:'pI',d:ni,col:'rgba(94,234,212,.7)'},
+    {a:'pH',d:nh,col:'rgba(252,211,77,.7)'},
+    {a:'IH',d:ni*nh,col:'rgba(248,113,113,.7)'},
+    {a:'pIH',d:ni*nh,col:'rgba(110,231,183,.7)'},
+  ];
+  document.getElementById('dAlphaGrid').innerHTML=items.map(it=>`
+    <div style="background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.07);border-radius:10px;padding:12px;text-align:center">
+      <div style="font-family:'Georgia',serif;font-size:.95rem;color:${it.col};direction:ltr;margin-bottom:4px">σ²(${it.a})</div>
+      <div style="font-size:.68rem;color:var(--im);margin-bottom:6px">d(${it.a}) =</div>
+      <div style="font-size:1.4rem;font-weight:900;font-family:'Cairo',sans-serif;color:${it.col}">${it.d}</div>
+      <div style="font-size:.62rem;color:var(--ig);margin-top:4px">σ²(${it.a.toLowerCase()}) / ${it.d}</div>
+    </div>`).join('');
+}
+['niSlider','nhSlider'].forEach(id=>document.getElementById(id).addEventListener('input',updateDAlpha));
+
+/* ═══ ERROR COMPARISON CHARTS ═══ */
+let errChart,errBChart;
+const gridC='rgba(255,255,255,.04)',tickC='rgba(240,236,224,.42)';
+function updateErrCharts(){
+  const ni=+document.getElementById('niESlider').value;
+  const nh=+document.getElementById('nhESlider').value;
+  document.getElementById('niE').textContent=ni;
+  document.getElementById('nhE').textContent=nh;
+  const g=getG();
+  const cr=calcCross(g,ni,nh);
+  const ne=calcNested(g,ni,nh);
+  const labels=Array.from({length:ni>10?10:ni},(_,i)=>i+1);
+  const semDcross=labels.map(n=>Math.sqrt(calcCross(g,n,nh).varD));
+  const semDnest=labels.map(n=>Math.sqrt(calcNested(g,n,nh).varD));
+  const semDeltaCross=labels.map(n=>Math.sqrt(calcCross(g,n,nh).vard));
+  const semDeltaNest=labels.map(n=>Math.sqrt(calcNested(g,n,nh).vard));
+  if(errChart)errChart.destroy();
+  errChart=new Chart(document.getElementById('errChart'),{type:'line',data:{labels,datasets:[
+    {label:'σ̂(Δ) متقاطع',data:semDcross,borderColor:'rgba(249,168,212,.8)',borderWidth:2,fill:false,tension:.3,pointRadius:3},
+    {label:'σ̂(Δ) متداخل',data:semDnest,borderColor:'rgba(249,168,212,.4)',borderWidth:2,fill:false,tension:.3,pointRadius:3,borderDash:[5,5]},
+    {label:'σ̂(δ) متقاطع',data:semDeltaCross,borderColor:'rgba(94,234,212,.8)',borderWidth:2,fill:false,tension:.3,pointRadius:3},
+    {label:'σ̂(δ) متداخل',data:semDeltaNest,borderColor:'rgba(94,234,212,.4)',borderWidth:2,fill:false,tension:.3,pointRadius:3,borderDash:[5,5]}
+  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:tickC,font:{size:9},boxWidth:14}}},scales:{x:{title:{display:true,text:"n′ᵢ",color:tickC,font:{size:10}},grid:{color:gridC},ticks:{color:tickC,font:{size:9}}},y:{grid:{color:gridC},ticks:{color:tickC,font:{size:9}},min:0}}}});
+  // breakdown for current ni,nh
+  const crossComp=[cr.d.I,cr.d.H,cr.d.pI,cr.d.pH,cr.d.IH,cr.d.pIH];
+  const nestComp=[ne.d.H,ne.d['I:H'],ne.d.pH,ne.d['pI:H']];
+  if(errBChart)errBChart.destroy();
+  errBChart=new Chart(document.getElementById('errBreakChart'),{type:'bar',data:{labels:['I','H','pI','pH','IH','pIH'],datasets:[
+    {label:'متقاطع p×I×H',data:crossComp,backgroundColor:['rgba(249,168,212,.7)','rgba(196,181,253,.7)','rgba(94,234,212,.7)','rgba(252,211,77,.6)','rgba(248,113,113,.6)','rgba(110,231,183,.6)'],borderRadius:5},
+  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:tickC,font:{size:9},boxWidth:14}}},scales:{x:{grid:{display:false},ticks:{color:tickC,font:{size:9}}},y:{grid:{color:gridC},ticks:{color:tickC,font:{size:9}},min:0}}}});
+  document.getElementById('errCompInfo').innerHTML=`n′ᵢ=${ni}, n′ₕ=${nh}: متقاطع → Eρ²=${cr.erho.toFixed(3)}, Φ=${cr.phi.toFixed(3)} &nbsp;|&nbsp; متداخل → Eρ²=${ne.erho.toFixed(3)}, Φ=${ne.phi.toFixed(3)} (أعلى بسبب التداخل الأكفأ)`;
+}
+['niESlider','nhESlider'].forEach(id=>document.getElementById(id).addEventListener('input',updateErrCharts));
+
+/* ═══ S/N CHARTS ═══ */
+let snC1,snC2;
+function updateSNCharts(){
+  const maxNi=+document.getElementById('snNiSlider').value;
+  const nhFix=+document.getElementById('snNhSlider').value;
+  document.getElementById('snNiV').textContent=maxNi;
+  document.getElementById('snNhV').textContent=nhFix;
+  const g=getG();
+  // Chart 1: SN vs Erho relationship
+  const snVals=Array.from({length:100},(_,i)=>i/10);
+  if(snC1)snC1.destroy();
+  snC1=new Chart(document.getElementById('snChart1'),{type:'line',data:{labels:snVals.map(v=>v.toFixed(1)),datasets:[
+    {label:'Eρ² = S/N/(1+S/N)',data:snVals.map(sn=>+(sn/(1+sn)).toFixed(4)),borderColor:'rgba(129,140,248,.8)',borderWidth:2,fill:false,tension:.4,pointRadius:0},
+    {label:'Φ ≤ Eρ²',data:snVals.map(sn=>+((sn*0.85)/(1+sn*0.85)).toFixed(4)),borderColor:'rgba(201,168,76,.6)',borderWidth:2,fill:false,tension:.4,pointRadius:0,borderDash:[5,5]}
+  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:tickC,font:{size:9},boxWidth:14}}},scales:{x:{title:{display:true,text:'S/N',color:tickC,font:{size:10}},grid:{color:gridC},ticks:{color:tickC,font:{size:9},maxTicksLimit:6}},y:{grid:{color:gridC},ticks:{color:tickC,font:{size:9}},min:0,max:1}}}});
+  // Chart 2: Erho and Phi vs ni
+  const niLabels=Array.from({length:maxNi},(_,i)=>i+1);
+  if(snC2)snC2.destroy();
+  snC2=new Chart(document.getElementById('snChart2'),{type:'line',data:{labels:niLabels,datasets:[
+    {label:'Eρ² متقاطع',data:niLabels.map(ni=>+calcCross(g,ni,nhFix).erho.toFixed(4)),borderColor:'rgba(129,140,248,.8)',borderWidth:2,fill:false,tension:.35,pointRadius:3},
+    {label:'Φ متقاطع',data:niLabels.map(ni=>+calcCross(g,ni,nhFix).phi.toFixed(4)),borderColor:'rgba(201,168,76,.8)',borderWidth:2,fill:false,tension:.35,pointRadius:3},
+    {label:'Eρ² متداخل',data:niLabels.map(ni=>+calcNested(g,ni,nhFix).erho.toFixed(4)),borderColor:'rgba(129,140,248,.4)',borderWidth:2,fill:false,tension:.35,pointRadius:3,borderDash:[5,5]},
+    {label:'Φ متداخل',data:niLabels.map(ni=>+calcNested(g,ni,nhFix).phi.toFixed(4)),borderColor:'rgba(201,168,76,.4)',borderWidth:2,fill:false,tension:.35,pointRadius:3,borderDash:[5,5]}
+  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:tickC,font:{size:9},boxWidth:14}}},scales:{x:{title:{display:true,text:"n′ᵢ",color:tickC,font:{size:10}},grid:{color:gridC},ticks:{color:tickC,font:{size:9}}},y:{grid:{color:gridC},ticks:{color:tickC,font:{size:9}},min:0,max:1}}}});
+  const cr=calcCross(g,maxNi,nhFix),ne=calcNested(g,maxNi,nhFix);
+  document.getElementById('snInfo').innerHTML=`عند n′ᵢ=${maxNi}, n′ₕ=${nhFix}: متقاطع → Eρ²=${cr.erho.toFixed(3)}, S/N(δ)=${cr.snd.toFixed(2)} | متداخل → Eρ²=${ne.erho.toFixed(3)}, S/N(δ)=${ne.snd.toFixed(2)}`;
+}
+['snNiSlider','snNhSlider'].forEach(id=>document.getElementById(id).addEventListener('input',updateSNCharts));
+
+/* ═══ VENN DIAGRAMS ═══ */
+function drawVenn(canvasId, isCrossed){
+  const cv=document.getElementById(canvasId);
+  cv.width=cv.offsetWidth;cv.height=220;
+  const ctx=cv.getContext('2d');const W=cv.width,H=220;
+  ctx.clearRect(0,0,W,H);
+  // Centered circles representing variance partitioning
+  const cx=W/2,cy=H/2-10,rP=70,rI=45,rH=45;
+  // p circle (universe score variance)
+  ctx.beginPath();ctx.arc(cx,cy,rP,0,Math.PI*2);ctx.fillStyle='rgba(129,140,248,.15)';ctx.fill();ctx.strokeStyle='rgba(129,140,248,.6)';ctx.lineWidth=1.5;ctx.stroke();
+  // τ label inside p
+  ctx.fillStyle='rgba(129,140,248,.9)';ctx.font='bold 13px Georgia';ctx.textAlign='center';ctx.fillText('τ = σ²(p)',cx,cy-10);
+  ctx.fillStyle='rgba(129,140,248,.6)';ctx.font='11px Georgia';ctx.fillText('δ includes',cx,cy+6);ctx.fillText('pI, pH, pIH',cx,cy+20);
+  if(isCrossed){
+    // I circle (left, outside mostly)
+    ctx.beginPath();ctx.arc(cx-rP-10,cy,rI,0,Math.PI*2);ctx.fillStyle='rgba(249,168,212,.1)';ctx.fill();ctx.strokeStyle='rgba(249,168,212,.5)';ctx.lineWidth=1.2;ctx.stroke();
+    ctx.fillStyle='rgba(249,168,212,.8)';ctx.font='11px Georgia';ctx.textAlign='center';ctx.fillText('σ²(I)',cx-rP-10,cy-12);ctx.fillText('σ²(IH)',cx-rP-10,cy+6);
+    // H circle (right)
+    ctx.beginPath();ctx.arc(cx+rP+10,cy,rH,0,Math.PI*2);ctx.fillStyle='rgba(196,181,253,.1)';ctx.fill();ctx.strokeStyle='rgba(196,181,253,.5)';ctx.lineWidth=1.2;ctx.stroke();
+    ctx.fillStyle='rgba(196,181,253,.8)';ctx.font='11px Georgia';ctx.textAlign='center';ctx.fillText('σ²(H)',cx+rP+10,cy);
+    // Label
+    ctx.fillStyle='rgba(240,236,224,.35)';ctx.font='10px Cairo';ctx.textAlign='center';ctx.fillText('Δ إضافي = σ²(I)+σ²(H)+σ²(IH)',cx,H-8);
+  } else {
+    // Nested: I:H combined
+    ctx.beginPath();ctx.arc(cx-rP-5,cy,55,0,Math.PI*2);ctx.fillStyle='rgba(94,234,212,.08)';ctx.fill();ctx.strokeStyle='rgba(94,234,212,.4)';ctx.lineWidth=1.2;ctx.stroke();
+    ctx.fillStyle='rgba(94,234,212,.8)';ctx.font='11px Georgia';ctx.textAlign='center';ctx.fillText('σ²(H)',cx-rP-5,cy-14);ctx.fillText('σ²(I:H)',cx-rP-5,cy+4);
+    ctx.fillStyle='rgba(240,236,224,.35)';ctx.font='10px Cairo';ctx.textAlign='center';ctx.fillText('Δ إضافي = σ²(H)+σ²(I:H) [أقل!]',cx,H-8);
+  }
+}
+
+/* ═══ FULL CALCULATOR ═══ */
+function runCalc(){
+  const g=getG();
+  const ni=+document.getElementById('dn_i').value||4;
+  const nh=+document.getElementById('dn_h').value||2;
+  const cr=calcCross(g,ni,nh);
+  const ne=calcNested(g,ni,nh);
+  const fmt=(n,d=4)=>n.toFixed(d);
+  document.getElementById('calcOut').innerHTML=`
+    <div class="cres-grid">
+      <div class="cres cres-i">
+        <div class="cres-head">تصميم p × I × H (متقاطع) — n′ᵢ=${ni}, n′ₕ=${nh}</div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;direction:ltr;font-family:'Georgia',serif;font-size:.78rem;margin-bottom:12px">
+          ${Object.entries(cr.d).map(([k,v])=>`<div style="background:rgba(0,0,0,.3);border-radius:6px;padding:7px;text-align:center"><div style="color:rgba(129,140,248,.8)">σ²(${k})</div><div style="font-weight:700;color:var(--ivory);font-size:.95rem">${fmt(v)}</div></div>`).join('')}
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+          ${[['σ²(τ)=σ²(p)',cr.tau,'rgba(129,140,248,.9)'],['σ²(Δ)',cr.varD,'rgba(249,168,212,.9)'],['σ²(δ)',cr.vard,'rgba(94,234,212,.9)'],['σ̂(Δ)',cr.semD,'rgba(249,168,212,.7)'],['σ̂(δ)',cr.semd,'rgba(94,234,212,.7)'],['ES²(p)',cr.es2p,'rgba(252,211,77,.8)'],['Eρ²',cr.erho,'rgba(129,140,248,.9)'],['Φ',cr.phi,'rgba(201,168,76,.9)'],['S/N(δ)',cr.snd,'rgba(94,234,212,.7)'],['S/N(Δ)',cr.snD,'rgba(249,168,212,.7)']].map(([l,v,c])=>`<div style="background:rgba(55,48,163,.07);border-radius:7px;padding:8px 12px;display:flex;justify-content:space-between;align-items:center;direction:ltr"><span style="color:var(--im);font-family:'Georgia',serif;font-size:.76rem">${l}</span><span style="color:${c};font-weight:700;font-size:1.05rem;font-family:'Cairo',sans-serif">${fmt(v,3)}</span></div>`).join('')}
+        </div>
+        <div style="margin-top:10px;padding:10px 14px;background:${cr.erho>=.85?'rgba(5,150,105,.06)':cr.erho>=.7?'rgba(201,168,76,.06)':'rgba(220,38,38,.06)'};border:1px solid ${cr.erho>=.85?'rgba(110,231,183,.25)':cr.erho>=.7?'rgba(201,168,76,.25)':'rgba(248,113,113,.25)'};border-radius:8px;font-size:.78rem;color:${cr.erho>=.85?'#6ee7b7':cr.erho>=.7?'#fcd34d':'#f87171'}">
+          ${cr.erho>=.85?'✅ جودة ممتازة':cr.erho>=.7?'⚠ جودة مقبولة':'❌ جودة منخفضة'} — Eρ²=${fmt(cr.erho,3)}, Φ=${fmt(cr.phi,3)}, الفرق=${fmt(cr.erho-cr.phi,3)}
+        </div>
+      </div>
+      <div class="cres cres-v">
+        <div class="cres-head">تصميم p × (I:H) (متداخل) — n′ᵢ=${ni}, n′ₕ=${nh}</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;direction:ltr;font-family:'Georgia',serif;font-size:.78rem;margin-bottom:12px">
+          ${Object.entries(ne.d).map(([k,v])=>`<div style="background:rgba(0,0,0,.3);border-radius:6px;padding:7px;text-align:center"><div style="color:rgba(196,181,253,.8)">σ²(${k})</div><div style="font-weight:700;color:var(--ivory);font-size:.95rem">${fmt(v)}</div></div>`).join('')}
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+          ${[['σ²(τ)=σ²(p)',ne.tau,'rgba(196,181,253,.9)'],['σ²(Δ)',ne.varD,'rgba(249,168,212,.9)'],['σ²(δ)',ne.vard,'rgba(94,234,212,.9)'],['σ̂(Δ)',ne.semD,'rgba(249,168,212,.7)'],['σ̂(δ)',ne.semd,'rgba(94,234,212,.7)'],['Eρ²',ne.erho,'rgba(196,181,253,.9)'],['Φ',ne.phi,'rgba(201,168,76,.9)'],['S/N(δ)',ne.snd,'rgba(94,234,212,.7)'],['S/N(Δ)',ne.snD,'rgba(249,168,212,.7)'],['Δ الخطأ',ne.vard-cr.vard,'rgba(110,231,183,.8)']].map(([l,v,c])=>`<div style="background:rgba(124,58,237,.06);border-radius:7px;padding:8px 12px;display:flex;justify-content:space-between;align-items:center;direction:ltr"><span style="color:var(--im);font-family:'Georgia',serif;font-size:.76rem">${l}</span><span style="color:${c};font-weight:700;font-size:1.05rem;font-family:'Cairo',sans-serif">${fmt(v,3)}</span></div>`).join('')}
+        </div>
+        <div style="margin-top:10px;padding:10px 14px;background:rgba(13,148,136,.06);border:1px solid rgba(94,234,212,.2);border-radius:8px;font-size:.78rem;color:var(--teal-lt)">
+          التصميم المتداخل أكثر كفاءة: Eρ² أعلى بـ ${fmt(ne.erho-cr.erho,3)} · σ²(δ) أقل بـ ${fmt(cr.vard-ne.vard,4)} لأن σ²(pi) مقسوم على n′ᵢ×n′ₕ=${ni*nh} بدل n′ᵢ=${ni}
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:14px;padding:14px 18px;background:rgba(55,48,163,.06);border:1px solid rgba(129,140,248,.15);border-radius:10px;font-size:.8rem;color:var(--id)">
+      <strong style="color:var(--indigo-lt)">الخلاصة:</strong> تباين درجة الكون σ²(τ)=${fmt(cr.tau,3)} <strong>لا يتغير</strong> بين التصميمَين (لا يعتمد على n′ أو البنية). الفرق في Eρ² يأتي كله من تباينات الخطأ النسبي σ²(δ) — الأقل في المتداخل بفضل القسمة على n′ᵢ×n′ₕ بدلاً من n′ᵢ فقط.
+    </div>`;
+}
+
+/* ═══ INIT ═══ */
+window.addEventListener('load',()=>{
+  updateUniScore();updateDAlpha();updateErrCharts();updateSNCharts();
+  drawVenn('vennCross',true);drawVenn('vennNested',false);
+  runCalc();
+});
+</script>
+
+<div class="page-nav-bottom" style="background:linear-gradient(135deg,#0a0a1a,#111827);"><a href="index.html" style="background:linear-gradient(135deg,#16213e,#0f3460);color:#fff;">&#x1F3E0; &#x627;&#x644;&#x631;&#x626;&#x64A;&#x633;&#x64A;&#x629;</a> <a href="3.5.html" style="background:linear-gradient(135deg,#4a5568,#2d3748);color:#fff;">&#x2190; &#x627;&#x644;&#x633;&#x627;&#x628;&#x642;</a> <a href="4.2.html" style="background:linear-gradient(135deg,#2b6cb0,#2c5282);color:#fff;">&#x627;&#x644;&#x62A;&#x627;&#x644;&#x64A; &#x2192;</a></div>
+</body>
+</html>

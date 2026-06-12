@@ -1,0 +1,1784 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>§3.2 النماذج الخطية وتأثيرات الدرجات | الفصل الثالث</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@400;500;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f2f6ff; --surf:#fff; --deep:#0c1a3a; --navy:#132050;
+  --blue:#1e4fd8; --sky:#1890d8; --cyan:#00b8e0; --teal:#00968a;
+  --mint:#00c898; --lime:#5cc820; --amber:#d8900a; --orange:#d86010;
+  --red:#d02030; --rose:#c82060; --violet:#6028c0; --purple:#8838e8;
+  --slate:#405070; --muted:#7888a8; --border:#d0daf0; --lite:#eef2ff;
+  --r:14px; --sh:0 2px 14px rgba(12,26,58,.07); --shm:0 8px 28px rgba(12,26,58,.12);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'Cairo','Tajawal',sans-serif;background:var(--bg);color:var(--deep);direction:rtl;overflow-x:hidden;line-height:1.75;}
+
+/* PROGRESS */
+.pgbar{position:fixed;top:0;left:0;right:0;z-index:1000;height:3px;background:var(--border);}
+.pgf{height:100%;width:0%;background:linear-gradient(90deg,var(--blue),var(--cyan),var(--teal),var(--mint));transition:width .1s;}
+
+/* NAV */
+.nav{position:sticky;top:3px;z-index:900;background:rgba(255,255,255,.96);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);padding:0 30px;display:flex;align-items:stretch;box-shadow:var(--sh);}
+.nav-logo{font-size:.84rem;font-weight:700;color:var(--blue);display:flex;align-items:center;gap:8px;padding:13px 0;margin-left:18px;white-space:nowrap;}
+.nav-links{display:flex;overflow-x:auto;}
+.nl{padding:0 13px;height:49px;display:flex;align-items:center;font-size:.72rem;font-weight:700;color:var(--slate);text-decoration:none;white-space:nowrap;border-bottom:3px solid transparent;transition:all .2s;}
+.nl:hover{color:var(--blue);} .nl.active{color:var(--blue);border-bottom-color:var(--blue);}
+
+/* HERO */
+.hero{background:linear-gradient(140deg,#080f25 0%,#0d1c42 50%,#0a1838 100%);min-height:88vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:70px 40px;position:relative;overflow:hidden;text-align:center;}
+.hero::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(0,184,224,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(0,184,224,.05) 1px,transparent 1px);background-size:40px 40px;}
+/* floating formula particles */
+.particle{position:absolute;font-family:'JetBrains Mono',monospace;color:rgba(0,200,240,.15);font-size:.9rem;pointer-events:none;animation:float-p 8s ease-in-out infinite;}
+@keyframes float-p{0%,100%{transform:translateY(0) rotate(0);}50%{transform:translateY(-20px) rotate(3deg);}}
+.hero-glow{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 700px 500px at 25% 40%,rgba(30,79,216,.12) 0%,transparent 60%),radial-gradient(ellipse 500px 400px at 78% 68%,rgba(0,150,138,.09) 0%,transparent 58%);}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(0,184,224,.12);border:1px solid rgba(0,184,224,.28);color:#67e8f9;padding:8px 22px;border-radius:50px;font-size:.78rem;font-weight:700;letter-spacing:1px;margin-bottom:26px;}
+.hero h1{font-size:clamp(2.3rem,5.5vw,4.2rem);font-weight:900;color:white;line-height:1.1;margin-bottom:16px;}
+.hero h1 em{font-style:normal;background:linear-gradient(120deg,#38bdf8,#34d399);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.hero-sub{font-size:1rem;color:rgba(255,255,255,.62);max-width:660px;margin:0 auto 44px;line-height:1.95;}
+.hero-stats{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;}
+.hstat{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.13);border-radius:12px;padding:14px 18px;min-width:130px;text-align:center;transition:all .3s;cursor:default;}
+.hstat:hover{background:rgba(0,184,224,.1);transform:translateY(-4px);}
+.hstat .hs{font-family:'JetBrains Mono',monospace;font-size:1.2rem;font-weight:700;margin-bottom:4px;}
+.hstat .hl{font-size:.68rem;color:rgba(255,255,255,.58);}
+
+/* SECTIONS */
+.sec{padding:68px 40px;}
+.sec-inner{max-width:1080px;margin:0 auto;}
+.sec-alt{background:#f7f9ff;}
+.sec-warm{background:#fffdf6;}
+.sec-dark{background:var(--deep);color:white;}
+.cx{text-align:center;}.cmx{margin:0 auto;}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:22px;}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
+
+.tag{display:inline-block;padding:5px 15px;border-radius:50px;font-size:.72rem;font-weight:700;letter-spacing:1px;margin-bottom:12px;}
+.tb{background:linear-gradient(135deg,var(--blue),var(--sky));color:white;}
+.tt{background:linear-gradient(135deg,var(--teal),var(--mint));color:white;}
+.ta{background:linear-gradient(135deg,var(--amber),var(--orange));color:white;}
+.tv{background:linear-gradient(135deg,var(--violet),var(--purple));color:white;}
+.tc{background:linear-gradient(135deg,var(--cyan),var(--sky));color:white;}
+.tl{background:linear-gradient(135deg,var(--lime),var(--teal));color:white;}
+.ts{background:var(--slate);color:white;}
+.tr{background:linear-gradient(135deg,var(--red),var(--rose));color:white;}
+h2.st{font-size:clamp(1.7rem,4vw,2.5rem);font-weight:900;color:var(--deep);margin-bottom:12px;}
+h2.st.wh{color:white;}
+.sd{font-size:.94rem;color:var(--slate);max-width:650px;line-height:1.9;margin-bottom:40px;}
+.sd.wh{color:rgba(255,255,255,.7);}
+
+.card{background:var(--surf);border-radius:var(--r);padding:26px;box-shadow:var(--sh);border:1px solid var(--border);transition:all .28s;}
+.card:hover{transform:translateY(-3px);box-shadow:var(--shm);}
+.dcard{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:var(--r);padding:24px;}
+
+/* CODE BLOCKS */
+.code{font-family:'JetBrains Mono',monospace;background:#0c1a3a;color:#67e8f9;border-radius:10px;padding:14px 18px;font-size:.9rem;direction:ltr;text-align:center;margin:10px 0;box-shadow:var(--shm);}
+.code .kw{color:#f0c040;}
+.code .op{color:#a0d8ef;}
+.code .cm{color:#6080a0;font-style:italic;}
+
+/* EQUATIONS */
+.eq{background:var(--lite);border-radius:10px;padding:12px 18px;border-right:3px solid;font-family:'JetBrains Mono',monospace;font-size:.9rem;direction:ltr;text-align:center;margin:8px 0;box-shadow:var(--sh);}
+.eq-b{border-color:var(--blue);} .eq-t{border-color:var(--teal);}
+.eq-a{border-color:var(--amber);} .eq-v{border-color:var(--violet);}
+.eq-c{border-color:var(--cyan);} .eq-l{border-color:var(--lime);}
+.eq-main{background:linear-gradient(135deg,#eef3ff,#dde8ff);border-radius:14px;padding:18px 28px;border:2px solid rgba(30,79,216,.2);font-family:'JetBrains Mono',monospace;font-size:1rem;direction:ltr;text-align:center;margin:14px 0;box-shadow:var(--shm);}
+
+/* INSIGHTS */
+.ins{border-radius:14px;padding:16px 20px;display:flex;gap:11px;margin:12px 0;}
+.ins .ico{font-size:1.3rem;flex-shrink:0;margin-top:2px;}
+.ins .it{font-weight:700;font-size:.86rem;margin-bottom:3px;}
+.ins .ii{font-size:.81rem;color:var(--slate);line-height:1.85;}
+.ib{background:#eff6ff;border:1.5px solid #93c5fd;} .ib .it{color:var(--blue);}
+.it2{background:#f0fdf9;border:1.5px solid #5eead4;} .it2 .it{color:var(--teal);}
+.ia{background:#fffbeb;border:1.5px solid #fde68a;} .ia .it{color:var(--amber);}
+.iv{background:#f5f3ff;border:1.5px solid #c4b5fd;} .iv .it{color:var(--violet);}
+.ir{background:#fff1f2;border:1.5px solid #fca5a5;} .ir .it{color:var(--red);}
+.il{background:#f0fdf4;border:1.5px solid #86efac;} .il .it{color:#15803d;}
+
+.rdiv{height:3px;border:none;background:linear-gradient(90deg,var(--blue),var(--cyan),var(--teal),var(--mint),var(--amber),var(--violet));}
+footer{background:var(--deep);color:rgba(255,255,255,.45);text-align:center;padding:36px 20px;font-size:.88rem;line-height:1.9;}
+.fu{opacity:0;transform:translateY(22px);transition:opacity .6s ease,transform .6s ease;}
+.fu.in{opacity:1;transform:translateY(0);}
+.fu:nth-child(2){transition-delay:.07s;}.fu:nth-child(3){transition-delay:.14s;}.fu:nth-child(4){transition-delay:.21s;}
+
+/* ═══ SECTION SPECIFIC ═══ */
+
+/* Anatomy of notation */
+.notation-box{background:white;border-radius:16px;padding:36px;box-shadow:var(--shm);border:1px solid var(--border);}
+.formula-strip{display:flex;align-items:center;justify-content:center;gap:0;flex-wrap:wrap;margin:24px 0;}
+.fs-part{padding:14px 20px;text-align:center;font-family:'JetBrains Mono',monospace;font-weight:700;position:relative;}
+.fs-primary{background:linear-gradient(135deg,#1e4fd8,#1890d8);color:white;border-radius:12px 0 0 12px;font-size:1.2rem;}
+.fs-colon{background:#334;color:#67e8f9;padding:14px 8px;font-size:1.4rem;}
+.fs-nest1{background:linear-gradient(135deg,#00968a,#00c898);color:white;font-size:1.2rem;}
+.fs-colon2{background:#334;color:#67e8f9;padding:14px 8px;font-size:1.4rem;}
+.fs-nest2{background:linear-gradient(135deg,#6028c0,#8838e8);color:white;border-radius:0 12px 12px 0;font-size:1.2rem;}
+.fs-label{font-size:.7rem;font-family:'Cairo',sans-serif;font-weight:400;margin-top:4px;opacity:.85;}
+
+/* Effect cards */
+.effect-demo{background:white;border-radius:var(--r);padding:28px;box-shadow:var(--shm);border:1px solid var(--border);}
+.eff-row{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:10px;margin-bottom:8px;cursor:pointer;transition:all .2s;}
+.eff-row:hover{transform:translateX(-4px);}
+.eff-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:.8rem;font-weight:700;flex-shrink:0;}
+.eff-main{font-size:.82rem;color:var(--slate);flex:1;line-height:1.7;}
+.eff-badge{font-size:.7rem;font-weight:700;padding:3px 9px;border-radius:50px;flex-shrink:0;}
+
+/* Confounding visual */
+.conf-strip{display:flex;align-items:center;gap:0;margin:16px 0;flex-wrap:wrap;}
+.cs-box{padding:12px 16px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:.9rem;font-weight:700;min-width:80px;}
+.cs-eq{font-size:1.1rem;color:var(--muted);padding:0 10px;}
+.cs-orig{background:#eff6ff;border:1.5px solid #93c5fd;border-radius:10px;color:var(--blue);}
+.cs-plus{color:var(--muted);font-size:1.2rem;padding:0 8px;}
+.cs-merged{background:linear-gradient(135deg,#f0fdf9,#d1fae5);border:1.5px solid #5eead4;border-radius:10px;color:var(--teal);}
+.cs-result{background:linear-gradient(135deg,#fef9f0,#fef3c7);border:1.5px solid #fcd34d;border-radius:10px;color:#854d0e;}
+
+/* Linear model display */
+.lm-card{background:var(--deep);border-radius:16px;padding:28px;box-shadow:var(--shm);overflow:hidden;position:relative;}
+.lm-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,184,224,.06) 0%,transparent 60%);}
+.lm-formula{font-family:'JetBrains Mono',monospace;color:white;font-size:1rem;text-align:center;direction:ltr;padding:14px;background:rgba(255,255,255,.05);border-radius:10px;border:1px solid rgba(255,255,255,.1);margin:12px 0;}
+.lm-term{display:inline-block;padding:3px 8px;border-radius:6px;margin:0 2px;}
+.t-p{background:rgba(56,189,248,.2);color:#67e8f9;}
+.t-h{background:rgba(167,243,208,.2);color:#6ee7b7;}
+.t-i{background:rgba(196,181,253,.2);color:#c4b5fd;}
+.t-ph{background:rgba(253,186,116,.2);color:#fdba74;}
+.t-ih{background:rgba(252,165,165,.2);color:#fca5a5;}
+.t-mu{color:rgba(255,255,255,.6);}
+.t-plus{color:rgba(255,255,255,.4);}
+
+/* Score mean anatomy */
+.smean-visual{background:white;border-radius:16px;padding:32px;box-shadow:var(--shm);border:1px solid var(--border);}
+.smean-table{width:100%;border-collapse:separate;border-spacing:0;border-radius:12px;overflow:hidden;font-size:.82rem;}
+.smean-table thead tr{background:linear-gradient(135deg,var(--deep),var(--navy));}
+.smean-table th{padding:12px 16px;color:white;font-weight:700;text-align:center;}
+.smean-table th:first-child{text-align:right;}
+.smean-table tbody tr{background:white;transition:background .2s;}
+.smean-table tbody tr:nth-child(even){background:#f6f8ff;}
+.smean-table tbody tr:hover{background:#eff6ff;}
+.smean-table td{padding:11px 16px;border-bottom:1px solid var(--border);text-align:center;font-family:'JetBrains Mono',monospace;font-size:.82rem;}
+.smean-table td:first-child{font-family:'Cairo',sans-serif;font-size:.82rem;font-weight:600;text-align:right;}
+
+/* ALGORITHM VISUAL */
+.algo-box{background:white;border-radius:16px;padding:36px;box-shadow:var(--shm);border:1px solid var(--border);}
+.algo-intro{background:linear-gradient(135deg,#0c1a3a,#132050);border-radius:12px;padding:20px 24px;color:white;margin-bottom:28px;}
+.algo-intro .code{font-size:.85rem;background:rgba(255,255,255,.08);color:#a0d8ef;margin-top:10px;}
+.algo-steps{display:flex;flex-direction:column;gap:0;position:relative;}
+.algo-steps::before{content:'';position:absolute;right:27px;top:36px;bottom:36px;width:2px;background:linear-gradient(to bottom,var(--blue),var(--teal),var(--mint));border-radius:2px;}
+.algo-step{display:flex;gap:18px;padding:16px 0;position:relative;}
+.as-num{width:54px;height:54px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1rem;font-weight:900;color:white;flex-shrink:0;position:relative;z-index:2;box-shadow:var(--shm);}
+.as-0{background:linear-gradient(135deg,var(--blue),var(--sky));}
+.as-1{background:linear-gradient(135deg,var(--red),var(--rose));}
+.as-2{background:linear-gradient(135deg,var(--teal),var(--mint));}
+.as-3{background:linear-gradient(135deg,var(--amber),var(--orange));}
+.as-end{background:linear-gradient(135deg,var(--violet),var(--purple));}
+.as-body{background:white;border-radius:14px;padding:18px 22px;flex:1;box-shadow:var(--sh);border:1px solid var(--border);}
+.as-body h4{font-size:.88rem;font-weight:700;color:var(--deep);margin-bottom:8px;}
+.as-body p{font-size:.82rem;color:var(--slate);line-height:1.85;}
+.as-rule{background:var(--lite);border-radius:8px;padding:8px 14px;margin-top:8px;font-size:.78rem;color:var(--slate);}
+
+/* WORKED EXAMPLE */
+.worked-box{background:white;border-radius:16px;padding:32px;box-shadow:var(--shm);border:1px solid var(--border);}
+.wb-step{border-radius:12px;padding:18px 22px;margin-bottom:14px;border-right:4px solid;}
+.wb-0{background:#eff6ff;border-color:var(--blue);}
+.wb-1{background:#fff1f2;border-color:var(--red);}
+.wb-2{background:#f0fdf9;border-color:var(--teal);}
+.wb-result{background:linear-gradient(135deg,#0c1a3a,#132050);border-radius:12px;padding:20px 24px;text-align:center;color:white;border:none;margin-top:20px;}
+.wb-step-label{font-size:.78rem;font-weight:700;margin-bottom:8px;}
+.wb-formula{font-family:'JetBrains Mono',monospace;font-size:.92rem;direction:ltr;}
+
+/* INTERACTIVE BUILDER */
+.builder-box{background:white;border-radius:16px;padding:32px;box-shadow:var(--shm);border:1px solid var(--border);}
+.bb-select{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;}
+.bb-btn{padding:8px 16px;border-radius:50px;border:2px solid var(--border);font-family:'JetBrains Mono',monospace;font-size:.82rem;font-weight:700;cursor:pointer;transition:all .2s;background:white;color:var(--slate);}
+.bb-btn:hover{border-color:var(--blue);}
+.bb-btn.active{background:var(--blue);border-color:var(--blue);color:white;}
+.bb-content{display:none;} .bb-content.active{display:block;}
+.bb-model{background:var(--deep);border-radius:12px;padding:20px;font-family:'JetBrains Mono',monospace;font-size:.88rem;color:#a0d8ef;direction:ltr;text-align:center;margin:14px 0;}
+.bb-effects{display:flex;flex-direction:column;gap:8px;margin-top:16px;}
+.be-row{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:10px;background:#f6f8ff;border:1px solid var(--border);}
+.be-sym{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:.9rem;min-width:80px;direction:ltr;}
+.be-eq{font-family:'JetBrains Mono',monospace;font-size:.8rem;direction:ltr;flex:1;color:var(--slate);}
+.be-type{font-size:.7rem;font-weight:700;padding:3px 9px;border-radius:50px;}
+.be-main{background:#dbeafe;color:#1e40af;}
+.be-inter{background:#ede9fe;color:#4c1d95;}
+
+/* SUMMARY TABLE */
+.sum-tbl{width:100%;border-collapse:separate;border-spacing:0;border-radius:14px;overflow:hidden;box-shadow:var(--shm);}
+.sum-tbl thead tr{background:linear-gradient(135deg,var(--deep),var(--navy));}
+.sum-tbl th{padding:13px 16px;font-size:.78rem;font-weight:700;color:white;text-align:center;}
+.sum-tbl th:first-child{text-align:right;}
+.sum-tbl tbody tr{background:white;transition:background .2s;}
+.sum-tbl tbody tr:nth-child(even){background:#f6f8ff;}
+.sum-tbl tbody tr:hover{background:#eff6ff;}
+.sum-tbl td{padding:12px 16px;font-size:.82rem;border-bottom:1px solid var(--border);text-align:center;vertical-align:middle;font-family:'JetBrains Mono',monospace;}
+.sum-tbl td:first-child{font-family:'Cairo',sans-serif;font-weight:600;text-align:right;}
+
+@media(max-width:860px){
+  .g2,.g3,.g4{grid-template-columns:1fr;}
+  .sec{padding:50px 20px;} .hero{padding:60px 20px;}
+  .nav{padding:0 14px;} .formula-strip{flex-direction:column;align-items:center;}
+  .fs-primary,.fs-nest1,.fs-nest2{border-radius:10px !important;}
+  .algo-steps::before{display:none;}
+}
+
+/* COMPREHENSIVE MOBILE RESPONSIVE FIXES */
+*, *::before, *::after { box-sizing: border-box; }
+html { max-width: 100%; }
+body { max-width: 100%; }
+img, svg, canvas, video, iframe { max-width: 100%; height: auto; }
+table { max-width: 100%; }
+
+.table-wrap {
+  width: 100%; max-width: 100%;
+  overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 12px;
+}
+.tbl-wrap { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.score-matrix-wrap { overflow-x: auto; }
+
+pre, code { white-space: pre-wrap; word-break: break-word; max-width: 100%; }
+
+/* Page bottom navigation */
+.page-nav-bottom {
+  display: flex; flex-wrap: wrap; gap: 12px;
+  justify-content: center; align-items: center;
+  padding: 28px 20px; text-align: center;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  margin-top: 40px;
+}
+.page-nav-bottom a {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 12px 28px; border-radius: 50px;
+  font-size: 0.95rem; font-weight: 700;
+  text-decoration: none; min-height: 48px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.page-nav-bottom a:hover { transform: translateY(-2px); }
+
+@media (max-width: 768px) {
+  .page-nav-bottom { padding: 18px 14px; gap: 8px; }
+  .page-nav-bottom a { font-size: 0.88rem; padding: 10px 18px; }
+}
+@media (max-width: 480px) {
+  .page-nav-bottom a { font-size: 0.82rem; padding: 8px 14px; min-height: 44px; width: 100%; justify-content: center; }
+}
+
+/* Overflow fixes */
+.eq-row { flex-wrap: wrap; gap: 8px; }
+.eq-formula { min-width: 0; }
+.sym-featured { flex-wrap: wrap; gap: 12px; }
+
+@media (max-width: 768px) {
+  /* Navigation */
+  .nav, .top-nav {
+    padding: 0 14px !important;
+    height: auto !important;
+    min-height: 52px;
+    flex-wrap: wrap !important;
+    gap: 4px;
+  }
+  .nav-links { flex-wrap: wrap !important; gap: 2px !important; overflow-x: visible !important; }
+  .nav a, .nav-link, .nl {
+    font-size: 0.78rem !important;
+    padding: 5px 9px !important;
+    white-space: normal !important;
+    height: auto !important;
+    min-height: 30px;
+    display: inline-flex !important;
+    align-items: center;
+  }
+  .nav-logo, .nav-brand { font-size: 0.85rem !important; white-space: normal !important; }
+
+  /* Hero */
+  .hero {
+    min-height: auto !important;
+    padding: 44px 14px !important;
+  }
+  .hero h1, .hero-t, .hero-title {
+    font-size: clamp(1.6rem, 7vw, 2.8rem) !important;
+    line-height: 1.25 !important;
+  }
+  .hero h2, .hero-sub, .hero-subtitle-line {
+    font-size: clamp(1.15rem, 4vw, 1.8rem) !important;
+  }
+  .hero p, .hero-desc { font-size: 0.95rem !important; }
+  .hero-content, .hero-c { max-width: 100% !important; width: 100% !important; }
+  .hero::before, .hero::after,
+  .hero-aura { width: 280px !important; height: 280px !important; opacity: 0.2 !important; }
+  .hero-ring, .hero-ring-2, .hr1, .hr2 { display: none !important; }
+  .hero-mesh, .hero-grid { opacity: 0.08 !important; }
+  .hero-badge, .hero-eyebrow { font-size: 0.68rem !important; padding: 5px 14px; }
+  .hero-meta { flex-wrap: wrap !important; gap: 8px; justify-content: center; }
+  .hero-meta-item { padding: 10px 14px; min-width: 0; flex: 1 1 40%; }
+  .hero-cards { gap: 10px; justify-content: center; }
+  .hero-pills { flex-wrap: wrap !important; gap: 8px; }
+  .hcard { min-width: 0 !important; padding: 14px 16px; }
+  .scroll-hint { display: none !important; }
+  .chapter-deco { display: none !important; }
+
+  /* Sections */
+  .section, .sec { padding: 44px 14px !important; }
+  .section-inner, .sec-inner, .sec-in { max-width: 100% !important; }
+  .section-header, .sec-header { margin-bottom: 28px; }
+
+  /* Grids */
+  .scenario-grid, .crossed-grid, .concepts-grid, .gstudy-layout,
+  .matrix-grid, .sym-grid-2, .sym-grid-3, .sym-card-grid,
+  .authors-grid, .design-compare, .asm-grid, .expect-grid,
+  .rel-grid, .vp-grid, .g2, .g3, .g4, .compare-grid,
+  .ms-grid, .concepts-grid { grid-template-columns: 1fr !important; gap: 16px !important; }
+
+  .hero-cards { grid-template-columns: 1fr 1fr !important; }
+
+  /* Flex */
+  .tree-row { flex-wrap: wrap !important; justify-content: center; }
+  .var-row { flex-wrap: wrap !important; gap: 6px; }
+  .step-item { flex-wrap: wrap !important; gap: 14px; }
+  .step-content { width: 100% !important; order: 1; }
+  .step-num { order: 0; }
+  .decomp, .decomp-live, .flow-row { flex-direction: column !important; align-items: center !important; }
+  .decomp-op, .dl-op, .fn-arrow { transform: rotate(90deg); }
+  .crow { flex-direction: column !important; }
+  .concept-row { flex-wrap: wrap; }
+
+  /* Padding */
+  .family-bg, .universe-card, .scenario-bg, .var-section-bg,
+  .source-card, .guide-card, .interactive-box, .score-matrix-wrap,
+  .assumption-wrap, .lm-box, .ins, .highlight-box, .warn-box,
+  .crossed-card, .concept-card, .section-card, .cbox {
+    padding: 20px 14px !important;
+  }
+  .intro-callout { padding: 18px 16px; }
+  .source-card { gap: 14px; }
+  .tree-connector { height: 20px; }
+  .tree-node { min-width: 120px !important; font-size: 0.82rem !important; padding: 10px 14px !important; }
+  .section-divider, .div { margin: 0 14px; }
+
+  /* Fixed widths */
+  .var-label { min-width: 50px !important; font-size: 0.78rem !important; }
+  .var-desc { min-width: 0 !important; flex: 1 1 100% !important; }
+  .var-value { min-width: 40px !important; }
+  .sym-featured-glyph { width: 44px !important; height: 44px !important; }
+
+  /* Tables */
+  .table-wrap {
+    margin: 0 -14px; padding: 0 14px;
+    width: calc(100% + 28px); border-radius: 0;
+  }
+  .tbl-wrap { margin: 0 -14px; padding: 0 14px; }
+
+  .prog-bar { z-index: 9999; }
+}
+
+@media (max-width: 480px) {
+  .hero { padding: 32px 10px !important; }
+  .hero h1, .hero-t, .hero-title { font-size: clamp(1.3rem, 8vw, 2rem) !important; }
+  .hero h2, .hero-sub { font-size: clamp(1rem, 5vw, 1.5rem) !important; }
+  .hero p, .hero-desc { font-size: 0.9rem !important; }
+  .nav, .top-nav { padding: 0 8px !important; min-height: 44px; gap: 2px !important; }
+  .nav a, .nav-link, .nl { font-size: 0.7rem !important; padding: 4px 7px !important; }
+
+  .section, .sec { padding: 28px 10px !important; }
+
+  .hero-cards { grid-template-columns: 1fr !important; }
+  .hero-pills { gap: 6px; }
+  .pill { padding: 8px 10px; }
+
+  .table-wrap {
+    margin: 0 -10px; padding: 0 10px;
+    width: calc(100% + 20px);
+  }
+  table { font-size: 0.72rem !important; }
+  td, th { padding: 5px 7px !important; }
+
+  .hero-card, .concept-card, .crossed-card, .scenario-item,
+  .step-content, .coeff-card, .card, .design-card, .sym-card,
+  .exp-card, .author-card, .hcard { padding: 12px !important; }
+
+  .tree-node { min-width: 100px !important; font-size: 0.78rem !important; }
+  .hero-meta-item { padding: 8px 10px; }
+
+  .btn, .btn-primary, .btn-ghost {
+    width: 100%; justify-content: center; min-height: 44px;
+  }
+}
+
+/* â•â•â•â•â•â• ADDITIONAL OVERFLOW FIXES â•â•â•â•â•â• */
+[style*="min-width:200px"], [style*="min-width: 200px"], [style*="min-width:220px"], [style*="min-width: 220px"],
+[style*="min-width:280px"], [style*="min-width: 280px"], [style*="min-width:500px"], [style*="min-width: 500px"] {
+  min-width: 0 !important;
+}
+[style*="width:480px"], [style*="width: 480px"], [style*="width:400px"], [style*="width: 400px"] {
+  max-width: 100% !important;
+  width: auto !important;
+}
+.flex-item, .sym-grid-2 > .sym-featured, .eq-row { flex-wrap: wrap; }
+.score-matrix { min-width: 0 !important; }
+.hcard, .pill { min-width: 0 !important; }
+.dt-node { max-width: 100% !important; }
+
+@media (max-width: 768px) {
+  .mat { grid-template-columns: repeat(auto-fill, minmax(32px, 1fr)) !important; }
+  .mc { width: 32px !important; height: 32px !important; font-size: 0.6rem !important; }
+  .hcard { min-width: 0 !important; }
+  .hero-meta-num { font-size: 1.5rem !important; }
+  .hero-meta-lbl { font-size: 0.68rem !important; }
+  .hero-meta-item { flex: 1 1 42% !important; }
+  .pill { min-width: 0 !important; flex: 1 1 30% !important; }
+}
+
+@media (max-width: 480px) {
+  .mat { grid-template-columns: repeat(auto-fill, minmax(28px, 1fr)) !important; }
+  .mc { width: 28px !important; height: 28px !important; font-size: 0.55rem !important; }
+}
+
+/* ==================================================
+   FINAL REAL MOBILE LAYOUT REBUILD
+   Must be the last CSS block in the file
+   ================================================== */
+*, *::before, *::after { box-sizing: border-box !important; }
+html, body {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  min-width: 0 !important;
+}
+img, svg, canvas, video, iframe {
+  max-width: 100% !important;
+  height: auto !important;
+}
+table { max-width: 100% !important; }
+
+/* Force all major containers to viewport width */
+@media (max-width: 768px) {
+  html, body {
+    overflow-x: clip !important;
+    min-width: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .hero,
+  .section,
+  .sec,
+  .container,
+  .wrapper,
+  .content,
+  .main,
+  .page,
+  .page-wrap,
+  .layout,
+  .shell,
+  .panel,
+  .chapter,
+  .chapter-wrap,
+  .story,
+  .story-wrap,
+  .book-page,
+  .section-dark,
+  .section-mid,
+  .intro-section,
+  .source-section,
+  .guide-section,
+  .sec-dark,
+  .sec-alt,
+  .sec-inner,
+  .section-inner,
+  .section-header,
+  .sec-header,
+  .family-bg,
+  .universe-card,
+  .scenario-bg,
+  .var-section-bg,
+  .source-card,
+  .index-card,
+  .guide-card,
+  .intro-body,
+  .interactive-box,
+  .score-matrix-wrap,
+  .assumption-wrap,
+  .lm-box,
+  .cbox,
+  .comparison-wrap,
+  .steps-flow,
+  .highlight-box,
+  .warn-box,
+  .insight-box,
+  .history-wrap {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+    transform: none !important;
+    left: auto !important;
+    right: auto !important;
+    box-sizing: border-box !important;
+  }
+
+  .hero {
+    min-height: auto !important;
+    height: auto !important;
+    padding-top: 36px !important;
+    padding-bottom: 36px !important;
+    text-align: center !important;
+    overflow: hidden !important;
+  }
+
+  .hero-content,
+  .hero-inner,
+  .hero-wrap,
+  .hero-text,
+  .hero-c,
+  .hero-content {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+    text-align: center !important;
+    transform: none !important;
+    position: relative !important;
+  }
+
+  .hero h1,
+  .hero-title,
+  .hero-t,
+  .hero-ta,
+  h1 {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    font-size: clamp(1.55rem, 8vw, 2.3rem) !important;
+    line-height: 1.25 !important;
+    text-align: center !important;
+    white-space: normal !important;
+    overflow-wrap: break-word !important;
+    word-break: normal !important;
+  }
+
+  .hero-sub,
+  .hero-subtitle-line,
+  .hero-s,
+  .hero-d,
+  .hero-desc,
+  .sec-lead,
+  .slead,
+  .section-desc,
+  .subtitle,
+  .lead {
+    max-width: 100% !important;
+    white-space: normal !important;
+    overflow-wrap: break-word !important;
+    width: 100% !important;
+  }
+
+  .grid,
+  .cards,
+  .hero-cards,
+  .hero-meta,
+  .hero-pills,
+  .scenario-grid,
+  .crossed-grid,
+  .concepts-grid,
+  .gstudy-layout,
+  .matrix-grid,
+  .design-compare,
+  .authors-grid,
+  .rel-grid,
+  .vp-grid,
+  .g2,
+  .g3,
+  .g4,
+  .asm-grid,
+  .expect-grid,
+  .sym-grid-2,
+  .sym-grid-3,
+  .sym-card-grid,
+  .compare-grid,
+  .ms-grid,
+  .crow {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    gap: 16px !important;
+    transform: none !important;
+  }
+
+  .hero-cards {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+  }
+
+  .card,
+  .hero-card,
+  .glass-card,
+  .info-card,
+  .concept-card,
+  .step-card,
+  .source-card,
+  .index-card,
+  .guide-card,
+  .hcard,
+  .pill,
+  .tree-node,
+  .dt-node,
+  .matrix-card,
+  .panel-card,
+  .design-card,
+  .design-header,
+  .design-body,
+  .crossed-card,
+  .scenario-item,
+  .step-content,
+  .author-card,
+  .sym-card,
+  .sym-featured,
+  .var-section-bg,
+  .intro-callout,
+  .eq-row,
+  .eq-main {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    transform: none !important;
+  }
+
+  [style*="min-width"],
+  [style*="width: 480"],
+  [style*="width:480"],
+  [style*="width: 400"],
+  [style*="width:400"] {
+    max-width: 100% !important;
+    min-width: 0 !important;
+    width: auto !important;
+  }
+
+  .nav,
+  .top-nav,
+  .page-nav,
+  .page-nav-bottom {
+    width: 100% !important;
+    max-width: 100% !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    white-space: normal !important;
+    overflow: visible !important;
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
+
+  .nav-links {
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    gap: 4px !important;
+    overflow: visible !important;
+    width: auto !important;
+  }
+
+  .nav a,
+  .nav-link,
+  .nl,
+  .top-nav a,
+  .page-nav a,
+  .page-nav-bottom a {
+    max-width: 100% !important;
+    white-space: normal !important;
+    text-align: center !important;
+    min-height: 36px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 4px 10px !important;
+    font-size: 0.75rem !important;
+  }
+
+  .nav-logo,
+  .nav-brand {
+    font-size: 0.82rem !important;
+    white-space: normal !important;
+    max-width: 100% !important;
+    overflow: visible !important;
+  }
+
+  /* Hide all decorative overlays, rings, meshes */
+  .hero::before,
+  .hero::after,
+  .hero-ring,
+  .hero-ring-2,
+  .hr1,
+  .hr2,
+  .hero-mesh,
+  .hero-grid,
+  .hero-aura,
+  .chapter-deco,
+  .decor,
+  .bg-shape,
+  .section-divider,
+  .rainbow,
+  .div,
+  .scroll-hint,
+  .starfield {
+    display: none !important;
+  }
+
+  /* Section dividers must not cause overflow */
+  .section-divider,
+  .div-a,
+  .div-r,
+  .div-s,
+  .div-v,
+  .div-g {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    max-width: 100% !important;
+  }
+
+  .table-wrap,
+  .tbl-wrap {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  /* Hero-specific containers */
+  .hero-badge,
+  .hero-eyebrow {
+    display: inline-flex !important;
+    max-width: 100% !important;
+    white-space: normal !important;
+  }
+
+  .hero-meta {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .hero-meta-item {
+    flex: 1 1 42% !important;
+    min-width: 0 !important;
+    max-width: 48% !important;
+  }
+
+  .hcard,
+  .pill {
+    min-width: 0 !important;
+    flex: 1 1 42% !important;
+    max-width: 48% !important;
+  }
+
+  .decomp-block,
+  .decomp-live .dl-block {
+    min-width: 0 !important;
+    flex: 1 1 auto !important;
+  }
+
+  /* Family tree and diagrams */
+  .family-bg {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  /* Force flex containers to wrap */
+  .concept-row,
+  .badge-row,
+  .hero-actions {
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+  }
+
+  .btn,
+  .btn-primary,
+  .btn-ghost,
+  .calc-btn {
+    min-height: 44px !important;
+    padding: 12px 24px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  html, body {
+    min-width: 0 !important;
+    width: 100% !important;
+  }
+
+  .hero,
+  .section,
+  .sec,
+  .container,
+  .wrapper,
+  .content,
+  .main,
+  .page,
+  .page-wrap {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+  }
+
+  .hero {
+    padding-top: 28px !important;
+    padding-bottom: 28px !important;
+  }
+
+  .hero h1,
+  .hero-title,
+  .hero-t,
+  .hero-ta,
+  h1 {
+    font-size: clamp(1.35rem, 8.5vw, 2rem) !important;
+    line-height: 1.28 !important;
+  }
+
+  h2 {
+    font-size: clamp(1.2rem, 6.5vw, 1.65rem) !important;
+  }
+
+  h3 {
+    font-size: clamp(1rem, 5.5vw, 1.35rem) !important;
+  }
+
+  .card,
+  .hero-card,
+  .glass-card,
+  .info-card,
+  .concept-card,
+  .step-card,
+  .source-card,
+  .crossed-card,
+  .scenario-item,
+  .design-card {
+    padding: 14px 10px !important;
+  }
+
+  .nav,
+  .top-nav {
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+  }
+
+  .nav a,
+  .nav-link,
+  .nl {
+    padding: 3px 6px !important;
+    font-size: 0.68rem !important;
+  }
+
+  .hero-meta-item {
+    flex: 1 1 100% !important;
+    max-width: 100% !important;
+  }
+
+  .hcard {
+    flex: 1 1 100% !important;
+    max-width: 100% !important;
+  }
+
+  .hero-cards {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    flex-direction: column !important;
+    align-items: center !important;
+  }
+}
+
+/* === PAGE NAV TOP === */
+.page-nav-top {
+  direction: rtl;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  width: min(100% - 24px, 1100px);
+  margin: 14px auto;
+  padding: 10px;
+  border-radius: 16px;
+  background: rgba(15, 52, 96, 0.88);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.14);
+  backdrop-filter: blur(8px);
+  position: relative;
+  z-index: 10;
+}
+.page-nav-top a,
+.page-nav-top a:visited {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 8px 18px;
+  border-radius: 999px;
+  text-decoration: none;
+  font-weight: 700;
+  color: #ffffff;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.18);
+  transition: background 0.2s, transform 0.2s;
+}
+.page-nav-top a:hover {
+  background: rgba(0, 180, 216, 0.28);
+  transform: translateY(-2px);
+}
+@media (max-width: 480px) {
+  .page-nav-top {
+    width: calc(100% - 20px);
+    gap: 8px;
+    padding: 8px;
+  }
+  .page-nav-top a {
+    flex: 1 1 auto;
+    min-width: 90px;
+    padding: 8px 12px;
+    font-size: 0.9rem;
+  }
+}
+</style>
+</head>
+<body>
+<nav class="page-nav-top" aria-label="تنقل الصفحة العلوي"><a href="index.html" class="nav-home">الرئيسية</a></nav>
+
+<div class="pgbar"><div class="pgf" id="pgf"></div></div>
+
+<nav class="nav">
+  <div class="nav-logo">🔬 §3.2 النماذج الخطية</div>
+  <div class="nav-links">
+<a href="3.1.html">السابق</a><a href="index.html">الرئيسية</a><a href="3.3.html">التالي</a>
+
+    <a href="#overview" class="nl active" data-s="overview">لماذا نحتاجه؟</a>
+    <a href="#notation" class="nl" data-s="notation">النظام الرمزي</a>
+    <a href="#interact" class="nl" data-s="interact">الآثار التفاعلية</a>
+    <a href="#confound" class="nl" data-s="confound">الاختلاط</a>
+    <a href="#model" class="nl" data-s="model">النموذج الخطي</a>
+    <a href="#means" class="nl" data-s="means">متوسطات الدرجات</a>
+    <a href="#algo" class="nl" data-s="algo">الخوارزمية</a>
+    <a href="#worked" class="nl" data-s="worked">مثال محلول</a>
+    <a href="#builder" class="nl" data-s="builder">مكتبة التصاميم</a>
+  </div>
+
+
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="top">
+  <!-- floating formula particles -->
+  <div class="particle" style="top:15%;right:10%;animation-delay:0s;">Xω = μ + Σνα</div>
+  <div class="particle" style="top:70%;right:80%;animation-delay:2s;">ν_pi:h = X_pih − μ_ph − μ_ih + μ_h</div>
+  <div class="particle" style="top:40%;right:55%;animation-delay:4s;">E(ν_α) = 0</div>
+  <div class="particle" style="top:80%;right:25%;animation-delay:1.5s;">σ²(i:h) = σ²(i) + σ²(ih)</div>
+  <div class="hero-glow"></div>
+  <div class="hero-badge">[ § 3.2 · النماذج الخطية ]</div>
+  <h1>تأثيرات الدرجات<br>ومتوسطات الكون <em>والمجتمع</em></h1>
+  <p class="hero-sub">
+    كيف نُعبِّر رياضياً عن أي تأثير في تصميم متعدد الأوجه؟ وكيف نربطه بمتوسطات الدرجات؟
+    وما الخوارزمية التي تُحوِّله خطوةً بخطوة؟
+  </p>
+  <div class="hero-stats">
+    <div class="hstat"><div class="hs" style="color:#67e8f9;">3.2.1</div><div class="hl">النظام الرمزي</div></div>
+    <div class="hstat"><div class="hs" style="color:#6ee7b7;">3.2.2</div><div class="hl">النماذج الخطية</div></div>
+    <div class="hstat"><div class="hs" style="color:#fde047;">3.2.3</div><div class="hl">خوارزمية التحويل</div></div>
+    <div class="hstat"><div class="hs" style="color:#c4b5fd;">⊕</div><div class="hl">الاختلاط</div></div>
+  </div>
+</section>
+<hr class="rdiv">
+
+<!-- ═══ SECTION 1: لماذا نحتاجه؟ ═══ -->
+<section class="sec sec-alt" id="overview">
+<div class="sec-inner">
+  <div class="cx fu">
+    <span class="tag tb">الدافع والهدف</span>
+    <h2 class="st">ما الذي يُضيفه القسم 3.2؟</h2>
+    <p class="sd cmx">النماذج الخطية ليست مجرد معادلات جمالية — إنها الأداة الوحيدة التي تربط الملاحظ بالكون الحقيقي</p>
+  </div>
+
+  <div class="g3 fu">
+    <div class="card" style="border-top:4px solid var(--blue);text-align:center;">
+      <div style="font-size:2rem;margin-bottom:10px;">🗂️</div>
+      <div style="font-weight:700;font-size:.95rem;color:var(--blue);margin-bottom:8px;">§3.2.1 النظام الرمزي</div>
+      <p style="font-size:.82rem;color:var(--slate);line-height:1.8;">كيف نُسمِّي كل تأثير في أي تصميم بطريقة موحدة ودقيقة — آثار رئيسية وآثار تفاعل</p>
+    </div>
+    <div class="card" style="border-top:4px solid var(--teal);text-align:center;">
+      <div style="font-size:2rem;margin-bottom:10px;">🧮</div>
+      <div style="font-weight:700;font-size:.95rem;color:var(--teal);margin-bottom:8px;">§3.2.2 النماذج الخطية</div>
+      <p style="font-size:.82rem;color:var(--slate);line-height:1.8;">الصيغة العامة X_ω = μ + Σν_α — وكيف تُعرَّف متوسطات الكون والمجتمع في ضوئها</p>
+    </div>
+    <div class="card" style="border-top:4px solid var(--violet);text-align:center;">
+      <div style="font-size:2rem;margin-bottom:10px;">⚙️</div>
+      <div style="font-weight:700;font-size:.95rem;color:var(--violet);margin-bottom:8px;">§3.2.3 الخوارزمية</div>
+      <p style="font-size:.82rem;color:var(--slate);line-height:1.8;">خطوات تحويل أي تأثير درجة إلى مجموع خطي من متوسطات الدرجات — قابلة للتطبيق على أي تصميم</p>
+    </div>
+  </div>
+
+  <div class="card fu" style="margin-top:22px;background:linear-gradient(135deg,#f0f6ff,#e8f0ff);border-color:#93c5fd;">
+    <div style="font-size:.9rem;font-weight:700;color:var(--blue);margin-bottom:12px;">🔑 الفكرة المحورية</div>
+    <div class="g2">
+      <div>
+        <p style="font-size:.86rem;color:var(--slate);line-height:1.9;margin-bottom:12px;">
+          في الفصل الثاني رأينا أن الدرجة تتفكك: <strong style="font-family:'JetBrains Mono',monospace;">X<sub>pi</sub> = μ + ν<sub>p</sub> + ν<sub>i</sub> + ν<sub>pi</sub></strong>
+        </p>
+        <p style="font-size:.86rem;color:var(--slate);line-height:1.9;">الآن مع تصاميم ثنائية الوجه — كيف نُعمِّم هذه الصيغة؟ وكيف نُعرِّف كل تأثير بدقة؟</p>
+      </div>
+      <div>
+        <div class="code" style="font-size:.82rem;">
+          <span class="cm">// التعميم لتصميم p × i × h</span><br>
+          X_pih = μ + ν_p + ν_i + ν_h<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+ ν_pi + ν_ph + ν_ih + ν_pih
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ═══ SECTION 2: النظام الرمزي ═══ -->
+<section class="sec" id="notation">
+<div class="sec-inner">
+  <div class="cx fu">
+    <span class="tag tc">§ 3.2.1</span>
+    <h2 class="st">النظام الرمزي للتأثيرات</h2>
+    <p class="sd cmx">قبل أن نكتب أي معادلة — يجب أن نتفق على لغة مشتركة لتسمية كل تأثير في أي تصميم</p>
+  </div>
+
+  <!-- Main effect anatomy -->
+  <div class="notation-box fu" style="margin-bottom:28px;">
+    <div style="font-size:.9rem;font-weight:700;color:var(--deep);margin-bottom:18px;text-align:center;">🔵 بنية الأثر الرئيسي Main Effect</div>
+    <div class="formula-strip">
+      <div class="fs-part fs-primary">
+        المؤشر الأولي
+        <div class="fs-label">Primary Index</div>
+      </div>
+      <div class="fs-colon">:</div>
+      <div class="fs-part fs-nest1" style="border-radius:0;">
+        مؤشر التداخل الأول
+        <div class="fs-label">1st Nesting Index</div>
+      </div>
+      <div class="fs-colon2">:</div>
+      <div class="fs-part fs-nest2">
+        مؤشر التداخل الثاني
+        <div class="fs-label">2nd Nesting Index (if any)</div>
+      </div>
+    </div>
+
+    <div class="g3" style="margin-top:22px;">
+      <div style="background:#eff6ff;border-radius:12px;padding:16px;text-align:center;border:1.5px solid #93c5fd;">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:1.2rem;font-weight:700;color:var(--blue);margin-bottom:6px;">p</div>
+        <div style="font-size:.8rem;font-weight:700;color:var(--blue);margin-bottom:4px;">بلا تداخل</div>
+        <div style="font-size:.76rem;color:var(--slate);">المؤشر الأولي فقط — p ليس متداخلاً داخل أي وجه آخر</div>
+      </div>
+      <div style="background:#f0fdf9;border-radius:12px;padding:16px;text-align:center;border:1.5px solid #5eead4;">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:1.2rem;font-weight:700;color:var(--teal);margin-bottom:6px;">i:h</div>
+        <div style="font-size:.8rem;font-weight:700;color:var(--teal);margin-bottom:4px;">تداخل مستوى واحد</div>
+        <div style="font-size:.76rem;color:var(--slate);">i هو المؤشر الأولي، h هو مؤشر التداخل — فقرات داخل فئات</div>
+      </div>
+      <div style="background:#fdf4ff;border-radius:12px;padding:16px;text-align:center;border:1.5px solid #e9d5ff;">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:1.2rem;font-weight:700;color:var(--violet);margin-bottom:6px;">i:h:p</div>
+        <div style="font-size:.8rem;font-weight:700;color:var(--violet);margin-bottom:4px;">تداخل مستويين</div>
+        <div style="font-size:.76rem;color:var(--slate);">i في h، وh في p — تداخل متسلسل من مستويين</div>
+      </div>
+    </div>
+
+    <div class="ins ib" style="margin-top:18px;">
+      <div class="ico">💡</div>
+      <div>
+        <div class="it">مهم: مؤشر التداخل غالباً هو نفسه أثر رئيسي مستقل!</div>
+        <div class="ii">في تصميم p × (i:h): الرمز h في i:h هو مؤشر تداخل، لكنه أيضاً أثر رئيسي مستقل h. أي أن h يؤدي دورَين في آنٍ واحد.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Interaction effect anatomy -->
+  <div class="notation-box fu">
+    <div style="font-size:.9rem;font-weight:700;color:var(--deep);margin-bottom:18px;text-align:center;">🟣 بنية أثر التفاعل Interaction Effect</div>
+    <div style="text-align:center;margin-bottom:16px;">
+      <div class="code" style="display:inline-block;font-size:.92rem;">
+        {مجموعة من المؤشرات الأولية} : {مجموعة من مؤشرات التداخل الأولى} : ...
+      </div>
+    </div>
+
+    <div class="g2">
+      <div>
+        <div style="font-size:.85rem;font-weight:700;color:var(--deep);margin-bottom:12px;">📌 قواعد بناء التفاعل</div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div style="background:#eff6ff;border-radius:10px;padding:12px 14px;font-size:.82rem;border-right:3px solid var(--blue);">
+            <strong style="color:var(--blue);">قاعدة ١:</strong> لا يظهر أي مؤشر مؤشراً أولياً ومؤشر تداخل في آنٍ واحد
+          </div>
+          <div style="background:#f0fdf9;border-radius:10px;padding:12px 14px;font-size:.82rem;border-right:3px solid var(--teal);">
+            <strong style="color:var(--teal);">قاعدة ٢:</strong> إذا تكرر مؤشر تداخل، يُحتفظ بآخر ظهور فقط (مثل pp → p)
+          </div>
+          <div style="background:#fdf4ff;border-radius:10px;padding:12px 14px;font-size:.82rem;border-right:3px solid var(--violet);">
+            <strong style="color:var(--violet);">قاعدة ٣:</strong> يُحذف أي تركيب ينتهك القاعدتين السابقتين
+          </div>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:.85rem;font-weight:700;color:var(--deep);margin-bottom:12px;">📐 تطبيق: تصميم p × (i:h)</div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div style="background:#f6f8ff;border-radius:10px;padding:12px 14px;font-size:.82rem;">
+            <div style="font-family:'JetBrains Mono',monospace;color:var(--blue);font-weight:700;margin-bottom:4px;">الآثار الرئيسية: p · h · i:h</div>
+            <div style="color:var(--slate);">نُركِّب p مع h: → ph ✓ (تفاعل صالح)</div>
+          </div>
+          <div style="background:#f6f8ff;border-radius:10px;padding:12px 14px;font-size:.82rem;">
+            <div style="color:var(--slate);">نُركِّب p مع i:h: → pi:h ✓ (المؤشر الأولي p، مؤشر التداخل h)</div>
+          </div>
+          <div style="background:#fff1f2;border-radius:10px;padding:12px 14px;font-size:.82rem;border-right:2px solid var(--red);">
+            <div style="color:var(--red);font-weight:700;font-size:.76rem;">مُهمَل:</div>
+            <div style="font-family:'JetBrains Mono',monospace;color:var(--red);">h + i:h → ph:h</div>
+            <div style="color:var(--slate);">لأن h يظهر أولياً وتداخلاً في آنٍ واحد ✗</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ═══ SECTION 3: جميع الآثار التفاعلية ═══ -->
+<section class="sec sec-alt" id="interact">
+<div class="sec-inner">
+  <div class="cx fu">
+    <span class="tag ta">استخراج التفاعلات</span>
+    <h2 class="st">كيف نستخرج جميع آثار التفاعل؟</h2>
+    <p class="sd cmx">جرِّب كل التركيبات الممكنة بين الآثار الرئيسية — واحذف غير الصالحة</p>
+  </div>
+
+  <!-- Interactive tabs for each design -->
+  <div class="builder-box fu" id="interactBuilder">
+    <div style="font-size:.9rem;font-weight:700;margin-bottom:14px;">اختر التصميم لترى كيف تُستخرج جميع آثاره:</div>
+    <div class="bb-select">
+      <button class="bb-btn active" onclick="showDesign('d_cross',this)">p × i × h</button>
+      <button class="bb-btn" onclick="showDesign('d_ih',this)">p × (i:h)</button>
+      <button class="bb-btn" onclick="showDesign('d_ip',this)">(i:p) × h</button>
+      <button class="bb-btn" onclick="showDesign('d_ph',this)">i:(p × h)</button>
+    </div>
+
+    <!-- p × i × h -->
+    <div class="bb-content active" id="d_cross">
+      <div class="g2">
+        <div>
+          <div style="font-size:.82rem;font-weight:700;margin-bottom:10px;">الآثار الرئيسية (3):</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;">
+            <span style="background:#dbeafe;color:#1e40af;padding:6px 14px;border-radius:8px;font-family:'JetBrains Mono',monospace;font-weight:700;">p</span>
+            <span style="background:#d1fae5;color:#065f46;padding:6px 14px;border-radius:8px;font-family:'JetBrains Mono',monospace;font-weight:700;">i</span>
+            <span style="background:#ede9fe;color:#4c1d95;padding:6px 14px;border-radius:8px;font-family:'JetBrains Mono',monospace;font-weight:700;">h</span>
+          </div>
+          <div style="font-size:.82rem;font-weight:700;margin-bottom:10px;">استخراج التفاعلات:</div>
+          <div style="display:flex;flex-direction:column;gap:6px;font-size:.78rem;">
+            <div style="display:flex;align-items:center;gap:6px;background:#f0fdf4;border-radius:8px;padding:7px 10px;">
+              <span style="font-family:'JetBrains Mono',monospace;color:#1e40af;font-weight:700;">p</span><span>+</span><span style="font-family:'JetBrains Mono',monospace;color:#065f46;font-weight:700;">i</span><span>→</span><span style="font-family:'JetBrains Mono',monospace;font-weight:700;color:#9d174d;">pi</span><span style="color:var(--teal);">✓</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:6px;background:#f0fdf4;border-radius:8px;padding:7px 10px;">
+              <span style="font-family:'JetBrains Mono',monospace;color:#1e40af;font-weight:700;">p</span><span>+</span><span style="font-family:'JetBrains Mono',monospace;color:#4c1d95;font-weight:700;">h</span><span>→</span><span style="font-family:'JetBrains Mono',monospace;font-weight:700;color:#9d174d;">ph</span><span style="color:var(--teal);">✓</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:6px;background:#f0fdf4;border-radius:8px;padding:7px 10px;">
+              <span style="font-family:'JetBrains Mono',monospace;color:#065f46;font-weight:700;">i</span><span>+</span><span style="font-family:'JetBrains Mono',monospace;color:#4c1d95;font-weight:700;">h</span><span>→</span><span style="font-family:'JetBrains Mono',monospace;font-weight:700;color:#9d174d;">ih</span><span style="color:var(--teal);">✓</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:6px;background:#f0fdf4;border-radius:8px;padding:7px 10px;">
+              <span style="font-family:'JetBrains Mono',monospace;color:#1e40af;font-weight:700;">p</span><span>+</span><span style="font-family:'JetBrains Mono',monospace;color:#065f46;font-weight:700;">i</span><span>+</span><span style="font-family:'JetBrains Mono',monospace;color:#4c1d95;font-weight:700;">h</span><span>→</span><span style="font-family:'JetBrains Mono',monospace;font-weight:700;color:#166534;">pih</span><span style="color:var(--teal);">✓ + error</span>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="bb-model">X_pih = μ + <span style="color:#67e8f9;">ν_p</span> + <span style="color:#6ee7b7;">ν_i</span> + <span style="color:#c4b5fd;">ν_h</span><br>+ <span style="color:#fca5a5;">ν_pi</span> + <span style="color:#fdba74;">ν_ph</span> + <span style="color:#a7f3d0;">ν_ih</span> + <span style="color:#d1d5db;">ν_pih</span></div>
+          <div class="ins ib" style="margin-top:12px;padding:12px 14px;">
+            <div class="ico" style="font-size:1rem;">📊</div>
+            <div><div class="ii"><strong>7 آثار</strong> في p×i×h — أعلى عدد ممكن. مخطط فن: 3 دوائر متقاطعة بالكامل = 7 مناطق.</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- p × (i:h) -->
+    <div class="bb-content" id="d_ih">
+      <div class="g2">
+        <div>
+          <div style="font-size:.82rem;font-weight:700;margin-bottom:10px;">الآثار الرئيسية (3):</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;">
+            <span style="background:#dbeafe;color:#1e40af;padding:6px 14px;border-radius:8px;font-family:'JetBrains Mono',monospace;font-weight:700;">p</span>
+            <span style="background:#ede9fe;color:#4c1d95;padding:6px 14px;border-radius:8px;font-family:'JetBrains Mono',monospace;font-weight:700;">h</span>
+            <span style="background:#d1fae5;color:#065f46;padding:6px 14px;border-radius:8px;font-family:'JetBrains Mono',monospace;font-weight:700;">i:h</span>
+          </div>
+          <div style="font-size:.82rem;font-weight:700;margin-bottom:10px;">استخراج التفاعلات:</div>
+          <div style="display:flex;flex-direction:column;gap:6px;font-size:.78rem;">
+            <div style="display:flex;align-items:center;gap:6px;background:#f0fdf4;border-radius:8px;padding:7px 10px;">
+              <span style="font-family:'JetBrains Mono',monospace;color:#1e40af;font-weight:700;">p</span><span>+</span><span style="font-family:'JetBrains Mono',monospace;color:#4c1d95;font-weight:700;">h</span><span>→</span><span style="font-family:'JetBrains Mono',monospace;font-weight:700;color:#9d174d;">ph</span><span style="color:var(--teal);">✓</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:6px;background:#f0fdf4;border-radius:8px;padding:7px 10px;">
+              <span style="font-family:'JetBrains Mono',monospace;color:#1e40af;font-weight:700;">p</span><span>+</span><span style="font-family:'JetBrains Mono',monospace;color:#065f46;font-weight:700;">i:h</span><span>→</span><span style="font-family:'JetBrains Mono',monospace;font-weight:700;color:#166534;">pi:h</span><span style="color:var(--teal);">✓ + error</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:6px;background:#fff1f2;border-radius:8px;padding:7px 10px;border-right:2px solid var(--red);">
+              <span style="font-family:'JetBrains Mono',monospace;color:#4c1d95;font-weight:700;">h</span><span>+</span><span style="font-family:'JetBrains Mono',monospace;color:#065f46;font-weight:700;">i:h</span><span>→ ph:h</span><span style="color:var(--red);">✗ h أولي وتداخل!</span>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="bb-model">X_pih = μ + <span style="color:#67e8f9;">ν_p</span> + <span style="color:#c4b5fd;">ν_h</span> + <span style="color:#6ee7b7;">ν_i:h</span><br>+ <span style="color:#fdba74;">ν_ph</span> + <span style="color:#d1d5db;">ν_pi:h</span></div>
+          <div class="ins it2" style="margin-top:12px;padding:12px 14px;">
+            <div class="ico" style="font-size:1rem;">📊</div>
+            <div><div class="ii"><strong>5 آثار</strong> فقط في p×(i:h). التداخل ألغى إمكانية تفاعل h مع i:h.</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- (i:p) × h -->
+    <div class="bb-content" id="d_ip">
+      <div class="g2">
+        <div>
+          <div style="font-size:.82rem;font-weight:700;margin-bottom:10px;">الآثار الرئيسية (3):</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;">
+            <span style="background:#dbeafe;color:#1e40af;padding:6px 14px;border-radius:8px;font-family:'JetBrains Mono',monospace;font-weight:700;">p</span>
+            <span style="background:#ede9fe;color:#4c1d95;padding:6px 14px;border-radius:8px;font-family:'JetBrains Mono',monospace;font-weight:700;">h</span>
+            <span style="background:#d1fae5;color:#065f46;padding:6px 14px;border-radius:8px;font-family:'JetBrains Mono',monospace;font-weight:700;">i:p</span>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px;font-size:.78rem;">
+            <div style="display:flex;align-items:center;gap:6px;background:#f0fdf4;border-radius:8px;padding:7px 10px;">
+              <span style="font-family:'JetBrains Mono',monospace;color:#1e40af;font-weight:700;">p</span><span>+</span><span style="font-family:'JetBrains Mono',monospace;color:#4c1d95;font-weight:700;">h</span><span>→</span><span style="font-family:'JetBrains Mono',monospace;font-weight:700;color:#9d174d;">ph</span><span style="color:var(--teal);">✓</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:6px;background:#fff1f2;border-radius:8px;padding:7px 10px;border-right:2px solid var(--red);">
+              <span style="font-family:'JetBrains Mono',monospace;color:#1e40af;font-weight:700;">p</span><span>+</span><span style="font-family:'JetBrains Mono',monospace;color:#065f46;font-weight:700;">i:p</span><span>→ pi:p</span><span style="color:var(--red);">✗ p أولي وتداخل!</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:6px;background:#f0fdf4;border-radius:8px;padding:7px 10px;">
+              <span style="font-family:'JetBrains Mono',monospace;color:#4c1d95;font-weight:700;">h</span><span>+</span><span style="font-family:'JetBrains Mono',monospace;color:#065f46;font-weight:700;">i:p</span><span>→</span><span style="font-family:'JetBrains Mono',monospace;font-weight:700;color:#166534;">ih:p</span><span style="color:var(--teal);">✓ + error</span>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="bb-model">X_pih = μ + <span style="color:#67e8f9;">ν_p</span> + <span style="color:#c4b5fd;">ν_h</span> + <span style="color:#6ee7b7;">ν_i:p</span><br>+ <span style="color:#fdba74;">ν_ph</span> + <span style="color:#d1d5db;">ν_ih:p</span></div>
+          <div class="ins ia" style="margin-top:12px;padding:12px 14px;">
+            <div class="ico" style="font-size:1rem;">📊</div>
+            <div><div class="ii"><strong>5 آثار</strong> كما في p×(i:h) — لكن مع آثار مختلفة. التداخل داخل p أسقط تفاعل p مع i:p.</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- i:(p × h) -->
+    <div class="bb-content" id="d_ph">
+      <div class="g2">
+        <div>
+          <div style="font-size:.82rem;font-weight:700;margin-bottom:10px;">الآثار الرئيسية (3):</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;">
+            <span style="background:#dbeafe;color:#1e40af;padding:6px 14px;border-radius:8px;font-family:'JetBrains Mono',monospace;font-weight:700;">p</span>
+            <span style="background:#ede9fe;color:#4c1d95;padding:6px 14px;border-radius:8px;font-family:'JetBrains Mono',monospace;font-weight:700;">h</span>
+            <span style="background:#d1fae5;color:#065f46;padding:6px 14px;border-radius:8px;font-family:'JetBrains Mono',monospace;font-weight:700;">i:ph</span>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px;font-size:.78rem;">
+            <div style="display:flex;align-items:center;gap:6px;background:#f0fdf4;border-radius:8px;padding:7px 10px;">
+              <span style="font-family:'JetBrains Mono',monospace;color:#1e40af;font-weight:700;">p</span><span>+</span><span style="font-family:'JetBrains Mono',monospace;color:#4c1d95;font-weight:700;">h</span><span>→</span><span style="font-family:'JetBrains Mono',monospace;font-weight:700;color:#9d174d;">ph</span><span style="color:var(--teal);">✓</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:6px;background:#fff1f2;border-radius:8px;padding:7px 10px;border-right:2px solid var(--red);">
+              <span style="font-family:'JetBrains Mono',monospace;color:#1e40af;font-weight:700;">p</span><span>+</span><span style="font-family:'JetBrains Mono',monospace;color:#065f46;font-weight:700;">i:ph</span><span>→ pi:ph</span><span style="color:var(--red);">✗ p أولي وتداخل!</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:6px;background:#fff1f2;border-radius:8px;padding:7px 10px;border-right:2px solid var(--red);">
+              <span style="font-family:'JetBrains Mono',monospace;color:#4c1d95;font-weight:700;">h</span><span>+</span><span style="font-family:'JetBrains Mono',monospace;color:#065f46;font-weight:700;">i:ph</span><span>→ ih:ph</span><span style="color:var(--red);">✗ h أولي وتداخل!</span>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="bb-model">X_pih = μ + <span style="color:#67e8f9;">ν_p</span> + <span style="color:#c4b5fd;">ν_h</span> + <span style="color:#fdba74;">ν_ph</span><br>+ <span style="color:#d1d5db;">ν_i:ph</span></div>
+          <div class="ins iv" style="margin-top:12px;padding:12px 14px;">
+            <div class="ico" style="font-size:1rem;">📊</div>
+            <div><div class="ii"><strong>4 آثار فقط</strong> — التداخل داخل p×h أسقط كل التفاعلات المتعلقة بـ i. أقل معلومات تشخيصية.</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ═══ SECTION 4: الاختلاط ═══ -->
+<section class="sec" id="confound">
+<div class="sec-inner">
+  <div class="cx fu">
+    <span class="tag tv">مفهوم حيوي</span>
+    <h2 class="st">الاختلاط — ماذا يحدث عند التداخل؟</h2>
+    <p class="sd cmx">عندما يكون الكون متقاطعاً (i × h) لكن تصميم G يستخدم التداخل (i:h)، تُدمَج بعض مكوّنات التباين بلا رجعة</p>
+  </div>
+
+  <div class="card fu" style="padding:32px;margin-bottom:22px;">
+    <div style="font-size:.9rem;font-weight:700;color:var(--deep);margin-bottom:18px;text-align:center;">🔑 قاعدة الاختلاط — القاعدة الذهبية</div>
+
+    <div style="background:var(--lite);border-radius:12px;padding:18px 24px;margin-bottom:20px;border-right:4px solid var(--blue);">
+      <div style="font-size:.88rem;font-weight:700;color:var(--blue);margin-bottom:8px;">التأثيرات المختلطة هي جميع التأثيرات التي:</div>
+      <div style="font-size:.83rem;color:var(--slate);line-height:1.9;">
+        ① لا تتضمن إلا المؤشرات الداخلة في التأثير المتداخل<br>
+        ② تشمل المؤشر (أو المؤشرات) الأولية في ذلك التأثير
+      </div>
+    </div>
+
+    <div style="font-size:.86rem;font-weight:700;color:var(--deep);margin-bottom:14px;text-align:center;">📌 عدد التأثيرات المختلطة = 2 ^ (عدد مؤشرات التداخل)</div>
+
+    <div class="g3">
+      <!-- i:h -->
+      <div style="background:#f0fdf9;border-radius:14px;padding:18px;border:1.5px solid #5eead4;text-align:center;">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:1.2rem;font-weight:700;color:var(--teal);margin-bottom:8px;">i:h</div>
+        <div style="font-size:.78rem;color:var(--slate);margin-bottom:10px;">مؤشر تداخل واحد (h) → 2¹ = 2 تأثيرات</div>
+        <div class="conf-strip" style="justify-content:center;">
+          <div class="cs-box cs-merged">i:h ⟹</div>
+          <div class="cs-box cs-orig">i</div>
+          <div class="cs-plus">+</div>
+          <div class="cs-box cs-orig">ih</div>
+        </div>
+        <div class="eq eq-t" style="font-size:.8rem;margin-top:8px;">σ²(i:h) = σ²(i) + σ²(ih)</div>
+      </div>
+
+      <!-- pi:h -->
+      <div style="background:#eff6ff;border-radius:14px;padding:18px;border:1.5px solid #93c5fd;text-align:center;">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:1.2rem;font-weight:700;color:var(--blue);margin-bottom:8px;">pi:h</div>
+        <div style="font-size:.78rem;color:var(--slate);margin-bottom:10px;">مؤشر تداخل واحد (h) → 2¹ = 2 تأثيرات</div>
+        <div class="conf-strip" style="justify-content:center;">
+          <div class="cs-box cs-merged">pi:h ⟹</div>
+          <div class="cs-box cs-orig">pi</div>
+          <div class="cs-plus">+</div>
+          <div class="cs-box cs-orig">pih</div>
+        </div>
+        <div class="eq eq-b" style="font-size:.8rem;margin-top:8px;">σ²(pi:h) = σ²(pi) + σ²(pih)</div>
+      </div>
+
+      <!-- i:h:p -->
+      <div style="background:#fdf4ff;border-radius:14px;padding:18px;border:1.5px solid #e9d5ff;text-align:center;">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:1.2rem;font-weight:700;color:var(--violet);margin-bottom:8px;">i:h:p</div>
+        <div style="font-size:.78rem;color:var(--slate);margin-bottom:10px;">مؤشران تداخل (h,p) → 2² = 4 تأثيرات</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--violet);margin-bottom:6px;">i:h:p ⟹ i, ih, ip, ihp</div>
+        <div class="eq eq-v" style="font-size:.75rem;margin-top:8px;">σ²(i:h:p) = σ²(i)+σ²(ih)+σ²(ip)+σ²(ihp)</div>
+      </div>
+    </div>
+
+    <div class="ins ia fu" style="margin-top:20px;">
+      <div class="ico">⚠️</div>
+      <div>
+        <div class="it">تحذير مهم: الاختلاط مشروط بكون الملاحظات!</div>
+        <div class="ii">إذا كان الكون نفسه متداخلاً (i:h)، فلا معنى لتمثيل i:h بـ (i, ih) لأن i وih غير قابلَين للتمييز أصلاً داخل الكون. الاختلاط مفهوم يُطبَّق فقط عندما يكون الكون متقاطعاً لكن التصميم متداخل.</div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ═══ SECTION 5: النموذج الخطي ═══ -->
+<section class="sec sec-alt" id="model">
+<div class="sec-inner">
+  <div class="cx fu">
+    <span class="tag tb">§ 3.2.2</span>
+    <h2 class="st">النموذج الخطي العام</h2>
+    <p class="sd cmx">معادلة واحدة تصف أي تصميم كان — الصيغة 3.1</p>
+  </div>
+
+  <div class="g2 fu">
+    <div class="lm-card">
+      <div style="font-size:.88rem;font-weight:700;color:rgba(255,255,255,.8);margin-bottom:14px;">المعادلة العامة 3.1:</div>
+      <div class="lm-formula" style="font-size:1.1rem;">X<sub>ω</sub> = μ + Σ ν<sub>α</sub></div>
+      <div style="margin-top:16px;display:flex;flex-direction:column;gap:8px;">
+        <div style="display:flex;align-items:flex-start;gap:10px;font-size:.82rem;">
+          <span style="font-family:'JetBrains Mono',monospace;color:#67e8f9;font-weight:700;min-width:30px;">ω</span>
+          <span style="color:rgba(255,255,255,.72);">= جميع مؤشرات التصميم (مثلاً: pih)</span>
+        </div>
+        <div style="display:flex;align-items:flex-start;gap:10px;font-size:.82rem;">
+          <span style="font-family:'JetBrains Mono',monospace;color:#6ee7b7;font-weight:700;min-width:30px;">μ</span>
+          <span style="color:rgba(255,255,255,.72);">= المتوسط العام في المجتمع والكون</span>
+        </div>
+        <div style="display:flex;align-items:flex-start;gap:10px;font-size:.82rem;">
+          <span style="font-family:'JetBrains Mono',monospace;color:#fde047;font-weight:700;min-width:30px;">α</span>
+          <span style="color:rgba(255,255,255,.72);">= أي مكوّن في التصميم (مع أي تداخل)</span>
+        </div>
+        <div style="display:flex;align-items:flex-start;gap:10px;font-size:.82rem;">
+          <span style="font-family:'JetBrains Mono',monospace;color:#c4b5fd;font-weight:700;min-width:30px;">ν_α</span>
+          <span style="color:rgba(255,255,255,.72);">= تأثير الدرجة لذلك المكوّن</span>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom:14px;border-right:4px solid var(--blue);">
+        <div style="font-size:.86rem;font-weight:700;color:var(--blue);margin-bottom:8px;">الافتراضات الأساسية</div>
+        <div style="font-size:.82rem;color:var(--slate);line-height:1.85;">
+          <div style="display:flex;gap:8px;margin-bottom:5px;"><span style="color:var(--teal);">✓</span> N → ∞ لجميع الأوجه</div>
+          <div style="display:flex;gap:8px;margin-bottom:5px;"><span style="color:var(--teal);">✓</span> السحب عشوائي مستقل</div>
+          <div style="display:flex;gap:8px;margin-bottom:5px;"><span style="color:var(--teal);">✓</span> E(ν_α) = 0 لأي مكوّن</div>
+          <div style="display:flex;gap:8px;margin-bottom:5px;"><span style="color:var(--teal);">✓</span> جميع التأثيرات غير مترابطة</div>
+          <div style="display:flex;gap:8px;"><span style="color:var(--amber);">⚠️</span> لا افتراض توزيع طبيعي!</div>
+        </div>
+      </div>
+      <div class="ins ib" style="padding:12px 14px;">
+        <div class="ico" style="font-size:1rem;">💡</div>
+        <div><div class="ii"><strong>القيمة المتوقعة لأي تأثير = 0</strong>. هذا ليس افتراضاً ثانوياً — إنه نتيجة مباشرة من طريقة تعريف متوسطات الدرجات وتأثيراتها.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Score means table -->
+  <div class="smean-visual fu" style="margin-top:24px;">
+    <div style="font-size:.9rem;font-weight:700;color:var(--deep);margin-bottom:18px;">متوسطات الدرجات — كيف نُعرِّفها؟ (المعادلة 3.3)</div>
+    <div style="background:var(--lite);border-radius:12px;padding:16px 20px;margin-bottom:18px;border-right:4px solid var(--teal);">
+      <div class="eq eq-t" style="font-size:.9rem;">μ_α ≡ E_{α̇} X_ω</div>
+      <div style="font-size:.82rem;color:var(--slate);margin-top:6px;">
+        حيث α̇ = <strong>جميع المؤشرات في ω باستثناء مؤشرات α</strong>. أي: نأخذ التوقع على كل شيء ما عدا α.
+      </div>
+    </div>
+    <div style="overflow-x:auto;">
+    <div class="table-wrap"><table class="smean-table">
+      <thead><tr><th style="text-align:right;">متوسط الدرجة</th><th>التعريف</th><th>المعنى</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>المتوسط العام μ</td>
+          <td>E_p E_i E_h X_pih</td>
+          <td style="font-family:'Cairo',sans-serif;font-size:.78rem;">توقع على الجميع</td>
+        </tr>
+        <tr>
+          <td>μ_h</td>
+          <td>E_p E_i X_pih</td>
+          <td style="font-family:'Cairo',sans-serif;font-size:.78rem;">توقع على p و i (ليس h)</td>
+        </tr>
+        <tr>
+          <td>μ_ih</td>
+          <td>E_p X_pih</td>
+          <td style="font-family:'Cairo',sans-serif;font-size:.78rem;">توقع على p فقط</td>
+        </tr>
+        <tr>
+          <td>μ_p</td>
+          <td>E_i E_h X_pih</td>
+          <td style="font-family:'Cairo',sans-serif;font-size:.78rem;">توقع على i و h (ليس p)</td>
+        </tr>
+        <tr>
+          <td>μ_ph</td>
+          <td>E_i X_pih</td>
+          <td style="font-family:'Cairo',sans-serif;font-size:.78rem;">توقع على i فقط</td>
+        </tr>
+        <tr style="background:#fffde7;">
+          <td>μ_pih</td>
+          <td>= X_pih</td>
+          <td style="font-family:'Cairo',sans-serif;font-size:.78rem;color:var(--amber);">لا توقع! — الملاحظة نفسها</td>
+        </tr>
+      </tbody>
+    </table></div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ═══ SECTION 6: الخوارزمية ═══ -->
+<section class="sec" id="algo">
+<div class="sec-inner">
+  <div class="cx fu">
+    <span class="tag tv">§ 3.2.3</span>
+    <h2 class="st">الخوارزمية — تحويل تأثير الدرجة إلى متوسطات</h2>
+    <p class="sd cmx">خوارزمية خطوة بخطوة تُحوِّل أي تأثير ν_α إلى مجموع ومطروح من متوسطات الدرجات — تنطبق على أي تصميم</p>
+  </div>
+
+  <div class="algo-box fu">
+    <div class="algo-intro">
+      <div style="font-size:.88rem;font-weight:700;color:rgba(255,255,255,.9);margin-bottom:8px;">📋 المدخلات المطلوبة</div>
+      <div class="code">
+        <span class="kw">المكوّن α</span> يتضمن:<br>
+        &nbsp;&nbsp;<span class="cm">m = عدد المؤشرات الأولية</span><br>
+        &nbsp;&nbsp;<span class="cm">s = عدد مؤشرات التداخل</span>
+      </div>
+    </div>
+
+    <div class="algo-steps">
+      <div class="algo-step">
+        <div class="as-num as-0">0</div>
+        <div class="as-body">
+          <h4>الخطوة 0 — نبدأ بـ μ_α</h4>
+          <p>ابدأ بمتوسط الدرجة للمكوّن كاملاً (مؤشراته الأولية ومؤشرات تداخله معاً).</p>
+          <div class="as-rule">+ μ_{(s مؤشرات التداخل) + (m مؤشرات أولية)}</div>
+        </div>
+      </div>
+      <div class="algo-step">
+        <div class="as-num as-1">1</div>
+        <div class="as-body">
+          <h4>الخطوة 1 — اطرح المكوّنات التي تحتوي (m−1) مؤشراً أولياً</h4>
+          <p>اطرح جميع متوسطات الدرجات التي تحتوي على مؤشرات التداخل s ولكن (m−1) فقط من المؤشرات الأولية.</p>
+          <div class="as-rule">− μ_{(s تداخل) + (m-1 أولي)}</div>
+        </div>
+      </div>
+      <div class="algo-step">
+        <div class="as-num as-2">2</div>
+        <div class="as-body">
+          <h4>الخطوة 2 — أضف المكوّنات التي تحتوي (m−2) مؤشراً أولياً</h4>
+          <p>أضف جميع متوسطات الدرجات التي تحتوي على مؤشرات التداخل s ولكن (m−2) فقط من المؤشرات الأولية.</p>
+          <div class="as-rule">+ μ_{(s تداخل) + (m-2 أولي)}</div>
+        </div>
+      </div>
+      <div class="algo-step">
+        <div class="as-num as-3">j</div>
+        <div class="as-body">
+          <h4>الخطوة j — بالتناوب (طرح إذا j فردي، إضافة إذا j زوجي)</h4>
+          <p>نُكمل حتى نصل للمكوّن الذي يحتوي فقط على مؤشرات التداخل s (بلا مؤشرات أولية).</p>
+          <div class="as-rule">توقف عند الخطوة m — آخر خطوة تضم 0 مؤشرات أولية</div>
+        </div>
+      </div>
+      <div class="algo-step">
+        <div class="as-num as-end">✓</div>
+        <div class="as-body">
+          <h4>النهاية — إذا لم يكن هناك مؤشرات تداخل</h4>
+          <p>في آخر خطوة، إذا لم يكن هناك مؤشرات تداخل (s=0)، أضف μ أو اطرحها حسب الخطوة.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="ins ib" style="margin-top:20px;">
+      <div class="ico">💡</div>
+      <div>
+        <div class="it">لماذا هذا النمط (إضافة ثم طرح ثم إضافة...)؟</div>
+        <div class="ii">هذا مبدأ الشمول والإقصاء Inclusion-Exclusion في الاحتمالات — لضمان أن القيمة المتوقعة للتأثير تساوي صفراً (المعادلة 3.4).</div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ═══ SECTION 7: مثال محلول ═══ -->
+<section class="sec sec-alt" id="worked">
+<div class="sec-inner">
+  <div class="cx fu">
+    <span class="tag tt">مثال محلول بالتفصيل</span>
+    <h2 class="st">تطبيق الخوارزمية على ν<sub>pi:h</sub></h2>
+    <p class="sd cmx">تصميم p × (i:h) · المكوّن pi:h يحتوي مؤشرَين أوليَّين (p, i) ومؤشر تداخل واحد (h)</p>
+  </div>
+
+  <div class="worked-box fu">
+    <div style="font-size:.9rem;font-weight:700;color:var(--deep);margin-bottom:20px;text-align:center;">نطبق الخوارزمية على: ν<sub>pi:h</sub></div>
+
+    <!-- Identification -->
+    <div style="background:#f6f8ff;border-radius:12px;padding:16px 20px;margin-bottom:18px;display:flex;gap:20px;flex-wrap:wrap;justify-content:center;">
+      <div style="text-align:center;">
+        <div style="font-size:.76rem;color:var(--muted);margin-bottom:4px;">المؤشرات الأولية</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:1.1rem;font-weight:700;color:var(--blue);">p , i → m = 2</div>
+      </div>
+      <div style="text-align:center;">
+        <div style="font-size:.76rem;color:var(--muted);margin-bottom:4px;">مؤشرات التداخل</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:1.1rem;font-weight:700;color:var(--teal);">h → s = 1</div>
+      </div>
+      <div style="text-align:center;">
+        <div style="font-size:.76rem;color:var(--muted);margin-bottom:4px;">عدد الخطوات</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:1.1rem;font-weight:700;color:var(--violet);">m = 2 خطوتان</div>
+      </div>
+    </div>
+
+    <!-- Step 0 -->
+    <div class="wb-step wb-0">
+      <div class="wb-step-label" style="color:var(--blue);">الخطوة 0 — نبدأ بـ μ_pih (= X_pih)</div>
+      <div class="wb-formula" style="color:var(--blue);">ν_pi:h = <span style="background:rgba(30,79,216,.1);padding:2px 6px;border-radius:4px;">X_pih</span> + ...</div>
+      <div style="font-size:.78rem;color:var(--slate);margin-top:6px;">s=1 مؤشر تداخل (h) + m=2 مؤشران أوليان (p,i) → μ_pih = X_pih لأنها ملاحظة واحدة</div>
+    </div>
+
+    <!-- Step 1 -->
+    <div class="wb-step wb-1">
+      <div class="wb-step-label" style="color:var(--red);">الخطوة 1 (j فردي → نطرح) — s=1 تداخل + (m-1)=1 أولي</div>
+      <div class="wb-formula" style="color:var(--red);">= X_pih <span style="background:rgba(208,32,48,.1);padding:2px 6px;border-radius:4px;">− μ_ph − μ_ih</span> + ...</div>
+      <div style="font-size:.78rem;color:var(--slate);margin-top:6px;">
+        المكوّنات التي تحتوي على h (تداخل) وواحد من {p أو i} (أولي):<br>
+        → <span style="font-family:'JetBrains Mono',monospace;color:var(--red);">μ_ph</span> (h + p) و <span style="font-family:'JetBrains Mono',monospace;color:var(--red);">μ_ih</span> (h + i) → نطرحهما معاً
+      </div>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="wb-step wb-2">
+      <div class="wb-step-label" style="color:var(--teal);">الخطوة 2 (j زوجي → نضيف) — s=1 تداخل + (m-2)=0 أولي</div>
+      <div class="wb-formula" style="color:var(--teal);">= X_pih − μ_ph − μ_ih <span style="background:rgba(0,150,138,.1);padding:2px 6px;border-radius:4px;">+ μ_h</span></div>
+      <div style="font-size:.78rem;color:var(--slate);margin-top:6px;">
+        المكوّن الذي يحتوي على h فقط (تداخل، بلا أولي): → <span style="font-family:'JetBrains Mono',monospace;color:var(--teal);">μ_h</span> → نضيفه
+        <br>(هذه آخر خطوة لأننا وصلنا لـ m=2 خطوات)
+      </div>
+    </div>
+
+    <!-- Result -->
+    <div class="wb-result">
+      <div style="font-size:.78rem;color:rgba(255,255,255,.6);margin-bottom:6px;">النتيجة النهائية</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:1.1rem;color:#fde047;font-weight:700;">ν_pi:h = X_pih − μ_ph − μ_ih + μ_h</div>
+    </div>
+
+    <!-- Verification -->
+    <div style="margin-top:20px;background:#f0fdf9;border-radius:12px;padding:16px 20px;border:1.5px solid #5eead4;">
+      <div style="font-size:.85rem;font-weight:700;color:var(--teal);margin-bottom:10px;">✅ التحقق — هل E(ν_pi:h) = 0؟</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:.82rem;direction:ltr;color:var(--slate);">
+        E_p(ν_pi:h) = E_p(X_pih) − μ_ph − μ_ih + μ_h<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= μ_ih − μ_ph − μ_ih + μ_h<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= <span style="color:var(--teal);font-weight:700;">μ_h − μ_ph</span> ← ليس صفراً دائماً<br>
+        E_p E_i(ν_pi:h) = μ_h − μ_h = <span style="color:var(--teal);font-weight:700;">0 ✓</span>
+      </div>
+    </div>
+
+    <div class="ins iv" style="margin-top:14px;">
+      <div class="ico">🎯</div>
+      <div>
+        <div class="it">ν_pi:h — الطبيعة "المتبقية" الواضحة</div>
+        <div class="ii">ν_pi:h = X_pih − μ_ph − μ_ih + μ_h يعني: الدرجة الفعلية ناقص متوسط الشخص في فئة h ناقص متوسط الفقرة في فئة h ثم إضافة متوسط الفئة h. كل ما يتبقى بعد حذف تأثير الشخص والفقرة والفئة هو التأثير المتبقي ν_pi:h.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Additional examples -->
+  <div class="g2 fu" style="margin-top:22px;">
+    <div class="card" style="border-top:4px solid var(--blue);">
+      <div style="font-size:.86rem;font-weight:700;color:var(--blue);margin-bottom:10px;">مثال آخر: ν_p في تصميم p × i × h</div>
+      <div style="font-size:.8rem;color:var(--slate);margin-bottom:10px;">m=1 (أولي: p)، s=0 (بلا تداخل)</div>
+      <div class="eq eq-b" style="font-size:.84rem;">الخطوة 0: μ_p</div>
+      <div class="eq eq-b" style="font-size:.84rem;">الخطوة 1 (m=1): − μ</div>
+      <div class="wb-result" style="margin-top:10px;padding:12px;">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:.95rem;color:#fde047;">ν_p = μ_p − μ</div>
+      </div>
+    </div>
+    <div class="card" style="border-top:4px solid var(--teal);">
+      <div style="font-size:.86rem;font-weight:700;color:var(--teal);margin-bottom:10px;">مثال: ν_ih في تصميم p × i × h</div>
+      <div style="font-size:.8rem;color:var(--slate);margin-bottom:10px;">m=2 (أوليان: i,h)، s=0 (بلا تداخل)</div>
+      <div class="eq eq-t" style="font-size:.84rem;">الخطوة 0: μ_ih</div>
+      <div class="eq eq-t" style="font-size:.84rem;">الخطوة 1 (−): − μ_i − μ_h</div>
+      <div class="eq eq-t" style="font-size:.84rem;">الخطوة 2 (+): + μ</div>
+      <div class="wb-result" style="margin-top:10px;padding:12px;">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:.95rem;color:#fde047;">ν_ih = μ_ih − μ_i − μ_h + μ</div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ═══ SECTION 8: مكتبة التصاميم ═══ -->
+<section class="sec" id="builder">
+<div class="sec-inner">
+  <div class="cx fu">
+    <span class="tag tl">مرجع شامل</span>
+    <h2 class="st">مكتبة التصاميم — النماذج الخطية الكاملة</h2>
+    <p class="sd cmx">جميع النماذج الخطية للتصاميم الستة الأساسية ثنائية الوجه في مكان واحد — مع جميع تأثيرات الدرجات</p>
+  </div>
+
+  <div class="fu" style="overflow-x:auto;">
+  <div class="table-wrap"><table class="sum-tbl">
+    <thead>
+      <tr>
+        <th style="text-align:right;">التصميم</th>
+        <th>عدد الآثار</th>
+        <th>النموذج الخطي</th>
+        <th>ملاحظة</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="font-weight:700;font-size:.86rem;">p × i × h</td>
+        <td><span style="font-weight:700;color:var(--blue);">7</span></td>
+        <td style="font-size:.76rem;text-align:right;font-family:'JetBrains Mono',monospace;">X = μ + ν_p + ν_i + ν_h + ν_pi + ν_ph + ν_ih + ν_pih</td>
+        <td style="font-family:'Cairo',sans-serif;font-size:.74rem;">الأكثر شمولاً</td>
+      </tr>
+      <tr>
+        <td style="font-weight:700;font-size:.86rem;">p × (i:h)</td>
+        <td><span style="font-weight:700;color:var(--teal);">5</span></td>
+        <td style="font-size:.76rem;text-align:right;font-family:'JetBrains Mono',monospace;">X = μ + ν_p + ν_h + ν_i:h + ν_ph + ν_pi:h</td>
+        <td style="font-family:'Cairo',sans-serif;font-size:.74rem;">i:h يختلط i+ih</td>
+      </tr>
+      <tr>
+        <td style="font-weight:700;font-size:.86rem;">(i:p) × h</td>
+        <td><span style="font-weight:700;color:var(--orange);">5</span></td>
+        <td style="font-size:.76rem;text-align:right;font-family:'JetBrains Mono',monospace;">X = μ + ν_p + ν_h + ν_i:p + ν_ph + ν_ih:p</td>
+        <td style="font-family:'Cairo',sans-serif;font-size:.74rem;">i:p يختلط i+pi</td>
+      </tr>
+      <tr>
+        <td style="font-weight:700;font-size:.86rem;">i:(p × h)</td>
+        <td><span style="font-weight:700;color:var(--violet);">4</span></td>
+        <td style="font-size:.76rem;text-align:right;font-family:'JetBrains Mono',monospace;">X = μ + ν_p + ν_h + ν_ph + ν_i:ph</td>
+        <td style="font-family:'Cairo',sans-serif;font-size:.74rem;">i:ph يختلط i+pi+ih+pih</td>
+      </tr>
+      <tr>
+        <td style="font-weight:700;font-size:.86rem;">(i×h):p</td>
+        <td><span style="font-weight:700;color:var(--lime);">4</span></td>
+        <td style="font-size:.76rem;text-align:right;font-family:'JetBrains Mono',monospace;">X = μ + ν_p + ν_i:p + ν_h:p + ν_ih:p</td>
+        <td style="font-family:'Cairo',sans-serif;font-size:.74rem;">كل i,h متداخل في p</td>
+      </tr>
+      <tr>
+        <td style="font-weight:700;font-size:.86rem;">i:h:p</td>
+        <td><span style="font-weight:700;color:var(--red);">3</span></td>
+        <td style="font-size:.76rem;text-align:right;font-family:'JetBrains Mono',monospace;">X = μ + ν_p + ν_h:p + ν_i:h:p</td>
+        <td style="font-family:'Cairo',sans-serif;font-size:.74rem;">الأكثر تداخلاً</td>
+      </tr>
+    </tbody>
+  </table></div>
+  </div>
+
+  <div class="g2 fu" style="margin-top:22px;">
+    <div class="card" style="background:linear-gradient(135deg,#f0f6ff,#e8f0ff);border-color:#93c5fd;">
+      <div style="font-size:.9rem;font-weight:700;color:var(--blue);margin-bottom:12px;">🔑 القاعدة الأساسية — بناء النموذج</div>
+      <div style="font-size:.83rem;color:var(--slate);line-height:1.9;">
+        <div style="display:flex;gap:8px;margin-bottom:5px;"><span style="color:var(--teal);">①</span> حدِّد الآثار الرئيسية (كل وجه → أثر رئيسي)</div>
+        <div style="display:flex;gap:8px;margin-bottom:5px;"><span style="color:var(--teal);">②</span> استخرج الآثار التفاعلية بتركيب الرئيسية (احذف الخاطئة)</div>
+        <div style="display:flex;gap:8px;margin-bottom:5px;"><span style="color:var(--teal);">③</span> اكتب النموذج: X = μ + مجموع جميع الآثار</div>
+        <div style="display:flex;gap:8px;"><span style="color:var(--teal);">④</span> تحقق: عدد الآثار = عدد مناطق مخطط فن</div>
+      </div>
+    </div>
+    <div class="card" style="background:linear-gradient(135deg,#f0fdf9,#ecfdf5);border-color:#5eead4;">
+      <div style="font-size:.9rem;font-weight:700;color:var(--teal);margin-bottom:12px;">⚙️ الخوارزمية — تأثير إلى متوسطات</div>
+      <div style="font-size:.83rem;color:var(--slate);line-height:1.9;">
+        <div style="display:flex;gap:8px;margin-bottom:5px;"><span style="color:var(--blue);">①</span> حدِّد m (أولية) وs (تداخل)</div>
+        <div style="display:flex;gap:8px;margin-bottom:5px;"><span style="color:var(--blue);">②</span> ابدأ بـ +μ_α</div>
+        <div style="display:flex;gap:8px;margin-bottom:5px;"><span style="color:var(--red);">③</span> اطرح كل متوسط بـ(m-1) أولي</div>
+        <div style="display:flex;gap:8px;margin-bottom:5px;"><span style="color:var(--teal);">④</span> أضف كل متوسط بـ(m-2) أولي</div>
+        <div style="display:flex;gap:8px;"><span style="color:var(--violet);">⑤</span> واصل بالتناوب حتى الخطوة m</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Final summary principles -->
+  <div class="sec-dark" style="border-radius:var(--r);margin-top:22px;padding:32px;" class="fu">
+    <div style="font-size:.95rem;font-weight:700;color:white;margin-bottom:18px;text-align:center;">🎯 ست مبادئ من §3.2</div>
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:14px;">
+      <div class="dcard"><h4 style="color:#67e8f9;font-size:.87rem;margin-bottom:6px;">النموذج العام: X_ω = μ + Σν_α</h4><p style="font-size:.8rem;color:rgba(255,255,255,.68);">يصف أي تصميم — أحادي أو ثنائي أو أكثر الأوجه</p></div>
+      <div class="dcard"><h4 style="color:#6ee7b7;font-size:.87rem;margin-bottom:6px;">E(ν_α) = 0 دائماً</h4><p style="font-size:.8rem;color:rgba(255,255,255,.68);">ليس افتراضاً بل نتيجة حتمية من تعريف متوسطات الدرجات</p></div>
+      <div class="dcard"><h4 style="color:#fde047;font-size:.87rem;margin-bottom:6px;">التأثيرات غير مترابطة</h4><p style="font-size:.8rem;color:rgba(255,255,255,.68);">E(ν_α ν_β) = 0 لأي تأثيرين مختلفين — بدون افتراض الاستقلال التام</p></div>
+      <div class="dcard"><h4 style="color:#c4b5fd;font-size:.87rem;margin-bottom:6px;">الاختلاط: σ²(i:h) = σ²(i)+σ²(ih)</h4><p style="font-size:.8rem;color:rgba(255,255,255,.68);">2^s تأثيرات مختلطة في أي تأثير متداخل ذي s مؤشرات تداخل</p></div>
+      <div class="dcard"><h4 style="color:#86efac;font-size:.87rem;margin-bottom:6px;">μ_α — التوقع على ما سوى α</h4><p style="font-size:.8rem;color:rgba(255,255,255,.68);">متوسط الدرجة لمكوّن = التوقع على جميع المؤشرات ما عدا مؤشرات ذلك المكوّن</p></div>
+      <div class="dcard"><h4 style="color:#fca5a5;font-size:.87rem;margin-bottom:6px;">الخوارزمية عامة وشاملة</h4><p style="font-size:.8rem;color:rgba(255,255,255,.68);">تنطبق على أي مكوّن في أي تصميم — أحادي أو ثنائي أو أكثر</p></div>
+    </div>
+  </div>
+</div>
+</section>
+
+<hr class="rdiv">
+<footer>
+  <p style="font-size:1rem;color:white;margin-bottom:8px;">📖 <strong>Generalizability Theory</strong> — Robert L. Brennan</p>
+  <p>الفصل الثالث — القسم 3.2: النماذج الخطية وتأثيرات الدرجات ومتوسطات الدرجات</p>
+  <p style="margin-top:10px;font-size:.76rem;opacity:.4;">الدليل البصري الشامل | نظرية التعميم في القياس التربوي</p>
+</footer>
+
+<script>
+/* PROGRESS + NAV */
+window.addEventListener('scroll',()=>{
+  const p=window.scrollY/(document.body.scrollHeight-window.innerHeight)*100;
+  document.getElementById('pgf').style.width=p+'%';
+  const ss=['overview','notation','interact','confound','model','means','algo','worked','builder'];
+  let cur='overview';
+  ss.forEach(s=>{const el=document.getElementById(s);if(el&&el.getBoundingClientRect().top<110)cur=s;});
+  document.querySelectorAll('.nl').forEach(l=>l.classList.toggle('active',l.dataset.s===cur));
+},{passive:true});
+
+/* FADE */
+const io=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('in');});},{threshold:.07});
+document.querySelectorAll('.fu').forEach(el=>io.observe(el));
+
+/* DESIGN TABS */
+function showDesign(id, btn){
+  document.querySelectorAll('.bb-content').forEach(c=>c.classList.remove('active'));
+  document.querySelectorAll('.bb-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
+
+<div class="page-nav-bottom" style="background:linear-gradient(135deg,#0a0a1a,#111827);"><a href="index.html" style="background:linear-gradient(135deg,#16213e,#0f3460);color:#fff;">&#x1F3E0; &#x627;&#x644;&#x631;&#x626;&#x64A;&#x633;&#x64A;&#x629;</a> <a href="3.1.html" style="background:linear-gradient(135deg,#4a5568,#2d3748);color:#fff;">&#x2190; &#x627;&#x644;&#x633;&#x627;&#x628;&#x642;</a> <a href="3.3.html" style="background:linear-gradient(135deg,#2b6cb0,#2c5282);color:#fff;">&#x627;&#x644;&#x62A;&#x627;&#x644;&#x64A; &#x2192;</a></div>
+</body>
+</html>

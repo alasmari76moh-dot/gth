@@ -1,0 +1,1889 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>التصاميم المتداخلة — الفصل الثاني § 2.4</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+/* ══════════════ TOKENS ══════════════ */
+:root{
+  --bg:#f1f5f0; --surf:#fff; --deep:#1a2410; --forest:#2d4a1e;
+  --olive:#4a7c35; --lime:#7ab648; --mint:#3dbf7a; --teal:#1a9470;
+  --amber:#c77a12; --orange:#d4531a; --red:#c42b2b; --rose:#b52560;
+  --sky:#1c7abf; --blue:#2154a0; --violet:#5a3090;
+  --slate:#4a5568; --muted:#8a9ba0; --border:#d8e4d0;
+  --r:16px; --sh:0 2px 16px rgba(26,36,16,.08); --shm:0 8px 32px rgba(26,36,16,.13);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'Cairo','Tajawal',sans-serif;background:var(--bg);color:var(--deep);direction:rtl;overflow-x:hidden;line-height:1.75;}
+
+/* ── PROGRESS ── */
+.pgbar{position:fixed;top:0;left:0;right:0;z-index:1000;height:3px;background:var(--border);}
+.pgfill{height:100%;width:0%;background:linear-gradient(90deg,var(--forest),var(--olive),var(--lime),var(--mint));transition:width .1s;}
+
+/* ── NAV ── */
+.nav{position:sticky;top:3px;z-index:900;background:rgba(255,255,255,.95);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);padding:0 32px;display:flex;align-items:stretch;box-shadow:var(--sh);}
+.nav-logo{font-size:.85rem;font-weight:700;color:var(--forest);display:flex;align-items:center;gap:8px;padding:13px 0;margin-left:18px;white-space:nowrap;}
+.nav-links{display:flex;overflow-x:auto;}
+.nl{padding:0 14px;height:50px;display:flex;align-items:center;font-size:.74rem;font-weight:700;color:var(--slate);text-decoration:none;white-space:nowrap;border-bottom:3px solid transparent;transition:all .2s;}
+.nl:hover{color:var(--forest);background:rgba(45,74,30,.04);}
+.nl.active{color:var(--forest);border-bottom-color:var(--forest);}
+
+/* ── HERO ── */
+.hero{background:linear-gradient(140deg,var(--deep) 0%,var(--forest) 55%,#1e3d12 100%);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px 40px;position:relative;overflow:hidden;text-align:center;}
+.hero::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);background-size:52px 52px;}
+.hero-glow{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 700px 500px at 30% 40%,rgba(122,182,72,.12) 0%,transparent 60%),radial-gradient(ellipse 500px 400px at 78% 68%,rgba(61,191,122,.09) 0%,transparent 58%);}
+.hero-tag{display:inline-flex;align-items:center;gap:8px;background:rgba(122,182,72,.15);border:1px solid rgba(122,182,72,.3);color:#b8e87a;padding:8px 22px;border-radius:50px;font-size:.78rem;font-weight:700;letter-spacing:1px;margin-bottom:28px;}
+.hero h1{font-size:clamp(2.6rem,6.5vw,4.8rem);font-weight:900;color:white;line-height:1.1;margin-bottom:18px;}
+.hero h1 em{font-style:normal;background:linear-gradient(120deg,#b8e87a,#6ee7b7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.hero-sub{font-size:1.05rem;color:rgba(255,255,255,.62);max-width:640px;margin:0 auto 50px;line-height:1.95;}
+.hero-chips{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;}
+.hchip{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:16px 22px;min-width:148px;text-align:center;transition:all .3s;cursor:default;}
+.hchip:hover{background:rgba(255,255,255,.12);transform:translateY(-5px);}
+.hchip .sym{font-family:'Georgia',serif;font-size:1.5rem;font-weight:700;margin-bottom:5px;}
+.hchip .lbl{font-size:.72rem;color:rgba(255,255,255,.62);}
+
+/* ── SECTIONS ── */
+.sec{padding:70px 40px;}
+.sec-inner{max-width:1080px;margin:0 auto;}
+.sec-alt{background:#f8fbf5;}
+.sec-warm{background:#fdfbf5;}
+.sec-dark{background:var(--deep);color:white;}
+.sec-forest{background:var(--forest);color:white;}
+
+.tag{display:inline-block;padding:5px 16px;border-radius:50px;font-size:.73rem;font-weight:700;letter-spacing:1px;margin-bottom:12px;}
+.tf{background:linear-gradient(135deg,var(--forest),var(--olive));color:white;}
+.tl{background:linear-gradient(135deg,var(--olive),var(--lime));color:white;}
+.tm{background:linear-gradient(135deg,var(--teal),var(--mint));color:white;}
+.ta{background:linear-gradient(135deg,var(--amber),var(--orange));color:white;}
+.tv{background:linear-gradient(135deg,var(--violet),#7c5cbc);color:white;}
+.ts{background:var(--slate);color:white;}
+.tr{background:linear-gradient(135deg,var(--red),var(--rose));color:white;}
+
+h2.st{font-size:clamp(1.7rem,4vw,2.5rem);font-weight:900;color:var(--deep);margin-bottom:12px;}
+h2.st.wh{color:white;}
+.sdesc{font-size:.95rem;color:var(--slate);max-width:650px;line-height:1.9;margin-bottom:42px;}
+.sdesc.wh{color:rgba(255,255,255,.7);}
+.cx{text-align:center;}.cmx{margin:0 auto;}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:22px;}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;}
+
+.card{background:var(--surf);border-radius:var(--r);padding:26px;box-shadow:var(--sh);border:1px solid var(--border);transition:all .28s;}
+.card:hover{transform:translateY(-3px);box-shadow:var(--shm);}
+.dcard{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:var(--r);padding:24px;}
+
+.eq{background:#f5f8f0;border-radius:10px;padding:12px 18px;border-right:3px solid;font-family:'Georgia',serif;font-size:.95rem;direction:ltr;text-align:center;margin:8px 0;box-shadow:var(--sh);}
+.eq-f{border-color:var(--forest);} .eq-l{border-color:var(--lime);} .eq-m{border-color:var(--mint);}
+.eq-a{border-color:var(--amber);} .eq-v{border-color:var(--violet);} .eq-r{border-color:var(--red);}
+.eq-s{border-color:var(--sky);} .eq-t{border-color:var(--teal);}
+.eq-main{background:linear-gradient(135deg,#edf5e8,#dff0d8);border-radius:14px;padding:20px 28px;border:2px solid rgba(74,124,53,.25);font-family:'Georgia',serif;font-size:1.05rem;direction:ltr;text-align:center;margin:16px 0;box-shadow:var(--shm);}
+
+.ins{border-radius:14px;padding:18px 22px;display:flex;gap:12px;margin:14px 0;}
+.ins .ico{font-size:1.4rem;flex-shrink:0;margin-top:2px;}
+.ins .ititle{font-weight:700;font-size:.88rem;margin-bottom:4px;}
+.ins .itext{font-size:.82rem;color:var(--slate);line-height:1.85;}
+.ig{background:#f0fdf4;border:1.5px solid #86efac;} .ig .ititle{color:var(--forest);}
+.it{background:#f0fdf9;border:1.5px solid #5eead4;} .it .ititle{color:var(--teal);}
+.ia{background:#fffbeb;border:1.5px solid #fcd34d;} .ia .ititle{color:var(--amber);}
+.iv{background:#f5f3ff;border:1.5px solid #c4b5fd;} .iv .ititle{color:var(--violet);}
+.ir{background:#fff1f2;border:1.5px solid #fca5a5;} .ir .ititle{color:var(--red);}
+.ib{background:#eff6ff;border:1.5px solid #93c5fd;} .ib .ititle{color:var(--blue);}
+
+.bdg{display:inline-block;padding:3px 11px;border-radius:50px;font-size:.72rem;font-weight:700;}
+.bdg-f{background:#dcfce7;color:#166534;} .bdg-t{background:#d1fae5;color:#065f46;}
+.bdg-a{background:#fef3c7;color:#92400e;} .bdg-r{background:#fee2e2;color:#991b1b;}
+.bdg-v{background:#ede9fe;color:#4c1d95;} .bdg-s{background:#e2e8f0;color:#334155;}
+
+.divr{height:3px;border:none;background:linear-gradient(90deg,var(--forest),var(--olive),var(--lime),var(--teal),var(--amber));}
+footer{background:var(--deep);color:rgba(255,255,255,.45);text-align:center;padding:38px 20px;font-size:.88rem;line-height:1.9;}
+
+.fu{opacity:0;transform:translateY(22px);transition:opacity .58s ease,transform .58s ease;}
+.fu.in{opacity:1;transform:translateY(0);}
+.fu:nth-child(2){transition-delay:.07s;}.fu:nth-child(3){transition-delay:.14s;}.fu:nth-child(4){transition-delay:.21s;}
+
+/* ════ SECTION SPECIFIC ════ */
+
+/* Crossed vs Nested visual */
+.design-cmp{display:grid;grid-template-columns:1fr 1fr;gap:28px;}
+.dcrd{border-radius:var(--r);overflow:hidden;box-shadow:var(--shm);}
+.dcrd-hdr{padding:20px 26px;color:white;display:flex;align-items:center;gap:12px;}
+.dh-cross{background:linear-gradient(135deg,var(--blue),var(--sky));}
+.dh-nest{background:linear-gradient(135deg,var(--forest),var(--olive));}
+.dcrd-body{background:white;padding:24px;}
+
+/* Matrix */
+.mat{display:grid;gap:4px;width:fit-content;margin:14px auto;}
+.mc{width:40px;height:40px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;cursor:default;transition:all .25s;}
+.mch{background:var(--deep);color:white;}
+.mcx{background:linear-gradient(135deg,var(--sky),#1d4ed8);color:white;}
+.mce{background:#f1f5f9;color:#94a3b8;}
+/* nested cells - each person has DIFFERENT items */
+.mn1{background:linear-gradient(135deg,#16a34a,#4ade80);color:white;}
+.mn2{background:linear-gradient(135deg,#d97706,#fbbf24);color:white;}
+.mn3{background:linear-gradient(135deg,#7c3aed,#a78bfa);color:white;}
+.mn4{background:linear-gradient(135deg,#dc2626,#f87171);color:white;}
+.mn5{background:linear-gradient(135deg,#0369a1,#38bdf8);color:white;}
+
+/* Confounding visual */
+.conf-box{background:white;border-radius:var(--r);padding:32px;box-shadow:var(--shm);border:1px solid var(--border);}
+.conf-eq{display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:center;margin:20px 0;}
+.conf-block{border-radius:12px;padding:12px 18px;text-align:center;min-width:100px;transition:all .3s;}
+.conf-block:hover{transform:scale(1.05);}
+.cb-ip{background:linear-gradient(135deg,#dcfce7,#bbf7d0);border:2px solid #86efac;color:#166534;}
+.cb-i{background:linear-gradient(135deg,#dbeafe,#bfdbfe);border:2px solid #93c5fd;color:#1e40af;}
+.cb-pi{background:linear-gradient(135deg,#ede9fe,#ddd6fe);border:2px solid #c4b5fd;color:#4c1d95;}
+.cb-eq{font-size:1.4rem;color:var(--muted);align-self:center;}
+.cb-sym{font-family:'Georgia',serif;font-size:1.2rem;font-weight:700;}
+.cb-name{font-size:.72rem;margin-top:4px;}
+
+/* ANOVA comparison */
+.anova-cmp{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+.anova-tbl{width:100%;border-collapse:separate;border-spacing:0;border-radius:14px;overflow:hidden;font-size:.83rem;}
+.anova-tbl thead tr{background:linear-gradient(135deg,var(--deep),var(--forest));}
+.anova-tbl th{padding:12px 14px;font-size:.78rem;font-weight:700;color:white;text-align:center;}
+.anova-tbl th:first-child{text-align:right;}
+.anova-tbl tbody tr{background:white;transition:background .2s;}
+.anova-tbl tbody tr:nth-child(even){background:#f5f8f0;}
+.anova-tbl tbody tr:hover{background:#edf5e8;}
+.anova-tbl td{padding:11px 14px;border-bottom:1px solid var(--border);text-align:center;font-family:'Georgia',serif;font-size:.82rem;}
+.anova-tbl td:first-child{text-align:right;font-family:'Cairo',sans-serif;font-weight:700;}
+
+/* KEY DIFFERENCE VISUAL */
+.key-diff{background:white;border-radius:var(--r);padding:36px;box-shadow:var(--shm);}
+.kd-row{display:grid;grid-template-columns:1fr auto 1fr;gap:20px;align-items:center;margin-bottom:18px;padding-bottom:18px;border-bottom:1px solid var(--border);}
+.kd-row:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0;}
+.kd-label{font-size:.82rem;font-weight:700;color:var(--slate);text-align:center;margin-bottom:6px;}
+.kd-val{font-family:'Georgia',serif;font-size:1.1rem;font-weight:700;text-align:center;}
+.kd-arr{text-align:center;color:var(--muted);font-size:1.4rem;}
+.kd-context{font-size:.72rem;color:var(--muted);margin-top:4px;text-align:center;}
+
+/* Interactive slider */
+.slider-box{background:white;border-radius:var(--r);padding:32px;box-shadow:var(--shm);border:1px solid var(--border);}
+.sl-ctrl{display:flex;flex-direction:column;align-items:center;gap:6px;margin-bottom:22px;}
+.sl-ctrl label{font-size:.85rem;font-weight:700;color:var(--deep);}
+.sl-ctrl input{width:240px;accent-color:var(--forest);}
+.sval{display:inline-block;background:var(--forest);color:white;font-weight:700;font-size:.88rem;padding:3px 14px;border-radius:50px;min-width:38px;text-align:center;}
+.sl-results{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:20px;}
+.spill{padding:10px 16px;border-radius:10px;font-size:.84rem;font-weight:700;display:flex;align-items:center;gap:6px;}
+.sp-g{background:#f0fdf4;border:1.5px solid #86efac;color:var(--teal);}
+.sp-phi{background:#fdf4ff;border:1.5px solid #e9d5ff;color:var(--violet);}
+.sp-abs{background:#fffbeb;border:1.5px solid #fcd34d;color:var(--amber);}
+
+/* Data table */
+.dtbl-wrap{background:white;border-radius:var(--r);overflow:hidden;box-shadow:var(--shm);}
+.dtbl-hdr{background:linear-gradient(135deg,var(--forest),var(--olive));color:white;padding:18px 24px;display:flex;align-items:center;gap:10px;}
+.dtbl{width:100%;border-collapse:separate;border-spacing:0;}
+.dtbl th{padding:10px 12px;font-size:.76rem;font-weight:700;background:#f0f5eb;color:var(--forest);text-align:center;border-bottom:2px solid var(--border);}
+.dtbl th:first-child{text-align:right;background:#e8f0e0;}
+.dtbl td{padding:9px 12px;font-size:.82rem;text-align:center;border-bottom:1px solid var(--border);font-family:'Georgia',serif;}
+.dtbl td:first-child{font-family:'Cairo',sans-serif;font-weight:700;background:#f5f8f0;text-align:right;}
+.dtbl tbody tr:hover{background:#f0fdf4;}
+.dtbl .col-mup{background:#dcfce7 !important;font-weight:700;color:var(--forest);}
+.dtbl .row-mui td{background:#f0fdf4;font-weight:700;color:var(--teal);}
+/* Nested: color each person's items differently */
+.p1-c{background:#dcfce7;color:#166534;}
+.p2-c{background:#fef3c7;color:#92400e;}
+.p3-c{background:#ede9fe;color:#4c1d95;}
+.p4-c{background:#fee2e2;color:#991b1b;}
+.p5-c{background:#dbeafe;color:#1e40af;}
+
+/* advantage section */
+.adv-cards{display:grid;grid-template-columns:1fr 1fr;gap:22px;}
+.adv-card{border-radius:var(--r);overflow:hidden;box-shadow:var(--shm);}
+.adv-hdr{padding:18px 24px;color:white;display:flex;align-items:center;gap:10px;}
+.ah-pi{background:linear-gradient(135deg,var(--blue),var(--sky));}
+.ah-ip{background:linear-gradient(135deg,var(--forest),var(--olive));}
+.adv-body{background:white;padding:24px;}
+
+/* sigma comparison bars */
+.sig-cmp{background:white;border-radius:var(--r);padding:28px;box-shadow:var(--sh);border:1px solid var(--border);}
+.sig-row{display:flex;align-items:center;gap:12px;margin-bottom:10px;}
+.sig-lbl{min-width:80px;font-family:'Georgia',serif;font-size:.82rem;font-weight:700;direction:ltr;text-align:left;}
+.sig-bg{flex:1;background:#f1f5f9;border-radius:50px;height:26px;overflow:hidden;}
+.sig-bar{height:100%;border-radius:50px;display:flex;align-items:center;padding:0 10px;font-size:.72rem;font-weight:700;color:white;direction:ltr;justify-content:flex-end;min-width:38px;transition:width 1.3s cubic-bezier(.34,1.56,.64,1);}
+.sb-pi{background:linear-gradient(90deg,var(--blue),var(--sky));}
+.sb-ip{background:linear-gradient(90deg,var(--forest),var(--lime));}
+.sig-num{min-width:50px;font-size:.8rem;font-weight:700;direction:ltr;}
+.sig-desc{font-size:.76rem;color:var(--slate);}
+
+/* venn */
+.venn-box{background:white;border-radius:var(--r);padding:32px;box-shadow:var(--shm);border:1px solid var(--border);text-align:center;}
+
+/* summary table */
+.sum-tbl{width:100%;border-collapse:separate;border-spacing:0;border-radius:14px;overflow:hidden;box-shadow:var(--shm);}
+.sum-tbl thead tr{background:linear-gradient(135deg,var(--deep),var(--forest));}
+.sum-tbl th{padding:14px 16px;font-size:.8rem;font-weight:700;color:white;text-align:center;}
+.sum-tbl th:first-child{text-align:right;}
+.sum-tbl tbody tr{background:white;transition:background .2s;}
+.sum-tbl tbody tr:nth-child(even){background:#f5f8f0;}
+.sum-tbl tbody tr:hover{background:#edf5e8;}
+.sum-tbl td{padding:13px 16px;font-size:.83rem;border-bottom:1px solid var(--border);text-align:center;}
+.sum-tbl td:first-child{text-align:right;font-weight:700;}
+
+@media(max-width:860px){
+  .g2,.g3,.design-cmp,.anova-cmp,.adv-cards{grid-template-columns:1fr;}
+  .conf-eq,.kd-row{flex-direction:column;} .sec{padding:50px 20px;} .hero{padding:60px 20px;}
+  .steps::before{display:none;} .nav{padding:0 14px;}
+}
+@media(max-width:480px){.hero-chips{flex-direction:column;align-items:center;}}
+
+/* COMPREHENSIVE MOBILE RESPONSIVE FIXES */
+*, *::before, *::after { box-sizing: border-box; }
+html { max-width: 100%; }
+body { max-width: 100%; }
+img, svg, canvas, video, iframe { max-width: 100%; height: auto; }
+table { max-width: 100%; }
+
+.table-wrap {
+  width: 100%; max-width: 100%;
+  overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 12px;
+}
+.tbl-wrap { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.score-matrix-wrap { overflow-x: auto; }
+
+pre, code { white-space: pre-wrap; word-break: break-word; max-width: 100%; }
+
+/* Page bottom navigation */
+.page-nav-bottom {
+  display: flex; flex-wrap: wrap; gap: 12px;
+  justify-content: center; align-items: center;
+  padding: 28px 20px; text-align: center;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  margin-top: 40px;
+}
+.page-nav-bottom a {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 12px 28px; border-radius: 50px;
+  font-size: 0.95rem; font-weight: 700;
+  text-decoration: none; min-height: 48px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.page-nav-bottom a:hover { transform: translateY(-2px); }
+
+@media (max-width: 768px) {
+  .page-nav-bottom { padding: 18px 14px; gap: 8px; }
+  .page-nav-bottom a { font-size: 0.88rem; padding: 10px 18px; }
+}
+@media (max-width: 480px) {
+  .page-nav-bottom a { font-size: 0.82rem; padding: 8px 14px; min-height: 44px; width: 100%; justify-content: center; }
+}
+
+/* Overflow fixes */
+.eq-row { flex-wrap: wrap; gap: 8px; }
+.eq-formula { min-width: 0; }
+.sym-featured { flex-wrap: wrap; gap: 12px; }
+
+@media (max-width: 768px) {
+  /* Navigation */
+  .nav, .top-nav {
+    padding: 0 14px !important;
+    height: auto !important;
+    min-height: 52px;
+    flex-wrap: wrap !important;
+    gap: 4px;
+  }
+  .nav-links { flex-wrap: wrap !important; gap: 2px !important; overflow-x: visible !important; }
+  .nav a, .nav-link, .nl {
+    font-size: 0.78rem !important;
+    padding: 5px 9px !important;
+    white-space: normal !important;
+    height: auto !important;
+    min-height: 30px;
+    display: inline-flex !important;
+    align-items: center;
+  }
+  .nav-logo, .nav-brand { font-size: 0.85rem !important; white-space: normal !important; }
+
+  /* Hero */
+  .hero {
+    min-height: auto !important;
+    padding: 44px 14px !important;
+  }
+  .hero h1, .hero-t, .hero-title {
+    font-size: clamp(1.6rem, 7vw, 2.8rem) !important;
+    line-height: 1.25 !important;
+  }
+  .hero h2, .hero-sub, .hero-subtitle-line {
+    font-size: clamp(1.15rem, 4vw, 1.8rem) !important;
+  }
+  .hero p, .hero-desc { font-size: 0.95rem !important; }
+  .hero-content, .hero-c { max-width: 100% !important; width: 100% !important; }
+  .hero::before, .hero::after,
+  .hero-aura { width: 280px !important; height: 280px !important; opacity: 0.2 !important; }
+  .hero-ring, .hero-ring-2, .hr1, .hr2 { display: none !important; }
+  .hero-mesh, .hero-grid { opacity: 0.08 !important; }
+  .hero-badge, .hero-eyebrow { font-size: 0.68rem !important; padding: 5px 14px; }
+  .hero-meta { flex-wrap: wrap !important; gap: 8px; justify-content: center; }
+  .hero-meta-item { padding: 10px 14px; min-width: 0; flex: 1 1 40%; }
+  .hero-cards { gap: 10px; justify-content: center; }
+  .hero-pills { flex-wrap: wrap !important; gap: 8px; }
+  .hcard { min-width: 0 !important; padding: 14px 16px; }
+  .scroll-hint { display: none !important; }
+  .chapter-deco { display: none !important; }
+
+  /* Sections */
+  .section, .sec { padding: 44px 14px !important; }
+  .section-inner, .sec-inner, .sec-in { max-width: 100% !important; }
+  .section-header, .sec-header { margin-bottom: 28px; }
+
+  /* Grids */
+  .scenario-grid, .crossed-grid, .concepts-grid, .gstudy-layout,
+  .matrix-grid, .sym-grid-2, .sym-grid-3, .sym-card-grid,
+  .authors-grid, .design-compare, .asm-grid, .expect-grid,
+  .rel-grid, .vp-grid, .g2, .g3, .g4, .compare-grid,
+  .ms-grid, .concepts-grid { grid-template-columns: 1fr !important; gap: 16px !important; }
+
+  .hero-cards { grid-template-columns: 1fr 1fr !important; }
+
+  /* Flex */
+  .tree-row { flex-wrap: wrap !important; justify-content: center; }
+  .var-row { flex-wrap: wrap !important; gap: 6px; }
+  .step-item { flex-wrap: wrap !important; gap: 14px; }
+  .step-content { width: 100% !important; order: 1; }
+  .step-num { order: 0; }
+  .decomp, .decomp-live, .flow-row { flex-direction: column !important; align-items: center !important; }
+  .decomp-op, .dl-op, .fn-arrow { transform: rotate(90deg); }
+  .crow { flex-direction: column !important; }
+  .concept-row { flex-wrap: wrap; }
+
+  /* Padding */
+  .family-bg, .universe-card, .scenario-bg, .var-section-bg,
+  .source-card, .guide-card, .interactive-box, .score-matrix-wrap,
+  .assumption-wrap, .lm-box, .ins, .highlight-box, .warn-box,
+  .crossed-card, .concept-card, .section-card, .cbox {
+    padding: 20px 14px !important;
+  }
+  .intro-callout { padding: 18px 16px; }
+  .source-card { gap: 14px; }
+  .tree-connector { height: 20px; }
+  .tree-node { min-width: 120px !important; font-size: 0.82rem !important; padding: 10px 14px !important; }
+  .section-divider, .div { margin: 0 14px; }
+
+  /* Fixed widths */
+  .var-label { min-width: 50px !important; font-size: 0.78rem !important; }
+  .var-desc { min-width: 0 !important; flex: 1 1 100% !important; }
+  .var-value { min-width: 40px !important; }
+  .sym-featured-glyph { width: 44px !important; height: 44px !important; }
+
+  /* Tables */
+  .table-wrap {
+    margin: 0 -14px; padding: 0 14px;
+    width: calc(100% + 28px); border-radius: 0;
+  }
+  .tbl-wrap { margin: 0 -14px; padding: 0 14px; }
+
+  .prog-bar { z-index: 9999; }
+}
+
+@media (max-width: 480px) {
+  .hero { padding: 32px 10px !important; }
+  .hero h1, .hero-t, .hero-title { font-size: clamp(1.3rem, 8vw, 2rem) !important; }
+  .hero h2, .hero-sub { font-size: clamp(1rem, 5vw, 1.5rem) !important; }
+  .hero p, .hero-desc { font-size: 0.9rem !important; }
+  .nav, .top-nav { padding: 0 8px !important; min-height: 44px; gap: 2px !important; }
+  .nav a, .nav-link, .nl { font-size: 0.7rem !important; padding: 4px 7px !important; }
+
+  .section, .sec { padding: 28px 10px !important; }
+
+  .hero-cards { grid-template-columns: 1fr !important; }
+  .hero-pills { gap: 6px; }
+  .pill { padding: 8px 10px; }
+
+  .table-wrap {
+    margin: 0 -10px; padding: 0 10px;
+    width: calc(100% + 20px);
+  }
+  table { font-size: 0.72rem !important; }
+  td, th { padding: 5px 7px !important; }
+
+  .hero-card, .concept-card, .crossed-card, .scenario-item,
+  .step-content, .coeff-card, .card, .design-card, .sym-card,
+  .exp-card, .author-card, .hcard { padding: 12px !important; }
+
+  .tree-node { min-width: 100px !important; font-size: 0.78rem !important; }
+  .hero-meta-item { padding: 8px 10px; }
+
+  .btn, .btn-primary, .btn-ghost {
+    width: 100%; justify-content: center; min-height: 44px;
+  }
+}
+
+/* â•â•â•â•â•â• ADDITIONAL OVERFLOW FIXES â•â•â•â•â•â• */
+[style*="min-width:200px"], [style*="min-width: 200px"], [style*="min-width:220px"], [style*="min-width: 220px"],
+[style*="min-width:280px"], [style*="min-width: 280px"], [style*="min-width:500px"], [style*="min-width: 500px"] {
+  min-width: 0 !important;
+}
+[style*="width:480px"], [style*="width: 480px"], [style*="width:400px"], [style*="width: 400px"] {
+  max-width: 100% !important;
+  width: auto !important;
+}
+.flex-item, .sym-grid-2 > .sym-featured, .eq-row { flex-wrap: wrap; }
+.score-matrix { min-width: 0 !important; }
+.hcard, .pill { min-width: 0 !important; }
+.dt-node { max-width: 100% !important; }
+
+@media (max-width: 768px) {
+  .mat { grid-template-columns: repeat(auto-fill, minmax(32px, 1fr)) !important; }
+  .mc { width: 32px !important; height: 32px !important; font-size: 0.6rem !important; }
+  .hcard { min-width: 0 !important; }
+  .hero-meta-num { font-size: 1.5rem !important; }
+  .hero-meta-lbl { font-size: 0.68rem !important; }
+  .hero-meta-item { flex: 1 1 42% !important; }
+  .pill { min-width: 0 !important; flex: 1 1 30% !important; }
+}
+
+@media (max-width: 480px) {
+  .mat { grid-template-columns: repeat(auto-fill, minmax(28px, 1fr)) !important; }
+  .mc { width: 28px !important; height: 28px !important; font-size: 0.55rem !important; }
+}
+
+/* ==================================================
+   FINAL REAL MOBILE LAYOUT REBUILD
+   Must be the last CSS block in the file
+   ================================================== */
+*, *::before, *::after { box-sizing: border-box !important; }
+html, body {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  min-width: 0 !important;
+}
+img, svg, canvas, video, iframe {
+  max-width: 100% !important;
+  height: auto !important;
+}
+table { max-width: 100% !important; }
+
+/* Force all major containers to viewport width */
+@media (max-width: 768px) {
+  html, body {
+    overflow-x: clip !important;
+    min-width: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .hero,
+  .section,
+  .sec,
+  .container,
+  .wrapper,
+  .content,
+  .main,
+  .page,
+  .page-wrap,
+  .layout,
+  .shell,
+  .panel,
+  .chapter,
+  .chapter-wrap,
+  .story,
+  .story-wrap,
+  .book-page,
+  .section-dark,
+  .section-mid,
+  .intro-section,
+  .source-section,
+  .guide-section,
+  .sec-dark,
+  .sec-alt,
+  .sec-inner,
+  .section-inner,
+  .section-header,
+  .sec-header,
+  .family-bg,
+  .universe-card,
+  .scenario-bg,
+  .var-section-bg,
+  .source-card,
+  .index-card,
+  .guide-card,
+  .intro-body,
+  .interactive-box,
+  .score-matrix-wrap,
+  .assumption-wrap,
+  .lm-box,
+  .cbox,
+  .comparison-wrap,
+  .steps-flow,
+  .highlight-box,
+  .warn-box,
+  .insight-box,
+  .history-wrap {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+    transform: none !important;
+    left: auto !important;
+    right: auto !important;
+    box-sizing: border-box !important;
+  }
+
+  .hero {
+    min-height: auto !important;
+    height: auto !important;
+    padding-top: 36px !important;
+    padding-bottom: 36px !important;
+    text-align: center !important;
+    overflow: hidden !important;
+  }
+
+  .hero-content,
+  .hero-inner,
+  .hero-wrap,
+  .hero-text,
+  .hero-c,
+  .hero-content {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+    text-align: center !important;
+    transform: none !important;
+    position: relative !important;
+  }
+
+  .hero h1,
+  .hero-title,
+  .hero-t,
+  .hero-ta,
+  h1 {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    font-size: clamp(1.55rem, 8vw, 2.3rem) !important;
+    line-height: 1.25 !important;
+    text-align: center !important;
+    white-space: normal !important;
+    overflow-wrap: break-word !important;
+    word-break: normal !important;
+  }
+
+  .hero-sub,
+  .hero-subtitle-line,
+  .hero-s,
+  .hero-d,
+  .hero-desc,
+  .sec-lead,
+  .slead,
+  .section-desc,
+  .subtitle,
+  .lead {
+    max-width: 100% !important;
+    white-space: normal !important;
+    overflow-wrap: break-word !important;
+    width: 100% !important;
+  }
+
+  .grid,
+  .cards,
+  .hero-cards,
+  .hero-meta,
+  .hero-pills,
+  .scenario-grid,
+  .crossed-grid,
+  .concepts-grid,
+  .gstudy-layout,
+  .matrix-grid,
+  .design-compare,
+  .authors-grid,
+  .rel-grid,
+  .vp-grid,
+  .g2,
+  .g3,
+  .g4,
+  .asm-grid,
+  .expect-grid,
+  .sym-grid-2,
+  .sym-grid-3,
+  .sym-card-grid,
+  .compare-grid,
+  .ms-grid,
+  .crow {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    gap: 16px !important;
+    transform: none !important;
+  }
+
+  .hero-cards {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+  }
+
+  .card,
+  .hero-card,
+  .glass-card,
+  .info-card,
+  .concept-card,
+  .step-card,
+  .source-card,
+  .index-card,
+  .guide-card,
+  .hcard,
+  .pill,
+  .tree-node,
+  .dt-node,
+  .matrix-card,
+  .panel-card,
+  .design-card,
+  .design-header,
+  .design-body,
+  .crossed-card,
+  .scenario-item,
+  .step-content,
+  .author-card,
+  .sym-card,
+  .sym-featured,
+  .var-section-bg,
+  .intro-callout,
+  .eq-row,
+  .eq-main {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    transform: none !important;
+  }
+
+  [style*="min-width"],
+  [style*="width: 480"],
+  [style*="width:480"],
+  [style*="width: 400"],
+  [style*="width:400"] {
+    max-width: 100% !important;
+    min-width: 0 !important;
+    width: auto !important;
+  }
+
+  .nav,
+  .top-nav,
+  .page-nav,
+  .page-nav-bottom {
+    width: 100% !important;
+    max-width: 100% !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    white-space: normal !important;
+    overflow: visible !important;
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
+
+  .nav-links {
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    gap: 4px !important;
+    overflow: visible !important;
+    width: auto !important;
+  }
+
+  .nav a,
+  .nav-link,
+  .nl,
+  .top-nav a,
+  .page-nav a,
+  .page-nav-bottom a {
+    max-width: 100% !important;
+    white-space: normal !important;
+    text-align: center !important;
+    min-height: 36px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 4px 10px !important;
+    font-size: 0.75rem !important;
+  }
+
+  .nav-logo,
+  .nav-brand {
+    font-size: 0.82rem !important;
+    white-space: normal !important;
+    max-width: 100% !important;
+    overflow: visible !important;
+  }
+
+  /* Hide all decorative overlays, rings, meshes */
+  .hero::before,
+  .hero::after,
+  .hero-ring,
+  .hero-ring-2,
+  .hr1,
+  .hr2,
+  .hero-mesh,
+  .hero-grid,
+  .hero-aura,
+  .chapter-deco,
+  .decor,
+  .bg-shape,
+  .section-divider,
+  .rainbow,
+  .div,
+  .scroll-hint,
+  .starfield {
+    display: none !important;
+  }
+
+  /* Section dividers must not cause overflow */
+  .section-divider,
+  .div-a,
+  .div-r,
+  .div-s,
+  .div-v,
+  .div-g {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    max-width: 100% !important;
+  }
+
+  .table-wrap,
+  .tbl-wrap {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  /* Hero-specific containers */
+  .hero-badge,
+  .hero-eyebrow {
+    display: inline-flex !important;
+    max-width: 100% !important;
+    white-space: normal !important;
+  }
+
+  .hero-meta {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .hero-meta-item {
+    flex: 1 1 42% !important;
+    min-width: 0 !important;
+    max-width: 48% !important;
+  }
+
+  .hcard,
+  .pill {
+    min-width: 0 !important;
+    flex: 1 1 42% !important;
+    max-width: 48% !important;
+  }
+
+  .decomp-block,
+  .decomp-live .dl-block {
+    min-width: 0 !important;
+    flex: 1 1 auto !important;
+  }
+
+  /* Family tree and diagrams */
+  .family-bg {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  /* Force flex containers to wrap */
+  .concept-row,
+  .badge-row,
+  .hero-actions {
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+  }
+
+  .btn,
+  .btn-primary,
+  .btn-ghost,
+  .calc-btn {
+    min-height: 44px !important;
+    padding: 12px 24px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  html, body {
+    min-width: 0 !important;
+    width: 100% !important;
+  }
+
+  .hero,
+  .section,
+  .sec,
+  .container,
+  .wrapper,
+  .content,
+  .main,
+  .page,
+  .page-wrap {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+  }
+
+  .hero {
+    padding-top: 28px !important;
+    padding-bottom: 28px !important;
+  }
+
+  .hero h1,
+  .hero-title,
+  .hero-t,
+  .hero-ta,
+  h1 {
+    font-size: clamp(1.35rem, 8.5vw, 2rem) !important;
+    line-height: 1.28 !important;
+  }
+
+  h2 {
+    font-size: clamp(1.2rem, 6.5vw, 1.65rem) !important;
+  }
+
+  h3 {
+    font-size: clamp(1rem, 5.5vw, 1.35rem) !important;
+  }
+
+  .card,
+  .hero-card,
+  .glass-card,
+  .info-card,
+  .concept-card,
+  .step-card,
+  .source-card,
+  .crossed-card,
+  .scenario-item,
+  .design-card {
+    padding: 14px 10px !important;
+  }
+
+  .nav,
+  .top-nav {
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+  }
+
+  .nav a,
+  .nav-link,
+  .nl {
+    padding: 3px 6px !important;
+    font-size: 0.68rem !important;
+  }
+
+  .hero-meta-item {
+    flex: 1 1 100% !important;
+    max-width: 100% !important;
+  }
+
+  .hcard {
+    flex: 1 1 100% !important;
+    max-width: 100% !important;
+  }
+
+  .hero-cards {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    flex-direction: column !important;
+    align-items: center !important;
+  }
+}
+
+/* === PAGE NAV TOP === */
+.page-nav-top {
+  direction: rtl;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  width: min(100% - 24px, 1100px);
+  margin: 14px auto;
+  padding: 10px;
+  border-radius: 16px;
+  background: rgba(15, 52, 96, 0.88);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.14);
+  backdrop-filter: blur(8px);
+  position: relative;
+  z-index: 10;
+}
+.page-nav-top a,
+.page-nav-top a:visited {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 8px 18px;
+  border-radius: 999px;
+  text-decoration: none;
+  font-weight: 700;
+  color: #ffffff;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.18);
+  transition: background 0.2s, transform 0.2s;
+}
+.page-nav-top a:hover {
+  background: rgba(0, 180, 216, 0.28);
+  transform: translateY(-2px);
+}
+@media (max-width: 480px) {
+  .page-nav-top {
+    width: calc(100% - 20px);
+    gap: 8px;
+    padding: 8px;
+  }
+  .page-nav-top a {
+    flex: 1 1 auto;
+    min-width: 90px;
+    padding: 8px 12px;
+    font-size: 0.9rem;
+  }
+}
+</style>
+</head>
+<body>
+<nav class="page-nav-top" aria-label="تنقل الصفحة العلوي"><a href="index.html" class="nav-home">الرئيسية</a></nav>
+
+
+<div class="pgbar"><div class="pgfill" id="pg"></div></div>
+
+<nav class="nav">
+  <div class="nav-logo">🌿 الفصل 2 · §2.4</div>
+  <div class="nav-links">
+<a href="2.3.html">السابق</a><a href="index.html">الرئيسية</a><a href="2.5.html">التالي</a>
+
+    <a href="#intro" class="nl active" data-s="intro">المتقاطع vs المتداخل</a>
+    <a href="#conf"  class="nl" data-s="conf">الاختلاط</a>
+    <a href="#model" class="nl" data-s="model">النموذج الخطي</a>
+    <a href="#anova" class="nl" data-s="anova">جدول ANOVA</a>
+    <a href="#dstudy" class="nl" data-s="dstudy">دراسة D</a>
+    <a href="#num"   class="nl" data-s="num">المثال العددي</a>
+    <a href="#adv"   class="nl" data-s="adv">متى تختار أيهما؟</a>
+    <a href="#sum"   class="nl" data-s="sum">الخلاصة</a>
+  </div>
+
+
+</nav>
+
+<!-- ═══════════════ HERO ═══════════════ -->
+<section class="hero" id="top">
+  <div class="hero-glow"></div>
+  <div class="hero-tag">🌿 الفصل الثاني — القسم 2.4</div>
+  <h1>التصاميم<br><em>المتداخلة</em></h1>
+  <p class="hero-sub">عندما يختلف كل شخص في الفقرات التي يُجيب عليها — كيف تتغير المعادلات والمعاملات والاستنتاجات؟</p>
+  <div class="hero-chips">
+    <div class="hchip"><div class="sym" style="color:#b8e87a;">i:p</div><div class="lbl">الفقرات متداخلة داخل الأشخاص</div></div>
+    <div class="hchip"><div class="sym" style="color:#6ee7b7;">ν(i:p)</div><div class="lbl">اختلاط ν_i + ν_pi</div></div>
+    <div class="hchip"><div class="sym" style="color:#fde68a;">σ²(Δ)=σ²(δ)</div><div class="lbl">الخطآن غير قابلَين للتمييز</div></div>
+    <div class="hchip"><div class="sym" style="color:#c4b5fd;">Eρ²=Φ</div><div class="lbl">المعاملان متساويان</div></div>
+  </div>
+</section>
+<hr class="divr">
+
+<!-- ═══════════════ SECTION 1: المتقاطع vs المتداخل ═══════════════ -->
+<section class="sec sec-alt" id="intro">
+<div class="sec-inner">
+  <div class="cx fu">
+    <span class="tag tf">المقارنة الأساسية</span>
+    <h2 class="st">تصميم p × i مقابل تصميم i:p</h2>
+    <p class="sdesc cmx">الفرق الجوهري: هل يُجيب جميع الأشخاص على نفس الفقرات؟</p>
+  </div>
+
+  <div class="design-cmp fu">
+    <!-- CROSSED p×i -->
+    <div class="dcrd">
+      <div class="dcrd-hdr dh-cross">
+        <div style="font-size:1.6rem;">🔀</div>
+        <div>
+          <div style="font-weight:700;font-size:1rem;">التصميم المتقاطع</div>
+          <div style="font-family:'Georgia',serif;font-size:.88rem;opacity:.85;">p × i</div>
+        </div>
+      </div>
+      <div class="dcrd-body">
+        <p style="font-size:.84rem;color:var(--slate);margin-bottom:14px;line-height:1.8;">كل شخص يُجيب على <strong>نفس مجموعة الفقرات</strong>. الفقرات مشتركة بين جميع الأشخاص.</p>
+        <!-- Matrix: 4 persons × 5 items, all filled -->
+        <div class="mat" style="grid-template-columns:repeat(6,40px);">
+          <div class="mc mch" style="font-size:.68rem;"></div>
+          <div class="mc mch" style="font-size:.65rem;">i₁</div><div class="mc mch" style="font-size:.65rem;">i₂</div><div class="mc mch" style="font-size:.65rem;">i₃</div><div class="mc mch" style="font-size:.65rem;">i₄</div><div class="mc mch" style="font-size:.65rem;">i₅</div>
+          <div class="mc mch" style="font-size:.65rem;">p₁</div><div class="mc mcx">✓</div><div class="mc mcx">✓</div><div class="mc mcx">✓</div><div class="mc mcx">✓</div><div class="mc mcx">✓</div>
+          <div class="mc mch" style="font-size:.65rem;">p₂</div><div class="mc mcx">✓</div><div class="mc mcx">✓</div><div class="mc mcx">✓</div><div class="mc mcx">✓</div><div class="mc mcx">✓</div>
+          <div class="mc mch" style="font-size:.65rem;">p₃</div><div class="mc mcx">✓</div><div class="mc mcx">✓</div><div class="mc mcx">✓</div><div class="mc mcx">✓</div><div class="mc mcx">✓</div>
+          <div class="mc mch" style="font-size:.65rem;">p₄</div><div class="mc mcx">✓</div><div class="mc mcx">✓</div><div class="mc mcx">✓</div><div class="mc mcx">✓</div><div class="mc mcx">✓</div>
+        </div>
+        <p style="text-align:center;font-size:.78rem;color:#1e40af;font-weight:600;margin-top:8px;">كل الخلايا ممتلئة — نفس الفقرات للجميع</p>
+        <div class="ins ig" style="margin-top:12px;padding:12px 14px;">
+          <div class="ico" style="font-size:1rem;">✅</div>
+          <div><div class="itext">يُتيح تقدير ν_i وν_pi منفصلَين → σ²(i) وσ²(pi) مستقلَّين → σ²(Δ) ≠ σ²(δ)</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- NESTED i:p -->
+    <div class="dcrd">
+      <div class="dcrd-hdr dh-nest">
+        <div style="font-size:1.6rem;">📦</div>
+        <div>
+          <div style="font-weight:700;font-size:1rem;">التصميم المتداخل</div>
+          <div style="font-family:'Georgia',serif;font-size:.88rem;opacity:.85;">i:p</div>
+        </div>
+      </div>
+      <div class="dcrd-body">
+        <p style="font-size:.84rem;color:var(--slate);margin-bottom:14px;line-height:1.8;">كل شخص يُجيب على <strong>مجموعة فقرات مختلفة</strong>. الفقرات فريدة لكل شخص.</p>
+        <!-- Matrix: 4 persons × different items (nested) -->
+        <div class="mat" style="grid-template-columns:repeat(6,40px);">
+          <div class="mc mch" style="font-size:.68rem;"></div>
+          <div class="mc mch" style="font-size:.65rem;">i₁</div><div class="mc mch" style="font-size:.65rem;">i₂</div><div class="mc mch" style="font-size:.65rem;">i₃</div><div class="mc mch" style="font-size:.65rem;">i₄</div><div class="mc mch" style="font-size:.65rem;">i₅</div>
+          <div class="mc mch" style="font-size:.65rem;">p₁</div><div class="mc mn1">✓</div><div class="mc mn1">✓</div><div class="mc mce">—</div><div class="mc mce">—</div><div class="mc mce">—</div>
+          <div class="mc mch" style="font-size:.65rem;">p₂</div><div class="mc mce">—</div><div class="mc mce">—</div><div class="mc mn2">✓</div><div class="mc mn2">✓</div><div class="mc mce">—</div>
+          <div class="mc mch" style="font-size:.65rem;">p₃</div><div class="mc mce">—</div><div class="mc mn3">✓</div><div class="mc mce">—</div><div class="mc mce">—</div><div class="mc mn3">✓</div>
+          <div class="mc mch" style="font-size:.65rem;">p₄</div><div class="mc mn4">✓</div><div class="mc mce">—</div><div class="mc mce">—</div><div class="mc mn4">✓</div><div class="mc mce">—</div>
+        </div>
+        <p style="text-align:center;font-size:.78rem;color:var(--forest);font-weight:600;margin-top:8px;">لكل شخص فقراته الخاصة — لا تقاطع</p>
+        <div class="ins ia" style="margin-top:12px;padding:12px 14px;">
+          <div class="ico" style="font-size:1rem;">⚠️</div>
+          <div><div class="itext">ν_i وν_pi <strong>مختلطان</strong> في ν_(i:p) → σ²(i) وσ²(pi) لا تُفصلان → σ²(Δ) = σ²(δ)</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Real example context -->
+  <div class="card fu" style="margin-top:22px;background:linear-gradient(135deg,#f0fdf4,#ecfdf5);border-color:#86efac;">
+    <div style="font-size:.9rem;font-weight:700;color:var(--forest);margin-bottom:12px;">🌍 متى يحدث التداخل في الواقع؟</div>
+    <div class="g3">
+      <div style="text-align:center;padding:14px;background:white;border-radius:12px;border:1px solid var(--border);">
+        <div style="font-size:1.6rem;margin-bottom:6px;">📝</div>
+        <div style="font-size:.82rem;font-weight:700;margin-bottom:4px;">الاختبارات التكيفية</div>
+        <div style="font-size:.76rem;color:var(--slate);line-height:1.7;">كل طالب يتلقى فقرات مختارة لمستواه — لا يوجد اختبار مشترك بالكامل</div>
+      </div>
+      <div style="text-align:center;padding:14px;background:white;border-radius:12px;border:1px solid var(--border);">
+        <div style="font-size:1.6rem;margin-bottom:6px;">🎯</div>
+        <div style="font-size:.82rem;font-weight:700;margin-bottom:4px;">الاختبارات الموازية</div>
+        <div style="font-size:.76rem;color:var(--slate);line-height:1.7;">نصفان مختلفان من بنك الأسئلة لمجموعتين مختلفتين — تقييم المقرر</div>
+      </div>
+      <div style="text-align:center;padding:14px;background:white;border-radius:12px;border:1px solid var(--border);">
+        <div style="font-size:1.6rem;margin-bottom:6px;">🏫</div>
+        <div style="font-size:.82rem;font-weight:700;margin-bottom:4px;">تقويم البرامج</div>
+        <div style="font-size:.76rem;color:var(--slate);line-height:1.7;">عينات مختلفة من مهام لكل مجموعة — مثالي لتقييم المنهج وليس الأفراد</div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ═══════════════ SECTION 2: الاختلاط ═══════════════ -->
+<section class="sec" id="conf">
+<div class="sec-inner">
+  <div class="cx fu">
+    <span class="tag tl">الاختلاط (Confounding)</span>
+    <h2 class="st">لماذا لا نستطيع فصل σ²(i) عن σ²(pi)؟</h2>
+    <p class="sdesc cmx">الاختلاط هو صميم التصميم المتداخل — وفهمه يُبيِّن كل شيء</p>
+  </div>
+
+  <div class="conf-box fu">
+    <!-- Visual equation: ν(i:p) = ν_i + ν_pi -->
+    <div style="text-align:center;margin-bottom:22px;">
+      <div style="font-size:.88rem;font-weight:700;color:var(--slate);margin-bottom:10px;">المعادلة 2.45 — الاشتقاق الجوهري</div>
+      <div class="conf-eq">
+        <div class="conf-block cb-ip">
+          <div class="cb-sym">ν<sub>(i:p)</sub></div>
+          <div class="cb-name">التأثير المتبقي<br>في تصميم i:p</div>
+        </div>
+        <div class="cb-eq">=</div>
+        <div class="conf-block cb-i">
+          <div class="cb-sym">ν<sub>i</sub></div>
+          <div class="cb-name">تأثير الفقرة<br>(من p×i)</div>
+        </div>
+        <div class="cb-eq">+</div>
+        <div class="conf-block cb-pi">
+          <div class="cb-sym">ν<sub>pi</sub></div>
+          <div class="cb-name">تأثير التفاعل<br>(من p×i)</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Why? -->
+    <div class="g2" style="margin-top:20px;">
+      <div>
+        <div style="font-size:.86rem;font-weight:700;color:var(--forest);margin-bottom:12px;">🔍 لماذا يحدث الاختلاط؟</div>
+        <p style="font-size:.83rem;color:var(--slate);line-height:1.85;margin-bottom:12px;">
+          في تصميم p×i، يُجيب كل شخص على نفس الفقرات. لذا يمكن مقارنة استجابات أشخاص مختلفين على نفس الفقرة → نُقدِّر تأثير الفقرة ν_i مستقلاً.
+        </p>
+        <p style="font-size:.83rem;color:var(--slate);line-height:1.85;">
+          في تصميم i:p، كل شخص له فقراته الخاصة. <strong>لا توجد فقرة مشتركة بين شخصين</strong> → لا يمكن مقارنة أداء شخصين على نفس الفقرة → ν_i لا تُقدَّر بشكل مستقل عن ν_pi.
+        </p>
+      </div>
+      <div>
+        <div style="font-size:.86rem;font-weight:700;color:var(--forest);margin-bottom:12px;">📊 الأثر على مكوّنات التباين</div>
+        <div class="conf-eq" style="flex-direction:column;gap:8px;align-items:flex-start;margin:0;">
+          <div style="background:#f0fdf4;border-radius:10px;padding:10px 14px;border:1px solid #86efac;width:100%;font-size:.82rem;">
+            <strong style="color:var(--forest);">في p×i:</strong> <span style="font-family:'Georgia',serif;direction:ltr;">σ²(p) + σ²(i) + σ²(pi)</span> — ثلاثة مكوّنات مستقلة
+          </div>
+          <div style="text-align:center;width:100%;font-size:1.2rem;color:var(--muted);">↓</div>
+          <div style="background:#fef9f0;border-radius:10px;padding:10px 14px;border:1px solid #fcd34d;width:100%;font-size:.82rem;">
+            <strong style="color:var(--amber);">في i:p:</strong> <span style="font-family:'Georgia',serif;direction:ltr;">σ²(p) + σ²(i:p)</span> — مكوّنان فقط
+          </div>
+          <div style="text-align:center;width:100%;font-size:1.2rem;color:var(--muted);">↓</div>
+          <div style="background:#dcfce7;border-radius:10px;padding:10px 14px;border:1px solid #86efac;width:100%;font-size:.82rem;">
+            <strong style="color:var(--forest);">العلاقة:</strong> <span style="font-family:'Georgia',serif;direction:ltr;">σ²(i:p) = σ²(i) + σ²(pi)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ins ia" style="margin-top:20px;">
+      <div class="ico">⚠️</div>
+      <div>
+        <div class="ititle">التبعية الجوهرية لتصميم i:p</div>
+        <div class="itext">
+          مكوّن التباين σ²(i:p) يُقدِّر الاختلاف بين الفقرات داخل كل شخص — ويتضمن في آنٍ واحد اختلاف الصعوبة (σ²i) والتفاعل الفريد بين شخص وفقرة (σ²pi). <strong>لا يوجد أي طريقة لفصلهما من بيانات i:p وحدها</strong> — تحتاج إلى بيانات متقاطعة p×i للفصل بينهما.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ═══════════════ SECTION 3: النموذج الخطي ═══════════════ -->
+<section class="sec sec-alt" id="model">
+<div class="sec-inner">
+  <div class="cx fu">
+    <span class="tag tm">النموذج الخطي</span>
+    <h2 class="st">نموذج تصميم i:p — أبسط من p×i</h2>
+    <p class="sdesc cmx">النموذج يحتوي على مكوّنَين فقط بدلاً من ثلاثة في التصميم المتقاطع</p>
+  </div>
+
+  <div class="g2 fu">
+    <div class="card" style="border-top:4px solid #3b82f6;">
+      <div style="font-size:.86rem;font-weight:700;color:#1e40af;margin-bottom:10px;">📌 نموذج التصميم المتقاطع p × i</div>
+      <div class="eq eq-s" style="font-size:.9rem;">X<sub>pi</sub> = μ + ν<sub>p</sub> + ν<sub>i</sub> + ν<sub>pi</sub> &nbsp;(2.5)</div>
+      <div style="margin-top:12px;font-size:.8rem;color:var(--slate);">
+        ثلاثة تأثيرات: الشخص + الفقرة + التفاعل/المتبقي
+      </div>
+      <div class="ins ib" style="margin-top:10px;padding:12px 14px;">
+        <div class="ico" style="font-size:1rem;">✓</div>
+        <div><div class="itext">ν_i وν_pi <strong>مستقلان</strong> → يمكن تقدير σ²(i) وσ²(pi) بشكل منفصل</div></div>
+      </div>
+    </div>
+
+    <div class="card" style="border-top:4px solid var(--forest);">
+      <div style="font-size:.86rem;font-weight:700;color:var(--forest);margin-bottom:10px;">📌 نموذج التصميم المتداخل i:p</div>
+      <div class="eq eq-f" style="font-size:.9rem;">X<sub>pi</sub> = μ + ν<sub>p</sub> + ν<sub>(i:p)</sub> &nbsp;(2.43)</div>
+      <div style="margin-top:12px;font-size:.8rem;color:var(--slate);">
+        مكوّنان فقط: الشخص + المتبقي المختلط (فقرة + تفاعل)
+      </div>
+      <div class="ins ig" style="margin-top:10px;padding:12px 14px;">
+        <div class="ico" style="font-size:1rem;">⚠️</div>
+        <div><div class="itext">ν_(i:p) = ν_i + ν_pi → اختلاط تام → لا فصل ممكن</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Key properties of ν(i:p) -->
+  <div class="card fu" style="margin-top:22px;">
+    <div style="font-size:.9rem;font-weight:700;color:var(--deep);margin-bottom:16px;">خصائص التأثير ν<sub>(i:p)</sub> — المعادلة 2.44</div>
+    <div class="g3">
+      <div style="background:#f5f8f0;border-radius:12px;padding:16px;text-align:center;border:1px solid var(--border);">
+        <div class="eq eq-f" style="margin-bottom:8px;font-size:.85rem;">E<sub>p</sub>(ν<sub>p</sub>) = 0</div>
+        <div style="font-size:.78rem;color:var(--slate);">متوسط تأثيرات الأشخاص عبر المجتمع = صفر</div>
+      </div>
+      <div style="background:#f5f8f0;border-radius:12px;padding:16px;text-align:center;border:1px solid var(--border);">
+        <div class="eq eq-f" style="margin-bottom:8px;font-size:.85rem;">E<sub>i</sub>(ν<sub>(i:p)</sub>) = 0</div>
+        <div style="font-size:.78rem;color:var(--slate);">لكل شخص بعينه، متوسط ν_(i:p) عبر فقراته = صفر</div>
+      </div>
+      <div style="background:#f5f8f0;border-radius:12px;padding:16px;text-align:center;border:1px solid var(--border);">
+        <div class="eq eq-f" style="margin-bottom:8px;font-size:.85rem;">E(ν<sub>(i:p)</sub>) = 0</div>
+        <div style="font-size:.78rem;color:var(--slate);">المتوسط العام لـ ν_(i:p) عبر الكل = صفر</div>
+      </div>
+    </div>
+    <div class="ins ig" style="margin-top:14px;">
+      <div class="ico">🔬</div>
+      <div>
+        <div class="ititle">الفارق عن تصميم p×i</div>
+        <div class="itext">في p×i لا يوجد حد ν_i مستقل في تصميم i:p، والتأثيرات المتبقية مختلفة في المعنى. ينبع هذان الفارقان من حقيقة أن ν_(i:p) يجمع بين ν_i وν_pi.</div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ═══════════════ SECTION 4: ANOVA ═══════════════ -->
+<section class="sec" id="anova">
+<div class="sec-inner">
+  <div class="cx fu">
+    <span class="tag ta">جدول ANOVA</span>
+    <h2 class="st">الجدول 2.7 — ANOVA لتصميم i:p</h2>
+    <p class="sdesc cmx">مقارنة جدول ANOVA للتصميمين: المتقاطع (3 مصادر) مقابل المتداخل (مصدران)</p>
+  </div>
+
+  <div class="anova-cmp fu">
+    <!-- Crossed ANOVA -->
+    <div>
+      <div style="font-size:.88rem;font-weight:700;color:#1e40af;margin-bottom:10px;text-align:center;">📋 جدول ANOVA — تصميم p × i</div>
+      <div class="table-wrap"><table class="anova-tbl">
+        <thead><tr><th>المصدر</th><th>df</th><th>MS</th><th>σ̂²</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><span class="bdg-s bdg">p</span></td>
+            <td>nₚ−1</td>
+            <td>MS(p)</td>
+            <td style="direction:ltr;font-size:.76rem;">[MS(p)−MS(pi)]/nᵢ</td>
+          </tr>
+          <tr>
+            <td><span class="bdg-s bdg">i</span></td>
+            <td>nᵢ−1</td>
+            <td>MS(i)</td>
+            <td style="direction:ltr;font-size:.76rem;">[MS(i)−MS(pi)]/nₚ</td>
+          </tr>
+          <tr>
+            <td><span class="bdg-v bdg">pi</span></td>
+            <td>(nₚ−1)(nᵢ−1)</td>
+            <td>MS(pi)</td>
+            <td style="direction:ltr;font-size:.76rem;">MS(pi)</td>
+          </tr>
+        </tbody>
+      </table></div>
+      <div style="background:#eff6ff;border-radius:10px;padding:12px;margin-top:10px;font-size:.78rem;color:#1e40af;text-align:center;">
+        3 مصادر → σ²(i) وσ²(pi) منفصلان
+      </div>
+    </div>
+
+    <!-- Nested ANOVA -->
+    <div>
+      <div style="font-size:.88rem;font-weight:700;color:var(--forest);margin-bottom:10px;text-align:center;">📋 جدول ANOVA — تصميم i:p</div>
+      <div class="table-wrap"><table class="anova-tbl">
+        <thead><tr><th>المصدر</th><th>df</th><th>MS</th><th>σ̂²</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><span class="bdg-s bdg">p</span></td>
+            <td>nₚ−1</td>
+            <td>MS(p)</td>
+            <td style="direction:ltr;font-size:.76rem;">[MS(p)−MS(i:p)]/nᵢ</td>
+          </tr>
+          <tr>
+            <td><span class="bdg-f bdg">i:p</span></td>
+            <td>nₚ(nᵢ−1)</td>
+            <td>MS(i:p)</td>
+            <td style="direction:ltr;font-size:.76rem;">MS(i:p)</td>
+          </tr>
+        </tbody>
+      </table></div>
+      <div style="background:#f0fdf4;border-radius:10px;padding:12px;margin-top:10px;font-size:.78rem;color:var(--forest);text-align:center;">
+        مصدران فقط → σ²(i:p) = σ²(i) + σ²(pi) مختلطان
+      </div>
+    </div>
+  </div>
+
+  <!-- SS formulas -->
+  <div class="card fu" style="margin-top:22px;">
+    <div style="font-size:.9rem;font-weight:700;color:var(--deep);margin-bottom:14px;">🔢 صيغ مجاميع المربعات لتصميم i:p</div>
+    <div class="g2">
+      <div>
+        <div style="font-size:.78rem;color:var(--muted);margin-bottom:6px;">SS(p) — كما في المتقاطع</div>
+        <div class="eq eq-f" style="font-size:.84rem;">SS(p) = nᵢΣₚ X̄ₚ² − nₚnᵢX̄²</div>
+        <div style="font-size:.76rem;color:var(--slate);margin-top:4px;">يقيس تباين متوسطات الأشخاص</div>
+      </div>
+      <div>
+        <div style="font-size:.78rem;color:var(--muted);margin-bottom:6px;">SS(i:p) — مجموع التباين داخل كل شخص</div>
+        <div class="eq eq-l" style="font-size:.84rem;">SS(i:p) = ΣₚΣᵢXₚᵢ² − nᵢΣₚX̄ₚ²</div>
+        <div style="font-size:.76rem;color:var(--slate);margin-top:4px;">يقيس تباين الفقرات داخل كل شخص</div>
+      </div>
+    </div>
+    <div class="ins ig" style="margin-top:14px;">
+      <div class="ico">💡</div>
+      <div>
+        <div class="ititle">درجات الحرية لـ i:p</div>
+        <div class="itext">df(i:p) = nₚ(nᵢ−1) — لكل شخص (nᵢ−1) درجة حرية من فقراته المتداخلة. مقارنةً بـ (nₚ−1)(nᵢ−1) في التصميم المتقاطع — عادةً أكبر في المتداخل!</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Venn for i:p -->
+  <div class="venn-box fu" style="margin-top:22px;">
+    <div style="font-size:.9rem;font-weight:700;color:var(--deep);margin-bottom:18px;">مخطط فن — تصميم i:p (الشكل 2.3)</div>
+    <div class="g2">
+      <div style="text-align:center;">
+        <svg width="260" height="230" viewBox="0 0 260 230" xmlns="http://www.w3.org/2000/svg">
+          <!-- p outer circle -->
+          <circle cx="130" cy="115" r="105" fill="rgba(45,74,30,.08)" stroke="#4a7c35" stroke-width="2.5"/>
+          <text x="50" y="80" text-anchor="middle" font-family="Georgia" font-size="14" font-weight="700" fill="#2d4a1e">σ²(p)</text>
+          <!-- i:p INSIDE p (fully nested) -->
+          <circle cx="155" cy="130" r="65" fill="rgba(122,182,72,.18)" stroke="#7ab648" stroke-width="2" stroke-dasharray="5,3"/>
+          <text x="167" y="122" text-anchor="middle" font-family="Georgia" font-size="13" font-weight="700" fill="#2d4a1e">σ²(i:p)</text>
+          <text x="167" y="140" text-anchor="middle" font-family="Cairo" font-size="10" fill="#4a7c35">= σ²(i)+σ²(pi)</text>
+          <!-- "inside" label -->
+          <text x="45" y="155" text-anchor="middle" font-family="Cairo" font-size="9" fill="#4a7c35">دائرة i:p</text>
+          <text x="45" y="167" text-anchor="middle" font-family="Cairo" font-size="9" fill="#4a7c35">داخل دائرة p</text>
+          <!-- Arrow -->
+          <path d="M 65 158 L 95 148" stroke="#4a7c35" stroke-width="1.5" marker-end="url(#arrf)"/>
+          <defs><marker id="arrf" markerWidth="6" markerHeight="5" refX="6" refY="2.5" orient="auto"><polygon points="0 0,6 2.5,0 5" fill="#4a7c35"/></marker></defs>
+        </svg>
+        <div style="font-size:.78rem;color:var(--slate);margin-top:8px;">التداخل: دائرة i داخل دائرة p كاملاً</div>
+      </div>
+      <div>
+        <p style="font-size:.82rem;color:var(--slate);line-height:1.85;margin-bottom:14px;">
+          في مخططات فن لتصميم i:p، تُدرج دائرة الفقرات <strong>داخل</strong> دائرة الأشخاص — لتعكس أن الفقرات متعشِّشة داخل الأشخاص.
+        </p>
+        <div class="card" style="border-right:4px solid var(--lime);">
+          <div style="font-size:.82rem;font-weight:700;color:var(--forest);margin-bottom:8px;">EMS في تصميم i:p</div>
+          <div class="eq eq-f" style="font-size:.84rem;margin:6px 0;">EMS(p) = σ²(i:p) + nᵢ σ²(p)</div>
+          <div class="eq eq-l" style="font-size:.84rem;margin:6px 0;">EMS(i:p) = σ²(i:p)</div>
+          <div style="font-size:.75rem;color:var(--slate);margin-top:8px;">نفس المنطق كتصميم p×i لكن بمكوّن واحد مختلط</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ═══════════════ SECTION 5: دراسة D ═══════════════ -->
+<section class="sec sec-alt" id="dstudy">
+<div class="sec-inner">
+  <div class="cx fu">
+    <span class="tag tm">دراسة D</span>
+    <h2 class="st">النتيجة الأهم: σ²(Δ) = σ²(δ) في تصميم I:p!</h2>
+    <p class="sdesc cmx">الفارق الجذري بين المتقاطع والمتداخل — الخطآن المطلق والنسبي يصبحان واحداً</p>
+  </div>
+
+  <!-- KEY FINDING BOX -->
+  <div class="card fu" style="background:linear-gradient(135deg,#fef9f0,#fef3c7);border:2px solid #fcd34d;margin-bottom:28px;text-align:center;">
+    <div style="font-size:2.5rem;margin-bottom:12px;">⚡</div>
+    <div style="font-size:1.3rem;font-weight:900;color:var(--forest);margin-bottom:14px;">النتيجة المميزة لتصميم I:p</div>
+    <div class="eq-main" style="font-size:1.1rem;max-width:500px;margin:0 auto;">
+      Δ = δ = X<sub>pI</sub> − μₚ = ν<sub>(I:p)</sub> &nbsp;&nbsp;(2.49)
+    </div>
+    <p style="font-size:.88rem;color:var(--slate);margin-top:14px;max-width:600px;margin-right:auto;margin-left:auto;line-height:1.85;">
+      في تصميم I:p، الخطأ المطلق والخطأ النسبي <strong>غير قابلَين للتمييز</strong> — وبالتالي σ²(Δ) = σ²(δ) وEρ² = Φ
+    </p>
+  </div>
+
+  <!-- Why? Step by step -->
+  <div class="card fu" style="margin-bottom:22px;">
+    <div style="font-size:.9rem;font-weight:700;color:var(--deep);margin-bottom:18px;">🔎 لماذا يتساوى الخطآن في تصميم I:p؟</div>
+    <div style="display:flex;flex-direction:column;gap:14px;">
+      <div style="display:flex;gap:14px;align-items:flex-start;">
+        <div style="width:32px;height:32px;border-radius:50%;background:var(--forest);color:white;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem;flex-shrink:0;margin-top:2px;">١</div>
+        <div>
+          <div style="font-size:.84rem;font-weight:700;margin-bottom:4px;">في تصميم I:p: كل شخص له صورته الخاصة</div>
+          <div class="eq eq-f" style="font-size:.84rem;">E<sub>p</sub> X<sub>pI</sub> = μ + E<sub>p</sub>ν<sub>p</sub> + E<sub>p</sub>ν<sub>(I:p)</sub> = μ</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:14px;align-items:flex-start;">
+        <div style="width:32px;height:32px;border-radius:50%;background:var(--olive);color:white;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem;flex-shrink:0;margin-top:2px;">٢</div>
+        <div>
+          <div style="font-size:.84rem;font-weight:700;margin-bottom:4px;">أخذ متوسط الأشخاص = أخذ متوسط الصور أيضاً</div>
+          <div style="font-size:.82rem;color:var(--slate);line-height:1.8;">لأن كل شخص يأخذ صورة مختلفة → Eₚ XₚI يمتص التباين في الصور أيضاً → μI لا وجود لها بشكل مستقل</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:14px;align-items:flex-start;">
+        <div style="width:32px;height:32px;border-radius:50%;background:var(--lime);color:var(--deep);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem;flex-shrink:0;margin-top:2px;">٣</div>
+        <div>
+          <div style="font-size:.84rem;font-weight:700;margin-bottom:4px;">النتيجة: الخطأ النسبي يُساوي الخطأ المطلق</div>
+          <div class="eq eq-m" style="font-size:.84rem;">δ<sub>pI</sub> = Δ<sub>pI</sub> = X<sub>pI</sub> − μₚ = ν<sub>(I:p)</sub></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Formulas for D study nested -->
+  <div class="g2 fu">
+    <div class="card" style="border-top:4px solid var(--teal);">
+      <div style="font-size:.86rem;font-weight:700;color:var(--teal);margin-bottom:12px;">📐 مكوّنات التباين في دراسة D (تصميم I:p)</div>
+      <div class="eq eq-f" style="font-size:.88rem;">σ²(I:p) = σ²(i:p) / nᵢ′ &nbsp;(2.48)</div>
+      <div class="eq eq-m" style="font-size:.88rem;margin-top:6px;">σ²(Δ) = σ²(δ) = σ²(I:p) = σ²(i:p)/nᵢ′ &nbsp;(2.50)</div>
+      <p style="font-size:.8rem;color:var(--slate);margin-top:10px;line-height:1.8;">كما في التصميم المتقاطع، زيادة nᵢ′ تُقلِّص تباين الخطأ.</p>
+    </div>
+    <div class="card" style="border-top:4px solid var(--violet);">
+      <div style="font-size:.86rem;font-weight:700;color:var(--violet);margin-bottom:12px;">📐 المعاملان في تصميم I:p</div>
+      <div class="eq eq-v" style="font-size:.88rem;">Eρ² = Φ = σ²(p) / [σ²(p) + σ²(I:p)]</div>
+      <p style="font-size:.8rem;color:var(--slate);margin-top:10px;line-height:1.8;">لأن σ²(δ) = σ²(Δ) → Eρ² = Φ تلقائياً.<br>هذا يطابق ما يحدث في النظرية التقليدية (الصور المتوازية التقليدية)!</p>
+      <div class="ins iv" style="margin-top:10px;padding:12px 14px;">
+        <div class="ico" style="font-size:1rem;">📌</div>
+        <div><div class="itext">في النظرية التقليدية كل الصور المتوازية لها نفس المتوسط → σ²(I)=0 → σ²(Δ)=σ²(δ). نظرية التعميم تُجسِّد هذا في تصميم I:p!</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Key differences summary -->
+  <div class="key-diff fu" style="margin-top:22px;">
+    <div style="font-size:.9rem;font-weight:700;color:var(--deep);margin-bottom:18px;text-align:center;">⚖️ مقارنة شاملة: تصميم p × I مقابل تصميم I:p</div>
+    <div class="kd-row">
+      <div>
+        <div class="kd-label" style="color:#1e40af;">p × I (متقاطع)</div>
+        <div class="kd-val" style="color:#1e40af;font-size:.9rem;direction:ltr;">σ²(Δ) = σ²(i)/nᵢ′ + σ²(pi)/nᵢ′</div>
+      </div>
+      <div class="kd-arr">↔</div>
+      <div>
+        <div class="kd-label" style="color:var(--forest);">I:p (متداخل)</div>
+        <div class="kd-val" style="color:var(--forest);font-size:.9rem;direction:ltr;">σ²(Δ) = σ²(i:p)/nᵢ′ = [σ²(i)+σ²(pi)]/nᵢ′</div>
+      </div>
+    </div>
+    <div class="kd-row">
+      <div>
+        <div class="kd-label" style="color:#1e40af;">p × I</div>
+        <div class="kd-val" style="color:#1e40af;font-size:.9rem;direction:ltr;">σ²(δ) = σ²(pi)/nᵢ′</div>
+        <div class="kd-context">أصغر من σ²(Δ)</div>
+      </div>
+      <div class="kd-arr">↔</div>
+      <div>
+        <div class="kd-label" style="color:var(--forest);">I:p</div>
+        <div class="kd-val" style="color:var(--forest);font-size:.9rem;direction:ltr;">σ²(δ) = σ²(i:p)/nᵢ′</div>
+        <div class="kd-context">= σ²(Δ) ← تساوٍ تام!</div>
+      </div>
+    </div>
+    <div class="kd-row">
+      <div>
+        <div class="kd-label" style="color:#1e40af;">p × I</div>
+        <div class="kd-val" style="color:#1e40af;font-size:.9rem;">Eρ² > Φ عموماً</div>
+      </div>
+      <div class="kd-arr">↔</div>
+      <div>
+        <div class="kd-label" style="color:var(--forest);">I:p</div>
+        <div class="kd-val" style="color:var(--forest);font-size:.9rem;">Eρ² = Φ دائماً</div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ═══════════════ SECTION 6: المثال العددي ═══════════════ -->
+<section class="sec" id="num">
+<div class="sec-inner">
+  <div class="cx fu">
+    <span class="tag ta">المثال العددي</span>
+    <h2 class="st">مجموعة البيانات الاصطناعية رقم 2 — تصميم i:p</h2>
+    <p class="sdesc cmx">10 أشخاص × 8 فقرات لكل شخص (مجموعات مختلفة) — درجات من 0 إلى 9</p>
+  </div>
+
+  <!-- Data table -->
+  <div class="dtbl-wrap fu">
+    <div class="dtbl-hdr"><div style="font-size:1.2rem;">🗂️</div><div style="font-weight:700;">الجدول 2.8 — البيانات الاصطناعية رقم 2 (تصميم i:p)</div></div>
+    <div style="overflow-x:auto;padding:4px;">
+    <div class="table-wrap"><table class="dtbl">
+      <thead><tr>
+        <th>الشخص</th>
+        <th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th>
+        <th>المجموع</th><th style="background:#16a34a;color:white;">X̄ₚ</th>
+      </tr></thead>
+      <tbody>
+        <tr><td>p₁</td><td>2</td><td>6</td><td>7</td><td>5</td><td>2</td><td>5</td><td>5</td><td>5</td><td>37</td><td class="col-mup">4.625</td></tr>
+        <tr><td>p₂</td><td>4</td><td>5</td><td>6</td><td>7</td><td>6</td><td>7</td><td>5</td><td>7</td><td>47</td><td class="col-mup">5.875</td></tr>
+        <tr><td>p₃</td><td>5</td><td>5</td><td>4</td><td>6</td><td>5</td><td>4</td><td>5</td><td>5</td><td>39</td><td class="col-mup">4.875</td></tr>
+        <tr><td>p₄</td><td>5</td><td>9</td><td>8</td><td>6</td><td>5</td><td>7</td><td>7</td><td>6</td><td>53</td><td class="col-mup" style="color:var(--forest);font-weight:700;">6.625</td></tr>
+        <tr><td>p₅</td><td>4</td><td>3</td><td>5</td><td>6</td><td>4</td><td>5</td><td>6</td><td>4</td><td>37</td><td class="col-mup">4.625</td></tr>
+        <tr><td>p₆</td><td>4</td><td>4</td><td>4</td><td>7</td><td>6</td><td>4</td><td>7</td><td>8</td><td>44</td><td class="col-mup">5.500</td></tr>
+        <tr><td>p₇</td><td>2</td><td>6</td><td>6</td><td>5</td><td>2</td><td>7</td><td>7</td><td>5</td><td>40</td><td class="col-mup">5.000</td></tr>
+        <tr><td>p₈</td><td>3</td><td>4</td><td>4</td><td>5</td><td>6</td><td>6</td><td>6</td><td>4</td><td>38</td><td class="col-mup">4.750</td></tr>
+        <tr><td>p₉</td><td>0</td><td>5</td><td>4</td><td>5</td><td>5</td><td>5</td><td>5</td><td>3</td><td>32</td><td class="col-mup" style="color:var(--red);">4.000</td></tr>
+        <tr><td>p₁₀</td><td>6</td><td>8</td><td>7</td><td>6</td><td>6</td><td>8</td><td>8</td><td>6</td><td>55</td><td class="col-mup" style="color:var(--forest);font-weight:700;">6.875</td></tr>
+      </tbody>
+      <tfoot><tr class="row-mui"><td>ملاحظة</td><td colspan="9">الأعداد 1،2،...،8 تمثل فقرات <em>مختلفة</em> لكل شخص في تصميم i:p</td><td>X̄=5.275</td></tr></tfoot>
+    </table></div>
+    </div>
+  </div>
+
+  <!-- Statistics summary -->
+  <div class="g3 fu" style="margin-top:18px;">
+    <div style="background:white;border-radius:12px;padding:16px;text-align:center;box-shadow:var(--sh);border:1px solid var(--border);">
+      <div style="font-size:.72rem;color:var(--muted);margin-bottom:4px;">المتوسط العام</div>
+      <div style="font-family:'Georgia',serif;font-size:1.3rem;font-weight:700;color:var(--deep);">X̄ = 5.275</div>
+    </div>
+    <div style="background:white;border-radius:12px;padding:16px;text-align:center;box-shadow:var(--sh);border:1px solid var(--border);">
+      <div style="font-size:.72rem;color:var(--muted);margin-bottom:4px;">Σₚ X̄ₚ²</div>
+      <div style="font-family:'Georgia',serif;font-size:1.3rem;font-weight:700;color:var(--forest);">286.0313</div>
+    </div>
+    <div style="background:white;border-radius:12px;padding:16px;text-align:center;box-shadow:var(--sh);border:1px solid var(--border);">
+      <div style="font-size:.72rem;color:var(--muted);margin-bottom:4px;">ΣₚΣᵢ Xₚᵢ²</div>
+      <div style="font-family:'Georgia',serif;font-size:1.3rem;font-weight:700;color:var(--olive);">2430</div>
+    </div>
+  </div>
+
+  <!-- ANOVA results -->
+  <div class="card fu" style="margin-top:18px;overflow-x:auto;">
+    <div style="font-size:.9rem;font-weight:700;color:var(--deep);margin-bottom:16px;">📋 الجدول 2.9 — نتائج ANOVA و دراسات D</div>
+    <div class="table-wrap"><table class="sum-tbl">
+      <thead><tr><th>التأثير</th><th>df</th><th>SS</th><th>MS</th><th>σ̂²</th><th>نᵢ′=4</th><th>nᵢ′=8</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><span class="bdg-s bdg">p</span></td>
+          <td>9</td><td>62.20</td>
+          <td style="font-family:'Georgia',serif;font-weight:700;">6.9111</td>
+          <td style="font-family:'Georgia',serif;font-weight:700;color:var(--forest);">0.6108</td>
+          <td style="font-family:'Georgia',serif;">0.6108</td>
+          <td style="font-family:'Georgia',serif;">0.6108</td>
+        </tr>
+        <tr>
+          <td><span class="bdg-f bdg">i:p</span></td>
+          <td>70</td><td>141.75</td>
+          <td style="font-family:'Georgia',serif;font-weight:700;">2.0250</td>
+          <td style="font-family:'Georgia',serif;font-weight:700;color:var(--lime);">2.0250</td>
+          <td style="font-family:'Georgia',serif;color:var(--amber);">σ²(I:p)=0.5063</td>
+          <td style="font-family:'Georgia',serif;color:var(--amber);">σ²(I:p)=0.2531</td>
+        </tr>
+        <tr style="background:#fef9f0;">
+          <td colspan="5" style="text-align:right;font-size:.8rem;color:var(--amber);">σ²(δ) = σ²(Δ)</td>
+          <td style="font-family:'Georgia',serif;font-weight:700;color:var(--red);">0.5063</td>
+          <td style="font-family:'Georgia',serif;font-weight:700;color:var(--amber);">0.2531</td>
+        </tr>
+        <tr style="background:#f0fdf4;">
+          <td colspan="5" style="text-align:right;font-size:.8rem;color:var(--forest);">Eρ̂² = Φ̂</td>
+          <td style="font-family:'Georgia',serif;font-weight:700;color:var(--forest);">0.547</td>
+          <td style="font-family:'Georgia',serif;font-weight:700;color:var(--teal);">0.707</td>
+        </tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <!-- Interactive slider for nested D -->
+  <div class="slider-box fu" style="margin-top:22px;">
+    <div style="font-size:.9rem;font-weight:700;color:var(--deep);margin-bottom:18px;text-align:center;">🎛️ أثر عدد الفقرات في تصميم I:p (البيانات الاصطناعية رقم 2)</div>
+    <div class="sl-ctrl">
+      <label>nᵢ′ (عدد الفقرات لكل شخص)</label>
+      <input type="range" id="niNested" min="1" max="20" value="8">
+      <span class="sval" id="niNestV">8</span>
+    </div>
+    <div class="sl-results" id="nestRes">
+      <div class="spill sp-g">Eρ̂² = Φ̂ = <span id="nr_g">0.707</span></div>
+      <div class="spill sp-abs">σ²(Δ) = σ²(δ) = <span id="nr_abs">0.253</span></div>
+    </div>
+    <canvas id="nestChart" height="160" style="width:100%;max-height:160px;"></canvas>
+    <div id="nestIns" class="ins ig" style="margin-top:12px;">
+      <div class="ico">📊</div>
+      <div><div class="ititle" id="nit">الاستنتاج</div><div class="itext" id="nii">اسحب المؤشر</div></div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ═══════════════ SECTION 7: متى تختار أيهما؟ ═══════════════ -->
+<section class="sec sec-alt" id="adv">
+<div class="sec-inner">
+  <div class="cx fu">
+    <span class="tag tf">القرار الاستراتيجي</span>
+    <h2 class="st">متى تختار التصميم المتداخل I:p على المتقاطع p×I؟</h2>
+    <p class="sdesc cmx">القسم 2.4.2 يكشف ميزة استراتيجية مهمة جداً للتصميم المتداخل في سياقات بعينها</p>
+  </div>
+
+  <!-- σ²(X̄) comparison -->
+  <div class="card fu" style="margin-bottom:22px;background:linear-gradient(135deg,#f0fdf4,#ecfdf5);border-color:#86efac;">
+    <div style="font-size:.9rem;font-weight:700;color:var(--forest);margin-bottom:14px;">🔑 الميزة الحاسمة: تباين خطأ متوسط المجموعة</div>
+    <div class="g2">
+      <div>
+        <div style="font-size:.82rem;font-weight:700;color:#1e40af;margin-bottom:8px;">تصميم p × I (متقاطع)</div>
+        <div class="eq eq-s" style="font-size:.83rem;">σ²(X̄) = σ²(p)/nₚ′ + σ²(i)/nᵢ′ + σ²(pi)/(nₚ′nᵢ′)</div>
+        <div style="font-size:.76rem;color:var(--slate);margin-top:6px;">يتضمن σ²(i) و σ²(pi) بشكل منفصل</div>
+      </div>
+      <div>
+        <div style="font-size:.82rem;font-weight:700;color:var(--forest);margin-bottom:8px;">تصميم I:p (متداخل)</div>
+        <div class="eq eq-f" style="font-size:.83rem;">σ²(X̄) = σ²(p)/nₚ′ + [σ²(i)+σ²(pi)]/(nₚ′nᵢ′) &nbsp;(2.52)</div>
+        <div style="font-size:.76rem;color:var(--slate);margin-top:6px;">= σ²(p)/nₚ′ + σ²(i:p)/(nₚ′nᵢ′)</div>
+      </div>
+    </div>
+
+    <!-- Why nested is SMALLER -->
+    <div style="background:white;border-radius:12px;padding:18px;margin-top:16px;border:1px solid var(--border);">
+      <div style="font-size:.86rem;font-weight:700;color:var(--forest);margin-bottom:10px;">📉 لماذا σ²(X̄) أصغر في التصميم المتداخل؟</div>
+      <p style="font-size:.82rem;color:var(--slate);line-height:1.85;">
+        في التصميم المتقاطع: σ²(X̄) يحتوي على <span style="font-family:'Georgia',serif;">σ²(i)/nᵢ′</span> — حد لا يختفي مع زيادة nₚ′.
+        <br>في التصميم المتداخل: σ²(X̄) يحتوي على <span style="font-family:'Georgia',serif;">σ²(i)/(nₚ′nᵢ′)</span> — يتقلص مع زيادة nₚ′ أيضاً!
+        <br><br>
+        <strong style="color:var(--forest);">الاستنتاج:</strong> تصميم I:p يُعطي تقديرات <em>أكثر اعتمادية</em> لمتوسطات المجموعات!
+      </p>
+    </div>
+  </div>
+
+  <!-- Advantage comparison -->
+  <div class="adv-cards fu">
+    <!-- p×I advantages -->
+    <div class="adv-card">
+      <div class="adv-hdr ah-pi">
+        <div style="font-size:1.5rem;">🔀</div>
+        <div>
+          <div style="font-weight:700;font-size:.95rem;">تصميم p × I (متقاطع)</div>
+          <div style="font-size:.75rem;opacity:.85;">الأفضل لقياس الأفراد</div>
+        </div>
+      </div>
+      <div class="adv-body">
+        <div style="margin-bottom:14px;">
+          <div style="font-size:.82rem;font-weight:700;color:#1e40af;margin-bottom:8px;">✅ مزاياه</div>
+          <ul style="font-size:.82rem;color:var(--slate);list-style:none;display:flex;flex-direction:column;gap:7px;">
+            <li style="display:flex;gap:8px;"><span style="color:#16a34a;font-weight:700;">✓</span>يُفصل σ²(i) عن σ²(pi) → معلومات تشخيصية أكثر</li>
+            <li style="display:flex;gap:8px;"><span style="color:#16a34a;font-weight:700;">✓</span>Eρ² > Φ → مناسب للتفسير النسبي</li>
+            <li style="display:flex;gap:8px;"><span style="color:#16a34a;font-weight:700;">✓</span>متوسطات الفقرات متاحة لتحليل الصعوبة</li>
+          </ul>
+        </div>
+        <div>
+          <div style="font-size:.82rem;font-weight:700;color:var(--red);margin-bottom:8px;">⚠️ قيوده</div>
+          <ul style="font-size:.82rem;color:var(--slate);list-style:none;display:flex;flex-direction:column;gap:7px;">
+            <li style="display:flex;gap:8px;"><span style="color:var(--red);font-weight:700;">✗</span>σ²(X̄) أكبر → تقديرات متوسطات المجموعات أقل دقة</li>
+            <li style="display:flex;gap:8px;"><span style="color:var(--red);font-weight:700;">✗</span>تعرّض لأثر ترتيب الفقرات والتعب</li>
+          </ul>
+        </div>
+        <div class="ins ib" style="margin-top:12px;padding:12px 14px;">
+          <div class="ico" style="font-size:1rem;">🎯</div>
+          <div><div class="itext">الأنسب عندما: القرارات تتعلق <strong>بالأفراد</strong> (اجتياز/رسوب، تصنيف)</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- I:p advantages -->
+    <div class="adv-card">
+      <div class="adv-hdr ah-ip">
+        <div style="font-size:1.5rem;">📦</div>
+        <div>
+          <div style="font-weight:700;font-size:.95rem;">تصميم I:p (متداخل)</div>
+          <div style="font-size:.75rem;opacity:.85;">الأفضل لقياس المجموعات</div>
+        </div>
+      </div>
+      <div class="adv-body">
+        <div style="margin-bottom:14px;">
+          <div style="font-size:.82rem;font-weight:700;color:var(--forest);margin-bottom:8px;">✅ مزاياه</div>
+          <ul style="font-size:.82rem;color:var(--slate);list-style:none;display:flex;flex-direction:column;gap:7px;">
+            <li style="display:flex;gap:8px;"><span style="color:#16a34a;font-weight:700;">✓</span>σ²(X̄) أصغر → تقديرات متوسطات المجموعات أكثر دقة!</li>
+            <li style="display:flex;gap:8px;"><span style="color:#16a34a;font-weight:700;">✓</span>تغطية أوسع لكون الفقرات (تنويع أكبر)</li>
+            <li style="display:flex;gap:8px;"><span style="color:#16a34a;font-weight:700;">✓</span>أقل تعرضاً لأثر التمرن على الفقرات</li>
+          </ul>
+        </div>
+        <div>
+          <div style="font-size:.82rem;font-weight:700;color:var(--red);margin-bottom:8px;">⚠️ قيوده</div>
+          <ul style="font-size:.82rem;color:var(--slate);list-style:none;display:flex;flex-direction:column;gap:7px;">
+            <li style="display:flex;gap:8px;"><span style="color:var(--red);font-weight:700;">✗</span>σ²(i) وσ²(pi) مختلطان → معلومات أقل عن الفقرات</li>
+            <li style="display:flex;gap:8px;"><span style="color:var(--red);font-weight:700;">✗</span>Eρ² = Φ → لا تمييز بين النوعين</li>
+          </ul>
+        </div>
+        <div class="ins ig" style="margin-top:12px;padding:12px 14px;">
+          <div class="ico" style="font-size:1rem;">🎯</div>
+          <div><div class="itext">الأنسب عندما: القرارات تتعلق <strong>بمتوسطات المجموعات</strong> (تقويم البرامج، مقارنة المدارس)</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Numerical comparison with dataset 1 -->
+  <div class="card fu" style="margin-top:22px;">
+    <div style="font-size:.9rem;font-weight:700;color:var(--deep);margin-bottom:14px;">📋 الجدول 2.10 — مقارنة تصميمَي دراسة D: p×I وI:p<br><span style="font-weight:400;font-size:.78rem;color:var(--muted);">(اعتماداً على مكوّنات G من مجموعة البيانات الاصطناعية رقم 1)</span></div>
+    <div class="g2">
+      <div>
+        <div style="font-size:.82rem;font-weight:700;color:#1e40af;margin-bottom:10px;text-align:center;">تصميم p × I (متقاطع)</div>
+        <div class="table-wrap"><table class="anova-tbl">
+          <thead><tr><th>nᵢ′</th><th style="font-family:'Georgia',serif;">σ²(δ)</th><th style="font-family:'Georgia',serif;">σ²(Δ)</th><th style="font-family:'Georgia',serif;">Eρ²</th><th style="font-family:'Georgia',serif;">Φ</th></tr></thead>
+          <tbody id="piTable"></tbody>
+        </table></div>
+      </div>
+      <div>
+        <div style="font-size:.82rem;font-weight:700;color:var(--forest);margin-bottom:10px;text-align:center;">تصميم I:p (متداخل)</div>
+        <div class="table-wrap"><table class="anova-tbl">
+          <thead><tr><th>nᵢ′</th><th style="font-family:'Georgia',serif;">σ²(δ)=σ²(Δ)</th><th colspan="2" style="font-family:'Georgia',serif;">Eρ²=Φ</th></tr></thead>
+          <tbody id="ipTable"></tbody>
+        </table></div>
+      </div>
+    </div>
+    <div class="ins ia" style="margin-top:14px;">
+      <div class="ico">🔍</div>
+      <div>
+        <div class="ititle">الملاحظة الجوهرية</div>
+        <div class="itext">σ²(δ) في I:p = σ²(Δ) في p×I — لكن Eρ² في I:p أصغر من Eρ² في p×I! هذا يعني أن التصميم المتداخل أكثر محافظة في تقدير الاعتمادية الفردية، لكنه أفضل لمتوسطات المجموعات.</div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ═══════════════ SECTION 8: الخلاصة ═══════════════ -->
+<section class="sec sec-dark" id="sum">
+<div class="sec-inner">
+  <div class="cx fu">
+    <span class="tag ts">الخلاصة الشاملة</span>
+    <h2 class="st wh">ست نقاط جوهرية عن التصاميم المتداخلة</h2>
+    <p class="sdesc wh cmx">كل ما تحتاج تذكره من القسم 2.4</p>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:18px;" class="fu">
+    <div class="dcard">
+      <div style="font-size:1.5rem;margin-bottom:8px;">📦</div>
+      <h4 style="color:#b8e87a;font-size:.9rem;margin-bottom:8px;">i:p = كل شخص له فقراته</h4>
+      <p style="font-size:.82rem;color:rgba(255,255,255,.68);line-height:1.8;">لا توجد فقرة مشتركة بين شخصين → الفقرات متعشِّشة داخل الأشخاص → تصميم حقيقي للاختبارات التكيفية وتقويم البرامج.</p>
+    </div>
+    <div class="dcard">
+      <div style="font-size:1.5rem;margin-bottom:8px;">🔀</div>
+      <h4 style="color:#6ee7b7;font-size:.9rem;margin-bottom:8px;">ν_(i:p) = ν_i + ν_pi</h4>
+      <p style="font-size:.82rem;color:rgba(255,255,255,.68);line-height:1.8;">الاختلاط الكامل بين تأثير الفقرة والتفاعل → σ²(i:p) = σ²(i) + σ²(pi) → لا يمكن فصلهما من بيانات i:p وحدها.</p>
+    </div>
+    <div class="dcard">
+      <div style="font-size:1.5rem;margin-bottom:8px;">⚡</div>
+      <h4 style="color:#fde68a;font-size:.9rem;margin-bottom:8px;">σ²(Δ) = σ²(δ) في I:p</h4>
+      <p style="font-size:.82rem;color:rgba(255,255,255,.68);line-height:1.8;">النتيجة الأهم: الخطآن المطلق والنسبي لا يتمايزان في التصميم المتداخل — مطابق لافتراض الصور المتوازية في النظرية التقليدية.</p>
+    </div>
+    <div class="dcard">
+      <div style="font-size:1.5rem;margin-bottom:8px;">🎭</div>
+      <h4 style="color:#c4b5fd;font-size:.9rem;margin-bottom:8px;">Eρ² = Φ في I:p</h4>
+      <p style="font-size:.82rem;color:rgba(255,255,255,.68);line-height:1.8;">نتيجة مباشرة لتساوي تباينَي الخطأ. لا حاجة للاختيار بين المعاملين — كلاهما واحد.</p>
+    </div>
+    <div class="dcard">
+      <div style="font-size:1.5rem;margin-bottom:8px;">🏫</div>
+      <h4 style="color:#86efac;font-size:.9rem;margin-bottom:8px;">متوسطات المجموعات أفضل في I:p</h4>
+      <p style="font-size:.82rem;color:rgba(255,255,255,.68);line-height:1.8;">σ²(X̄) في I:p < σ²(X̄) في p×I → تقييم البرامج والمقارنة بين المدارس يستفيد من التصميم المتداخل.</p>
+    </div>
+    <div class="dcard">
+      <div style="font-size:1.5rem;margin-bottom:8px;">🔬</div>
+      <h4 style="color:#fca5a5;font-size:.9rem;margin-bottom:8px;">G متقاطعة + D متداخلة = ممكن!</h4>
+      <p style="font-size:.82rem;color:rgba(255,255,255,.68);line-height:1.8;">يمكن استخدام مكوّنات من دراسة G متقاطعة (p×i) لتقدير نتائج دراسة D متداخلة (I:p). σ²(i:p) = σ²(i) + σ²(pi) → كلاهما متاح من G المتقاطعة.</p>
+    </div>
+  </div>
+
+  <!-- Final formula summary -->
+  <div class="dcard fu" style="margin-top:22px;text-align:center;">
+    <div style="font-size:.9rem;font-weight:700;color:rgba(255,255,255,.8);margin-bottom:14px;">🔑 المعادلات الأساسية لتصميم i:p و I:p</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;direction:ltr;">
+      <div style="background:rgba(255,255,255,.07);border-radius:10px;padding:12px;font-family:'Georgia',serif;font-size:.82rem;">ν<sub>(i:p)</sub> = ν<sub>i</sub> + ν<sub>pi</sub></div>
+      <div style="background:rgba(255,255,255,.07);border-radius:10px;padding:12px;font-family:'Georgia',serif;font-size:.82rem;">σ²(i:p) = σ²(i) + σ²(pi)</div>
+      <div style="background:rgba(255,255,255,.07);border-radius:10px;padding:12px;font-family:'Georgia',serif;font-size:.82rem;">σ²(I:p) = σ²(i:p)/nᵢ′</div>
+      <div style="background:rgba(255,255,255,.07);border-radius:10px;padding:12px;font-family:'Georgia',serif;font-size:.82rem;">σ²(Δ) = σ²(δ) = σ²(I:p)</div>
+      <div style="background:rgba(255,255,255,.07);border-radius:10px;padding:12px;font-family:'Georgia',serif;font-size:.82rem;">Eρ² = Φ</div>
+      <div style="background:rgba(255,255,255,.07);border-radius:10px;padding:12px;font-family:'Georgia',serif;font-size:.82rem;">σ²(X̄)<sub>I:p</sub> &lt; σ²(X̄)<sub>p×I</sub></div>
+    </div>
+  </div>
+</div>
+</section>
+
+<hr class="divr">
+<footer>
+  <p style="font-size:1rem;color:white;margin-bottom:8px;">📖 <strong>Generalizability Theory</strong> — Robert L. Brennan</p>
+  <p>الفصل الثاني — القسم 2.4: التصاميم المتداخلة (2.4.1 و 2.4.2)</p>
+  <p style="margin-top:10px;font-size:.76rem;opacity:.4;">الدليل البصري الشامل لمفاهيم القياس التربوي المتقدم</p>
+</footer>
+
+<script>
+/* ── PROGRESS + NAV ── */
+window.addEventListener('scroll',()=>{
+  const p=window.scrollY/(document.body.scrollHeight-window.innerHeight)*100;
+  document.getElementById('pg').style.width=p+'%';
+  const ss=['intro','conf','model','anova','dstudy','num','adv','sum'];
+  let cur='intro';
+  ss.forEach(s=>{const el=document.getElementById(s);if(el&&el.getBoundingClientRect().top<110)cur=s;});
+  document.querySelectorAll('.nl').forEach(l=>l.classList.toggle('active',l.dataset.s===cur));
+},{passive:true});
+
+/* ── FADE ── */
+const io=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('in');});},{threshold:.07});
+document.querySelectorAll('.fu').forEach(el=>io.observe(el));
+
+/* ══ G STUDY COMPONENTS (Dataset 1 for comparison, Dataset 2 for nested) ══ */
+/* Dataset 1 crossed G: σ²(p)=.0574, σ²(i)=.0754, σ²(pi)=.1269 */
+const sp1=.0574, si1=.0754, spi1=.1269;
+/* Dataset 2 nested G: σ²(p)=0.6108, σ²(i:p)=2.0250 */
+const sp2=.6108, sip2=2.0250;
+
+/* ── NESTED SLIDER ── */
+const nc=document.getElementById('nestChart').getContext('2d');
+const nlc=document.getElementById('nestChart');
+function setupNC(){const d=window.devicePixelRatio||1;nlc.width=nlc.offsetWidth*d;nlc.height=nlc.offsetHeight*d;nc.scale(d,d);nlc.style.width=nlc.offsetWidth+'px';nlc.style.height=nlc.offsetHeight+'px';}
+
+const hN=[],hG2=[];
+for(let n=1;n<=20;n++){
+  const sIp=sip2/n, g=sp2/(sp2+sIp);
+  hN.push(n);hG2.push(+g.toFixed(3));
+}
+
+function drawNestChart(curN){
+  const W=nlc.offsetWidth,H=nlc.offsetHeight,pad={t:18,r:18,b:30,l:40};
+  const cw=W-pad.l-pad.r,ch=H-pad.t-pad.b;
+  nc.clearRect(0,0,W,H);
+  const xs=n=>(n-1)/(20-1)*cw+pad.l;
+  const ys=v=>(1-v)*ch+pad.t;
+  // grid
+  [.4,.5,.6,.7,.8,.9,1].forEach(v=>{
+    nc.beginPath();nc.strokeStyle='rgba(0,0,0,.07)';nc.lineWidth=1;
+    nc.moveTo(pad.l,ys(v));nc.lineTo(pad.l+cw,ys(v));nc.stroke();
+    nc.fillStyle='#94a3b8';nc.font='11px Cairo';nc.textAlign='right';
+    nc.fillText(v.toFixed(1),pad.l-5,ys(v)+4);
+  });
+  [1,5,10,15,20].forEach(n=>{
+    nc.fillStyle='#94a3b8';nc.font='11px Cairo';nc.textAlign='center';
+    nc.fillText(n,xs(n),H-pad.b+14);
+  });
+  // Eρ²=Φ line (single in nested)
+  nc.beginPath();nc.strokeStyle='#2d4a1e';nc.lineWidth=2.5;nc.setLineDash([]);
+  hN.forEach((n,i)=>{i===0?nc.moveTo(xs(n),ys(hG2[i])):nc.lineTo(xs(n),ys(hG2[i]));});
+  nc.stroke();
+  // .80 reference
+  nc.beginPath();nc.strokeStyle='rgba(199,122,18,.45)';nc.lineWidth=1.5;nc.setLineDash([6,4]);
+  nc.moveTo(pad.l,ys(.80));nc.lineTo(pad.l+cw,ys(.80));nc.stroke();nc.setLineDash([]);
+  nc.fillStyle='#c77a12';nc.font='10px Cairo';nc.textAlign='left';nc.fillText('.80',pad.l+4,ys(.80)-3);
+  // current dot
+  const d=sip2/curN,g=sp2/(sp2+d);
+  nc.beginPath();nc.fillStyle='#2d4a1e';nc.arc(xs(curN),ys(g),5,0,Math.PI*2);nc.fill();
+  // x label
+  nc.fillStyle='#475569';nc.font='bold 10px Cairo';nc.textAlign='center';nc.fillText("nᵢ′",W/2,H-2);
+  // legend
+  nc.fillStyle='#2d4a1e';nc.fillRect(W-120,pad.t,16,3);nc.textAlign='left';nc.font='bold 10px Cairo';nc.fillText('Eρ²=Φ',W-100,pad.t+5);
+}
+
+function updateNested(){
+  const n=+document.getElementById('niNested').value;
+  document.getElementById('niNestV').textContent=n;
+  const sIp=sip2/n, g=sp2/(sp2+sIp);
+  document.getElementById('nr_g').textContent=g.toFixed(3);
+  document.getElementById('nr_abs').textContent=sIp.toFixed(3);
+  setupNC();drawNestChart(n);
+  const t=document.getElementById('nit'),i=document.getElementById('nii'),b=document.getElementById('nestIns');
+  if(g>=.8){b.className='ins ig';t.textContent='✅ اعتمادية مقبولة!';i.textContent=`عند nᵢ′=${n}: Eρ²=Φ=${g.toFixed(3)}. التصميم المتداخل يُعطي نتيجة واحدة — لا تمييز بين Eρ² وΦ.`;}
+  else{b.className='ins ia';t.textContent='⚠️ اعتمادية منخفضة';i.textContent=`عند nᵢ′=${n}: Eρ²=Φ=${g.toFixed(3)}. زِد عدد الفقرات للوصول لـ .80. Note: Eρ²=Φ دائماً في تصميم I:p.`;}
+}
+document.getElementById('niNested').addEventListener('input',updateNested);
+
+/* ── COMPARISON TABLES ── */
+function buildCompTables(){
+  // p×I table (using dataset 1 components)
+  const piTb=document.getElementById('piTable');
+  [5,10,12,15,20].forEach(n=>{
+    const sI=si1/n, spI=spi1/n;
+    const sdelta=spI, sDelta=sI+spI;
+    const g=sp1/(sp1+sdelta), phi=sp1/(sp1+sDelta);
+    const tr=document.createElement('tr');
+    if(n===12)tr.style.background='#eff6ff';
+    tr.innerHTML=`<td style="font-weight:700;text-align:center;font-family:'Georgia',serif;">${n}</td>
+      <td style="font-family:'Georgia',serif;font-size:.78rem;">${sdelta.toFixed(4)}</td>
+      <td style="font-family:'Georgia',serif;font-size:.78rem;">${sDelta.toFixed(4)}</td>
+      <td style="font-family:'Georgia',serif;font-size:.78rem;font-weight:700;color:#1e40af;">${g.toFixed(3)}</td>
+      <td style="font-family:'Georgia',serif;font-size:.78rem;font-weight:700;color:#4c1d95;">${phi.toFixed(3)}</td>`;
+    piTb.appendChild(tr);
+  });
+  // I:p table (using dataset 1: σ²(i:p) = σ²(i)+σ²(pi) = .0754+.1269 = .2023)
+  const sip1=si1+spi1; // = .2023
+  const ipTb=document.getElementById('ipTable');
+  [5,10,12,15,20].forEach(n=>{
+    const sIp=sip1/n, g=sp1/(sp1+sIp);
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td style="font-weight:700;text-align:center;font-family:'Georgia',serif;">${n}</td>
+      <td style="font-family:'Georgia',serif;font-size:.78rem;">${sIp.toFixed(4)}</td>
+      <td colspan="2" style="font-family:'Georgia',serif;font-size:.78rem;font-weight:700;color:#2d4a1e;">${g.toFixed(3)}</td>`;
+    ipTb.appendChild(tr);
+  });
+}
+buildCompTables();
+
+window.addEventListener('load',()=>{setupNC();updateNested();});
+window.addEventListener('resize',()=>{setupNC();drawNestChart(+document.getElementById('niNested').value);});
+</script>
+
+<div class="page-nav-bottom" style="background:linear-gradient(135deg,#0a0a1a,#111827);"><a href="index.html" style="background:linear-gradient(135deg,#16213e,#0f3460);color:#fff;">&#x1F3E0; &#x627;&#x644;&#x631;&#x626;&#x64A;&#x633;&#x64A;&#x629;</a> <a href="2.3.html" style="background:linear-gradient(135deg,#4a5568,#2d3748);color:#fff;">&#x2190; &#x627;&#x644;&#x633;&#x627;&#x628;&#x642;</a> <a href="2.5.html" style="background:linear-gradient(135deg,#2b6cb0,#2c5282);color:#fff;">&#x627;&#x644;&#x62A;&#x627;&#x644;&#x64A; &#x2192;</a></div>
+</body>
+</html>

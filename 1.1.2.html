@@ -1,0 +1,2127 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>درجات الكون ودراسة القرار — دليل بصري</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=IBM+Plex+Sans+Arabic:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f4f1eb;
+  --ink: #1c1c2e;
+  --deep: #0d1b2a;
+  --navy: #1b3a5c;
+  --teal: #0096a0;
+  --mint: #00c9a7;
+  --amber: #f4a261;
+  --red: #e63946;
+  --purple: #7b2d8b;
+  --gold: #f4c430;
+  --white: #ffffff;
+  --card: #ffffff;
+  --light: #f8f9ff;
+  --border: rgba(0,0,0,0.07);
+  --shadow-sm: 0 4px 16px rgba(0,0,0,0.07);
+  --shadow-md: 0 12px 40px rgba(0,0,0,0.10);
+  --shadow-lg: 0 24px 64px rgba(0,0,0,0.13);
+  --r: 20px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Cairo', 'IBM Plex Sans Arabic', sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  direction: rtl;
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+
+/* ══════════ NAV ══════════ */
+.top-nav {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(255,255,255,0.95);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 14px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: var(--shadow-sm);
+}
+.nav-logo {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--navy);
+  display: flex; align-items: center; gap: 8px;
+}
+.nav-links { display: flex; gap: 6px; flex-wrap: wrap; }
+.nav-link {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #555;
+  padding: 5px 14px;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+  border: 1px solid transparent;
+}
+.nav-link:hover {
+  background: var(--navy);
+  color: white;
+  border-color: var(--navy);
+}
+
+/* ══════════ HERO ══════════ */
+.hero {
+  min-height: 100vh;
+  background: var(--deep);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 80px 40px;
+  position: relative;
+  overflow: hidden;
+}
+.hero-bg-art {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 600px 400px at 10% 30%, rgba(0,150,160,0.18) 0%, transparent 60%),
+    radial-gradient(ellipse 500px 500px at 90% 70%, rgba(123,45,139,0.14) 0%, transparent 60%),
+    radial-gradient(ellipse 400px 300px at 50% 10%, rgba(244,162,97,0.10) 0%, transparent 50%);
+}
+.hero-grid {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+.hero-content { position: relative; z-index: 2; text-align: center; max-width: 860px; }
+
+.hero-chapter {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(0,150,160,0.2);
+  border: 1px solid rgba(0,150,160,0.4);
+  color: #4dd9e8;
+  padding: 7px 20px; border-radius: 50px;
+  font-size: 0.82rem; font-weight: 700;
+  margin-bottom: 32px; letter-spacing: 1px;
+}
+.hero h1 {
+  font-size: clamp(2.8rem, 7vw, 5rem);
+  font-weight: 900; color: white;
+  line-height: 1.15; margin-bottom: 20px;
+}
+.hero h1 .accent {
+  background: linear-gradient(135deg, #00c9a7, #0096a0);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.hero-sub {
+  font-size: 1.15rem; color: rgba(255,255,255,0.65);
+  max-width: 600px; margin: 0 auto 50px;
+  line-height: 1.9;
+}
+.hero-stats {
+  display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;
+}
+.hero-stat {
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 16px; padding: 18px 24px;
+  text-align: center; min-width: 140px;
+  transition: all 0.3s ease;
+}
+.hero-stat:hover { background: rgba(255,255,255,0.12); transform: translateY(-4px); }
+.hero-stat .num { font-size: 1.8rem; font-weight: 900; color: #4dd9e8; }
+.hero-stat .lbl { font-size: 0.82rem; color: rgba(255,255,255,0.7); margin-top: 4px; }
+
+/* ══════════ SECTION SHELL ══════════ */
+.sec { padding: 90px 40px; }
+.sec-inner { max-width: 1100px; margin: 0 auto; }
+.sec-alt { background: white; }
+.sec-dark { background: var(--deep); color: white; }
+.sec-teal { background: linear-gradient(135deg, #e0faf8, #ccf5ef); }
+.sec-amber { background: linear-gradient(135deg, #fff8ee, #fff0d6); }
+
+.sec-tag {
+  display: inline-block;
+  padding: 6px 18px; border-radius: 50px;
+  font-size: 0.8rem; font-weight: 700;
+  margin-bottom: 14px; letter-spacing: 1px;
+}
+.tag-teal { background: linear-gradient(135deg, var(--teal), var(--mint)); color: white; }
+.tag-amber { background: linear-gradient(135deg, var(--amber), #e07a3b); color: white; }
+.tag-navy { background: var(--navy); color: white; }
+.tag-red { background: linear-gradient(135deg, var(--red), #c0392b); color: white; }
+.tag-purple { background: linear-gradient(135deg, var(--purple), #9b59b6); color: white; }
+.tag-dark { background: var(--deep); color: white; }
+
+.sec-title {
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  font-weight: 900; color: var(--deep);
+  margin-bottom: 14px; line-height: 1.25;
+}
+.sec-title.light { color: white; }
+.sec-desc {
+  font-size: 1rem; color: #555;
+  max-width: 660px; line-height: 1.9;
+  margin-bottom: 50px;
+}
+.sec-desc.light { color: rgba(255,255,255,0.7); }
+.center { text-align: center; }
+
+/* ══════════ CARD GRID ══════════ */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+
+.card {
+  background: var(--card);
+  border-radius: var(--r);
+  padding: 30px;
+  box-shadow: var(--shadow-md);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.card:hover { transform: translateY(-5px); box-shadow: var(--shadow-lg); }
+.card-glass {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: var(--r);
+  padding: 28px;
+  backdrop-filter: blur(8px);
+}
+
+/* ══════════ UNIVERSE SCORE DIAGRAM ══════════ */
+.universe-scene {
+  background: var(--deep);
+  border-radius: var(--r);
+  padding: 50px;
+  color: white;
+  position: relative;
+  overflow: hidden;
+}
+.universe-scene::before {
+  content: '';
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 400px 300px at 20% 50%, rgba(0,150,160,0.12) 0%, transparent 60%),
+    radial-gradient(ellipse 300px 400px at 80% 30%, rgba(0,201,167,0.08) 0%, transparent 60%);
+}
+.universe-person-row {
+  display: flex; gap: 20px; align-items: center;
+  justify-content: center; position: relative; z-index: 2;
+  margin-bottom: 24px;
+}
+.person-block {
+  text-align: center;
+  transition: transform 0.3s;
+}
+.person-block:hover { transform: scale(1.08); }
+.person-avatar {
+  width: 64px; height: 64px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.8rem; margin: 0 auto 10px;
+  border: 2px solid rgba(255,255,255,0.2);
+}
+.person-score-wrap {
+  display: flex; flex-direction: column; gap: 4px; margin-top: 8px;
+}
+.obs-score {
+  font-size: 0.78rem; background: rgba(255,255,255,0.1);
+  border-radius: 6px; padding: 3px 8px;
+  display: flex; justify-content: space-between; gap: 10px;
+}
+.obs-score .lbl { opacity: 0.7; }
+.obs-score .val { font-weight: 700; }
+.univ-score-badge {
+  margin-top: 10px; padding: 6px 12px;
+  border-radius: 10px; font-size: 0.85rem;
+  font-weight: 700; display: inline-block;
+}
+.arrow-right {
+  font-size: 1.4rem; color: rgba(255,255,255,0.3);
+  align-self: center; flex-shrink: 0;
+}
+.universe-formula {
+  text-align: center; position: relative; z-index: 2;
+  background: rgba(255,255,255,0.06); border-radius: 14px;
+  padding: 18px 28px; margin-top: 20px; border: 1px solid rgba(255,255,255,0.1);
+  font-size: 1.05rem;
+}
+.universe-formula .eq-label { opacity: 0.7; font-size: 0.88rem; margin-bottom: 6px; }
+
+/* ══════════ RULE CARD ══════════ */
+.rule-card {
+  background: white; border-radius: var(--r);
+  box-shadow: var(--shadow-md); overflow: hidden;
+}
+.rule-header {
+  background: linear-gradient(135deg, var(--navy), #1a4a7a);
+  color: white; padding: 22px 32px;
+  font-size: 1.1rem; font-weight: 700;
+  display: flex; align-items: center; gap: 12px;
+}
+.rule-body { padding: 32px; }
+.rule-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 16px; margin-top: 20px;
+}
+.rule-item {
+  border-radius: 14px; padding: 20px;
+  text-align: center;
+  border: 2px solid transparent;
+  transition: transform 0.3s;
+}
+.rule-item:hover { transform: translateY(-4px); }
+.rule-item .cond { font-size: 0.78rem; font-weight: 700; opacity: 0.7; margin-bottom: 8px; }
+.rule-item .formula {
+  font-size: 1.1rem; font-weight: 700;
+  font-family: 'Georgia', serif; direction: ltr;
+  margin: 8px 0;
+}
+.rule-item .meaning { font-size: 0.8rem; color: #666; line-height: 1.6; }
+.ri-t { background: #fef3c7; border-color: #fcd34d; }
+.ri-r { background: #d1fae5; border-color: #6ee7b7; }
+.ri-tr { background: #ede9fe; border-color: #c4b5fd; }
+
+/* ══════════ ERROR VARIANCE COMPARISON ══════════ */
+.error-compare {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 28px;
+}
+.error-card {
+  border-radius: var(--r); overflow: hidden;
+  box-shadow: var(--shadow-md);
+}
+.error-header {
+  padding: 20px 28px;
+  display: flex; align-items: center; gap: 12px;
+}
+.error-header-abs { background: linear-gradient(135deg, #dc2626, #ef4444); color: white; }
+.error-header-rel { background: linear-gradient(135deg, #2563eb, #3b82f6); color: white; }
+.error-header h3 { font-size: 1rem; font-weight: 700; }
+.error-header .symbol { font-size: 1.5rem; font-family: 'Georgia', serif; }
+.error-body { background: white; padding: 28px; }
+.error-formula {
+  background: #f8faff; border-radius: 12px;
+  padding: 14px 20px; margin-bottom: 20px;
+  font-family: 'Georgia', serif; font-size: 0.95rem;
+  border-right: 3px solid;
+  direction: ltr; text-align: center;
+}
+.ef-abs { border-color: #ef4444; }
+.ef-rel { border-color: #3b82f6; }
+.comp-list { display: flex; flex-direction: column; gap: 8px; }
+.comp-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 12px; border-radius: 10px;
+  font-size: 0.85rem;
+}
+.comp-item.included { background: #f0fdf4; }
+.comp-item.excluded { background: #fef2f2; opacity: 0.5; }
+.comp-tick { width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 0.75rem; font-weight: 700; }
+.tick-yes { background: #16a34a; color: white; }
+.tick-no { background: #dc2626; color: white; }
+.comp-name { font-weight: 700; font-family: 'Georgia', serif; direction: ltr; }
+.comp-desc { color: #666; font-size: 0.78rem; margin-right: auto; text-align: right; }
+
+/* ══════════ RESULT BOX ══════════ */
+.result-box {
+  background: white; border-radius: 14px;
+  padding: 16px 20px; margin-top: 16px;
+  box-shadow: var(--shadow-sm);
+  display: flex; align-items: center; gap: 14px;
+  border-right: 4px solid;
+}
+.rb-abs { border-color: #ef4444; }
+.rb-rel { border-color: #3b82f6; }
+.result-box .rb-icon { font-size: 1.4rem; flex-shrink: 0; }
+.result-box .rb-label { font-size: 0.78rem; color: #888; }
+.result-box .rb-val { font-size: 1.2rem; font-weight: 900; color: var(--deep); font-family: 'Georgia', serif; direction: ltr; }
+.result-box .rb-desc { font-size: 0.82rem; color: #555; line-height: 1.6; margin-right: auto; text-align: right; max-width: 220px; }
+
+/* ══════════ INTERACTIVE SEM CHART ══════════ */
+.sem-chart-container {
+  background: white; border-radius: var(--r);
+  padding: 40px; box-shadow: var(--shadow-md);
+}
+.sem-controls {
+  display: flex; gap: 30px; justify-content: center;
+  margin-bottom: 30px; flex-wrap: wrap;
+}
+.sem-control-group { text-align: center; }
+.sem-control-group label {
+  display: block; font-size: 0.85rem; font-weight: 700;
+  color: var(--navy); margin-bottom: 6px;
+}
+.sem-control-group input[type="range"] {
+  width: 160px; accent-color: var(--teal);
+  cursor: pointer;
+}
+.sem-val {
+  display: inline-block; background: var(--teal);
+  color: white; font-weight: 700; font-size: 0.9rem;
+  padding: 3px 12px; border-radius: 50px;
+  margin-top: 4px; min-width: 40px; text-align: center;
+}
+.sem-results {
+  display: flex; gap: 16px; justify-content: center;
+  flex-wrap: wrap; margin-bottom: 30px;
+}
+.sem-result-pill {
+  padding: 10px 20px; border-radius: 12px;
+  font-weight: 700; font-size: 0.92rem;
+  display: flex; align-items: center; gap: 8px;
+}
+.pill-abs { background: #fef2f2; color: #dc2626; border: 2px solid #fca5a5; }
+.pill-rel { background: #eff6ff; color: #2563eb; border: 2px solid #93c5fd; }
+.pill-g { background: #f0fdf4; color: #16a34a; border: 2px solid #86efac; }
+.pill-phi { background: #fdf4ff; color: #7c3aed; border: 2px solid #d8b4fe; }
+
+/* Bar chart */
+.bar-chart-wrap { position: relative; height: 200px; }
+.bar-chart-svg { width: 100%; height: 100%; }
+
+/* ══════════ COEFFICIENT CARDS ══════════ */
+.coeff-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 28px;
+}
+.coeff-card {
+  border-radius: var(--r); overflow: hidden;
+  box-shadow: var(--shadow-md);
+}
+.coeff-header {
+  padding: 24px 28px; color: white;
+  display: flex; align-items: center; gap: 14px;
+}
+.ch-g { background: linear-gradient(135deg, #059669, #10b981); }
+.ch-phi { background: linear-gradient(135deg, #7c3aed, #8b5cf6); }
+.coeff-symbol { font-size: 2.2rem; font-family: 'Georgia', serif; }
+.coeff-name { font-size: 1rem; font-weight: 700; }
+.coeff-name-en { font-size: 0.8rem; opacity: 0.8; }
+.coeff-body { background: white; padding: 28px; }
+.coeff-formula {
+  background: #f8faff; border-radius: 12px;
+  padding: 16px; margin-bottom: 20px;
+  font-size: 1rem; font-family: 'Georgia', serif;
+  text-align: center; direction: ltr;
+}
+.coeff-body p { font-size: 0.88rem; color: #555; line-height: 1.8; }
+.coeff-example {
+  background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+  border-radius: 12px; padding: 14px 18px;
+  margin-top: 16px; display: flex; align-items: center; gap: 12px;
+  border: 1px solid #86efac;
+}
+.coeff-example .val { font-size: 1.5rem; font-weight: 900; color: #15803d; direction: ltr; }
+.coeff-example .ctx { font-size: 0.82rem; color: #166534; line-height: 1.6; }
+
+.coeff-example-phi {
+  background: linear-gradient(135deg, #faf5ff, #ede9fe);
+  border: 1px solid #c4b5fd;
+}
+.coeff-example-phi .val { color: #6d28d9; }
+.coeff-example-phi .ctx { color: #5b21b6; }
+
+/* ══════════ COMPARISON SCALE ══════════ */
+.scale-wrap {
+  background: white; border-radius: var(--r);
+  padding: 40px; box-shadow: var(--shadow-md);
+  text-align: center;
+}
+.scale-bar {
+  position: relative; height: 60px;
+  background: linear-gradient(to left, #dc2626, #f97316, #eab308, #22c55e);
+  border-radius: 50px; margin: 30px 0 10px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+}
+.scale-marks {
+  display: flex; justify-content: space-between;
+  padding: 0 10px;
+  font-size: 0.82rem; font-weight: 600; color: #666;
+}
+.scale-pointer {
+  position: absolute; top: -12px;
+  transform: translateX(50%);
+  display: flex; flex-direction: column; align-items: center;
+}
+.scale-arrow { font-size: 1.6rem; }
+.scale-label-val {
+  background: var(--deep); color: white;
+  padding: 3px 10px; border-radius: 8px;
+  font-size: 0.8rem; font-weight: 700;
+  white-space: nowrap;
+  margin-top: 2px;
+}
+
+/* ══════════ INTERPRETATION TABLE ══════════ */
+.interp-table {
+  width: 100%; border-collapse: separate; border-spacing: 0;
+  border-radius: var(--r); overflow: hidden;
+  box-shadow: var(--shadow-md);
+}
+.interp-table thead tr { background: var(--deep); color: white; }
+.interp-table th { padding: 18px 22px; font-size: 0.92rem; font-weight: 700; text-align: center; }
+.interp-table tbody tr { background: white; transition: background 0.2s; }
+.interp-table tbody tr:nth-child(even) { background: #f9fafb; }
+.interp-table tbody tr:hover { background: #f0f4ff; }
+.interp-table td { padding: 15px 22px; font-size: 0.88rem; border-bottom: 1px solid #f0f0f0; text-align: center; line-height: 1.7; }
+.interp-table td:first-child { font-weight: 700; color: var(--deep); }
+.badge { display: inline-block; padding: 3px 12px; border-radius: 50px; font-size: 0.78rem; font-weight: 700; }
+.badge-green { background: #dcfce7; color: #15803d; }
+.badge-blue { background: #dbeafe; color: #1d4ed8; }
+.badge-red { background: #fee2e2; color: #dc2626; }
+.badge-orange { background: #ffedd5; color: #c2410c; }
+
+/* ══════════ INSIGHT BOX ══════════ */
+.insight {
+  border-radius: 16px; padding: 22px 28px;
+  display: flex; gap: 16px; align-items: flex-start;
+  margin: 24px 0;
+}
+.insight-green { background: #f0fdf4; border: 2px solid #86efac; }
+.insight-amber { background: #fffbeb; border: 2px solid #fcd34d; }
+.insight-blue { background: #eff6ff; border: 2px solid #93c5fd; }
+.insight-red { background: #fef2f2; border: 2px solid #fca5a5; }
+.insight-dark { background: rgba(255,255,255,0.05); border: 2px solid rgba(255,255,255,0.15); }
+.insight .i-icon { font-size: 1.6rem; flex-shrink: 0; margin-top: 2px; }
+.insight .i-title { font-weight: 700; margin-bottom: 6px; font-size: 0.95rem; }
+.insight .i-text { font-size: 0.87rem; line-height: 1.85; }
+.insight-green .i-title { color: #065f46; }
+.insight-green .i-text { color: #047857; }
+.insight-amber .i-title { color: #92400e; }
+.insight-amber .i-text { color: #b45309; }
+.insight-blue .i-title { color: #1e40af; }
+.insight-blue .i-text { color: #1d4ed8; }
+.insight-red .i-title { color: #991b1b; }
+.insight-red .i-text { color: #dc2626; }
+.insight-dark .i-title { color: white; }
+.insight-dark .i-text { color: rgba(255,255,255,0.8); }
+
+/* ══════════ EQUATION ══════════ */
+.eq-block {
+  background: #f8faff; border-radius: 14px;
+  padding: 20px 28px; margin: 20px 0;
+  border-right: 4px solid var(--teal);
+  font-family: 'Georgia', serif; font-size: 1.05rem;
+  direction: ltr; text-align: center;
+  box-shadow: var(--shadow-sm);
+}
+.eq-block.red-border { border-color: var(--red); }
+.eq-block.blue-border { border-color: #3b82f6; }
+.eq-block.amber-border { border-color: var(--amber); }
+.eq-block.dark-bg {
+  background: rgba(255,255,255,0.05);
+  border-color: var(--mint);
+}
+
+/* ══════════ DIVIDER ══════════ */
+.divider { height: 4px; border: none; background: linear-gradient(90deg, var(--teal), var(--mint), var(--amber), var(--red), var(--purple)); }
+
+/* ══════════ FLOW DIAGRAM ══════════ */
+.flow-row {
+  display: flex; align-items: center; justify-content: center;
+  gap: 0; flex-wrap: wrap;
+}
+.flow-node {
+  border-radius: 14px; padding: 18px 22px;
+  text-align: center; min-width: 160px;
+  font-weight: 700; font-size: 0.9rem;
+  box-shadow: var(--shadow-sm);
+}
+.fn-g { background: linear-gradient(135deg, #eff6ff, #dbeafe); color: #1e40af; border: 2px solid #93c5fd; }
+.fn-arrow { font-size: 1.8rem; color: #ccc; padding: 0 8px; align-self: center; }
+.fn-d { background: linear-gradient(135deg, #fef3c7, #fde68a); color: #92400e; border: 2px solid #fcd34d; }
+.fn-decision { background: linear-gradient(135deg, #f0fdf4, #dcfce7); color: #15803d; border: 2px solid #86efac; }
+.fn-error { background: linear-gradient(135deg, #fef2f2, #fee2e2); color: #991b1b; border: 2px solid #fca5a5; }
+.fn-coeff { background: linear-gradient(135deg, #fdf4ff, #ede9fe); color: #6d28d9; border: 2px solid #d8b4fe; }
+
+/* ══════════ SUMMARY CARDS ══════════ */
+.summary-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+.summary-card {
+  border-radius: 16px; padding: 24px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.06);
+}
+.summary-card h4 { font-size: 1rem; font-weight: 700; margin-bottom: 10px; }
+.summary-card p { font-size: 0.86rem; opacity: 0.85; line-height: 1.85; }
+.sc-teal h4 { color: #4dd9e8; }
+.sc-mint h4 { color: #6ee7b7; }
+.sc-amber h4 { color: #fcd34d; }
+.sc-pink h4 { color: #f9a8d4; }
+
+/* ══════════ FOOTER ══════════ */
+footer {
+  background: var(--deep); color: rgba(255,255,255,0.5);
+  text-align: center; padding: 40px 20px;
+  font-size: 0.88rem; line-height: 1.9;
+}
+footer strong { color: white; }
+
+/* ══════════ ANIMATIONS ══════════ */
+.fade-up {
+  opacity: 0; transform: translateY(28px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.fade-up.in { opacity: 1; transform: translateY(0); }
+.fade-up:nth-child(2) { transition-delay: 0.1s; }
+.fade-up:nth-child(3) { transition-delay: 0.2s; }
+.fade-up:nth-child(4) { transition-delay: 0.3s; }
+
+/* ══════════ RESPONSIVE ══════════ */
+@media (max-width: 900px) {
+  .grid-2, .coeff-grid, .error-compare { grid-template-columns: 1fr; }
+  .grid-3 { grid-template-columns: 1fr 1fr; }
+  .rule-grid { grid-template-columns: 1fr; }
+  .summary-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+  .sec { padding: 60px 20px; }
+  .grid-3, .grid-4 { grid-template-columns: 1fr; }
+  .universe-person-row { flex-wrap: wrap; }
+  .hero { padding: 60px 20px; }
+  .top-nav { padding: 12px 20px; }
+  .nav-links { display: none; }
+  .flow-row { flex-direction: column; gap: 8px; }
+  .fn-arrow { transform: rotate(90deg); }
+}
+
+/* COMPREHENSIVE MOBILE RESPONSIVE FIXES */
+*, *::before, *::after { box-sizing: border-box; }
+html { max-width: 100%; }
+body { max-width: 100%; }
+img, svg, canvas, video, iframe { max-width: 100%; height: auto; }
+table { max-width: 100%; }
+
+.table-wrap {
+  width: 100%; max-width: 100%;
+  overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 12px;
+}
+.tbl-wrap { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.score-matrix-wrap { overflow-x: auto; }
+
+pre, code { white-space: pre-wrap; word-break: break-word; max-width: 100%; }
+
+/* Page bottom navigation */
+.page-nav-bottom {
+  display: flex; flex-wrap: wrap; gap: 12px;
+  justify-content: center; align-items: center;
+  padding: 28px 20px; text-align: center;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  margin-top: 40px;
+}
+.page-nav-bottom a {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 12px 28px; border-radius: 50px;
+  font-size: 0.95rem; font-weight: 700;
+  text-decoration: none; min-height: 48px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.page-nav-bottom a:hover { transform: translateY(-2px); }
+
+@media (max-width: 768px) {
+  .page-nav-bottom { padding: 18px 14px; gap: 8px; }
+  .page-nav-bottom a { font-size: 0.88rem; padding: 10px 18px; }
+}
+@media (max-width: 480px) {
+  .page-nav-bottom a { font-size: 0.82rem; padding: 8px 14px; min-height: 44px; width: 100%; justify-content: center; }
+}
+
+/* Overflow fixes */
+.eq-row { flex-wrap: wrap; gap: 8px; }
+.eq-formula { min-width: 0; }
+.sym-featured { flex-wrap: wrap; gap: 12px; }
+
+@media (max-width: 768px) {
+  /* Navigation */
+  .nav, .top-nav {
+    padding: 0 14px !important;
+    height: auto !important;
+    min-height: 52px;
+    flex-wrap: wrap !important;
+    gap: 4px;
+  }
+  .nav-links { flex-wrap: wrap !important; gap: 2px !important; overflow-x: visible !important; }
+  .nav a, .nav-link, .nl {
+    font-size: 0.78rem !important;
+    padding: 5px 9px !important;
+    white-space: normal !important;
+    height: auto !important;
+    min-height: 30px;
+    display: inline-flex !important;
+    align-items: center;
+  }
+  .nav-logo, .nav-brand { font-size: 0.85rem !important; white-space: normal !important; }
+
+  /* Hero */
+  .hero {
+    min-height: auto !important;
+    padding: 44px 14px !important;
+  }
+  .hero h1, .hero-t, .hero-title {
+    font-size: clamp(1.6rem, 7vw, 2.8rem) !important;
+    line-height: 1.25 !important;
+  }
+  .hero h2, .hero-sub, .hero-subtitle-line {
+    font-size: clamp(1.15rem, 4vw, 1.8rem) !important;
+  }
+  .hero p, .hero-desc { font-size: 0.95rem !important; }
+  .hero-content, .hero-c { max-width: 100% !important; width: 100% !important; }
+  .hero::before, .hero::after,
+  .hero-aura { width: 280px !important; height: 280px !important; opacity: 0.2 !important; }
+  .hero-ring, .hero-ring-2, .hr1, .hr2 { display: none !important; }
+  .hero-mesh, .hero-grid { opacity: 0.08 !important; }
+  .hero-badge, .hero-eyebrow { font-size: 0.68rem !important; padding: 5px 14px; }
+  .hero-meta { flex-wrap: wrap !important; gap: 8px; justify-content: center; }
+  .hero-meta-item { padding: 10px 14px; min-width: 0; flex: 1 1 40%; }
+  .hero-cards { gap: 10px; justify-content: center; }
+  .hero-pills { flex-wrap: wrap !important; gap: 8px; }
+  .hcard { min-width: 0 !important; padding: 14px 16px; }
+  .scroll-hint { display: none !important; }
+  .chapter-deco { display: none !important; }
+
+  /* Sections */
+  .section, .sec { padding: 44px 14px !important; }
+  .section-inner, .sec-inner, .sec-in { max-width: 100% !important; }
+  .section-header, .sec-header { margin-bottom: 28px; }
+
+  /* Grids */
+  .scenario-grid, .crossed-grid, .concepts-grid, .gstudy-layout,
+  .matrix-grid, .sym-grid-2, .sym-grid-3, .sym-card-grid,
+  .authors-grid, .design-compare, .asm-grid, .expect-grid,
+  .rel-grid, .vp-grid, .g2, .g3, .g4, .compare-grid,
+  .ms-grid, .concepts-grid { grid-template-columns: 1fr !important; gap: 16px !important; }
+
+  .hero-cards { grid-template-columns: 1fr 1fr !important; }
+
+  /* Flex */
+  .tree-row { flex-wrap: wrap !important; justify-content: center; }
+  .var-row { flex-wrap: wrap !important; gap: 6px; }
+  .step-item { flex-wrap: wrap !important; gap: 14px; }
+  .step-content { width: 100% !important; order: 1; }
+  .step-num { order: 0; }
+  .decomp, .decomp-live, .flow-row { flex-direction: column !important; align-items: center !important; }
+  .decomp-op, .dl-op, .fn-arrow { transform: rotate(90deg); }
+  .crow { flex-direction: column !important; }
+  .concept-row { flex-wrap: wrap; }
+
+  /* Padding */
+  .family-bg, .universe-card, .scenario-bg, .var-section-bg,
+  .source-card, .guide-card, .interactive-box, .score-matrix-wrap,
+  .assumption-wrap, .lm-box, .ins, .highlight-box, .warn-box,
+  .crossed-card, .concept-card, .section-card, .cbox {
+    padding: 20px 14px !important;
+  }
+  .intro-callout { padding: 18px 16px; }
+  .source-card { gap: 14px; }
+  .tree-connector { height: 20px; }
+  .tree-node { min-width: 120px !important; font-size: 0.82rem !important; padding: 10px 14px !important; }
+  .section-divider, .div { margin: 0 14px; }
+
+  /* Fixed widths */
+  .var-label { min-width: 50px !important; font-size: 0.78rem !important; }
+  .var-desc { min-width: 0 !important; flex: 1 1 100% !important; }
+  .var-value { min-width: 40px !important; }
+  .sym-featured-glyph { width: 44px !important; height: 44px !important; }
+
+  /* Tables */
+  .table-wrap {
+    margin: 0 -14px; padding: 0 14px;
+    width: calc(100% + 28px); border-radius: 0;
+  }
+  .tbl-wrap { margin: 0 -14px; padding: 0 14px; }
+
+  .prog-bar { z-index: 9999; }
+}
+
+@media (max-width: 480px) {
+  .hero { padding: 32px 10px !important; }
+  .hero h1, .hero-t, .hero-title { font-size: clamp(1.3rem, 8vw, 2rem) !important; }
+  .hero h2, .hero-sub { font-size: clamp(1rem, 5vw, 1.5rem) !important; }
+  .hero p, .hero-desc { font-size: 0.9rem !important; }
+  .nav, .top-nav { padding: 0 8px !important; min-height: 44px; gap: 2px !important; }
+  .nav a, .nav-link, .nl { font-size: 0.7rem !important; padding: 4px 7px !important; }
+
+  .section, .sec { padding: 28px 10px !important; }
+
+  .hero-cards { grid-template-columns: 1fr !important; }
+  .hero-pills { gap: 6px; }
+  .pill { padding: 8px 10px; }
+
+  .table-wrap {
+    margin: 0 -10px; padding: 0 10px;
+    width: calc(100% + 20px);
+  }
+  table { font-size: 0.72rem !important; }
+  td, th { padding: 5px 7px !important; }
+
+  .hero-card, .concept-card, .crossed-card, .scenario-item,
+  .step-content, .coeff-card, .card, .design-card, .sym-card,
+  .exp-card, .author-card, .hcard { padding: 12px !important; }
+
+  .tree-node { min-width: 100px !important; font-size: 0.78rem !important; }
+  .hero-meta-item { padding: 8px 10px; }
+
+  .btn, .btn-primary, .btn-ghost {
+    width: 100%; justify-content: center; min-height: 44px;
+  }
+}
+
+/* â•â•â•â•â•â• ADDITIONAL OVERFLOW FIXES â•â•â•â•â•â• */
+[style*="min-width:200px"], [style*="min-width: 200px"], [style*="min-width:220px"], [style*="min-width: 220px"],
+[style*="min-width:280px"], [style*="min-width: 280px"], [style*="min-width:500px"], [style*="min-width: 500px"] {
+  min-width: 0 !important;
+}
+[style*="width:480px"], [style*="width: 480px"], [style*="width:400px"], [style*="width: 400px"] {
+  max-width: 100% !important;
+  width: auto !important;
+}
+.flex-item, .sym-grid-2 > .sym-featured, .eq-row { flex-wrap: wrap; }
+.score-matrix { min-width: 0 !important; }
+.hcard, .pill { min-width: 0 !important; }
+.dt-node { max-width: 100% !important; }
+
+@media (max-width: 768px) {
+  .mat { grid-template-columns: repeat(auto-fill, minmax(32px, 1fr)) !important; }
+  .mc { width: 32px !important; height: 32px !important; font-size: 0.6rem !important; }
+  .hcard { min-width: 0 !important; }
+  .hero-meta-num { font-size: 1.5rem !important; }
+  .hero-meta-lbl { font-size: 0.68rem !important; }
+  .hero-meta-item { flex: 1 1 42% !important; }
+  .pill { min-width: 0 !important; flex: 1 1 30% !important; }
+}
+
+@media (max-width: 480px) {
+  .mat { grid-template-columns: repeat(auto-fill, minmax(28px, 1fr)) !important; }
+  .mc { width: 28px !important; height: 28px !important; font-size: 0.55rem !important; }
+}
+
+/* ==================================================
+   FINAL REAL MOBILE LAYOUT REBUILD
+   Must be the last CSS block in the file
+   ================================================== */
+*, *::before, *::after { box-sizing: border-box !important; }
+html, body {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  min-width: 0 !important;
+}
+img, svg, canvas, video, iframe {
+  max-width: 100% !important;
+  height: auto !important;
+}
+table { max-width: 100% !important; }
+
+/* Force all major containers to viewport width */
+@media (max-width: 768px) {
+  html, body {
+    overflow-x: clip !important;
+    min-width: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .hero,
+  .section,
+  .sec,
+  .container,
+  .wrapper,
+  .content,
+  .main,
+  .page,
+  .page-wrap,
+  .layout,
+  .shell,
+  .panel,
+  .chapter,
+  .chapter-wrap,
+  .story,
+  .story-wrap,
+  .book-page,
+  .section-dark,
+  .section-mid,
+  .intro-section,
+  .source-section,
+  .guide-section,
+  .sec-dark,
+  .sec-alt,
+  .sec-inner,
+  .section-inner,
+  .section-header,
+  .sec-header,
+  .family-bg,
+  .universe-card,
+  .scenario-bg,
+  .var-section-bg,
+  .source-card,
+  .index-card,
+  .guide-card,
+  .intro-body,
+  .interactive-box,
+  .score-matrix-wrap,
+  .assumption-wrap,
+  .lm-box,
+  .cbox,
+  .comparison-wrap,
+  .steps-flow,
+  .highlight-box,
+  .warn-box,
+  .insight-box,
+  .history-wrap {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+    transform: none !important;
+    left: auto !important;
+    right: auto !important;
+    box-sizing: border-box !important;
+  }
+
+  .hero {
+    min-height: auto !important;
+    height: auto !important;
+    padding-top: 36px !important;
+    padding-bottom: 36px !important;
+    text-align: center !important;
+    overflow: hidden !important;
+  }
+
+  .hero-content,
+  .hero-inner,
+  .hero-wrap,
+  .hero-text,
+  .hero-c,
+  .hero-content {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+    text-align: center !important;
+    transform: none !important;
+    position: relative !important;
+  }
+
+  .hero h1,
+  .hero-title,
+  .hero-t,
+  .hero-ta,
+  h1 {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    font-size: clamp(1.55rem, 8vw, 2.3rem) !important;
+    line-height: 1.25 !important;
+    text-align: center !important;
+    white-space: normal !important;
+    overflow-wrap: break-word !important;
+    word-break: normal !important;
+  }
+
+  .hero-sub,
+  .hero-subtitle-line,
+  .hero-s,
+  .hero-d,
+  .hero-desc,
+  .sec-lead,
+  .slead,
+  .section-desc,
+  .subtitle,
+  .lead {
+    max-width: 100% !important;
+    white-space: normal !important;
+    overflow-wrap: break-word !important;
+    width: 100% !important;
+  }
+
+  .grid,
+  .cards,
+  .hero-cards,
+  .hero-meta,
+  .hero-pills,
+  .scenario-grid,
+  .crossed-grid,
+  .concepts-grid,
+  .gstudy-layout,
+  .matrix-grid,
+  .design-compare,
+  .authors-grid,
+  .rel-grid,
+  .vp-grid,
+  .g2,
+  .g3,
+  .g4,
+  .asm-grid,
+  .expect-grid,
+  .sym-grid-2,
+  .sym-grid-3,
+  .sym-card-grid,
+  .compare-grid,
+  .ms-grid,
+  .crow {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    gap: 16px !important;
+    transform: none !important;
+  }
+
+  .hero-cards {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+  }
+
+  .card,
+  .hero-card,
+  .glass-card,
+  .info-card,
+  .concept-card,
+  .step-card,
+  .source-card,
+  .index-card,
+  .guide-card,
+  .hcard,
+  .pill,
+  .tree-node,
+  .dt-node,
+  .matrix-card,
+  .panel-card,
+  .design-card,
+  .design-header,
+  .design-body,
+  .crossed-card,
+  .scenario-item,
+  .step-content,
+  .author-card,
+  .sym-card,
+  .sym-featured,
+  .var-section-bg,
+  .intro-callout,
+  .eq-row,
+  .eq-main {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    transform: none !important;
+  }
+
+  [style*="min-width"],
+  [style*="width: 480"],
+  [style*="width:480"],
+  [style*="width: 400"],
+  [style*="width:400"] {
+    max-width: 100% !important;
+    min-width: 0 !important;
+    width: auto !important;
+  }
+
+  .nav,
+  .top-nav,
+  .page-nav,
+  .page-nav-bottom {
+    width: 100% !important;
+    max-width: 100% !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    white-space: normal !important;
+    overflow: visible !important;
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
+
+  .nav-links {
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    gap: 4px !important;
+    overflow: visible !important;
+    width: auto !important;
+  }
+
+  .nav a,
+  .nav-link,
+  .nl,
+  .top-nav a,
+  .page-nav a,
+  .page-nav-bottom a {
+    max-width: 100% !important;
+    white-space: normal !important;
+    text-align: center !important;
+    min-height: 36px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 4px 10px !important;
+    font-size: 0.75rem !important;
+  }
+
+  .nav-logo,
+  .nav-brand {
+    font-size: 0.82rem !important;
+    white-space: normal !important;
+    max-width: 100% !important;
+    overflow: visible !important;
+  }
+
+  /* Hide all decorative overlays, rings, meshes */
+  .hero::before,
+  .hero::after,
+  .hero-ring,
+  .hero-ring-2,
+  .hr1,
+  .hr2,
+  .hero-mesh,
+  .hero-grid,
+  .hero-aura,
+  .chapter-deco,
+  .decor,
+  .bg-shape,
+  .section-divider,
+  .rainbow,
+  .div,
+  .scroll-hint,
+  .starfield {
+    display: none !important;
+  }
+
+  /* Section dividers must not cause overflow */
+  .section-divider,
+  .div-a,
+  .div-r,
+  .div-s,
+  .div-v,
+  .div-g {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    max-width: 100% !important;
+  }
+
+  .table-wrap,
+  .tbl-wrap {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  /* Hero-specific containers */
+  .hero-badge,
+  .hero-eyebrow {
+    display: inline-flex !important;
+    max-width: 100% !important;
+    white-space: normal !important;
+  }
+
+  .hero-meta {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .hero-meta-item {
+    flex: 1 1 42% !important;
+    min-width: 0 !important;
+    max-width: 48% !important;
+  }
+
+  .hcard,
+  .pill {
+    min-width: 0 !important;
+    flex: 1 1 42% !important;
+    max-width: 48% !important;
+  }
+
+  .decomp-block,
+  .decomp-live .dl-block {
+    min-width: 0 !important;
+    flex: 1 1 auto !important;
+  }
+
+  /* Family tree and diagrams */
+  .family-bg {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  /* Force flex containers to wrap */
+  .concept-row,
+  .badge-row,
+  .hero-actions {
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+  }
+
+  .btn,
+  .btn-primary,
+  .btn-ghost,
+  .calc-btn {
+    min-height: 44px !important;
+    padding: 12px 24px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  html, body {
+    min-width: 0 !important;
+    width: 100% !important;
+  }
+
+  .hero,
+  .section,
+  .sec,
+  .container,
+  .wrapper,
+  .content,
+  .main,
+  .page,
+  .page-wrap {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+  }
+
+  .hero {
+    padding-top: 28px !important;
+    padding-bottom: 28px !important;
+  }
+
+  .hero h1,
+  .hero-title,
+  .hero-t,
+  .hero-ta,
+  h1 {
+    font-size: clamp(1.35rem, 8.5vw, 2rem) !important;
+    line-height: 1.28 !important;
+  }
+
+  h2 {
+    font-size: clamp(1.2rem, 6.5vw, 1.65rem) !important;
+  }
+
+  h3 {
+    font-size: clamp(1rem, 5.5vw, 1.35rem) !important;
+  }
+
+  .card,
+  .hero-card,
+  .glass-card,
+  .info-card,
+  .concept-card,
+  .step-card,
+  .source-card,
+  .crossed-card,
+  .scenario-item,
+  .design-card {
+    padding: 14px 10px !important;
+  }
+
+  .nav,
+  .top-nav {
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+  }
+
+  .nav a,
+  .nav-link,
+  .nl {
+    padding: 3px 6px !important;
+    font-size: 0.68rem !important;
+  }
+
+  .hero-meta-item {
+    flex: 1 1 100% !important;
+    max-width: 100% !important;
+  }
+
+  .hcard {
+    flex: 1 1 100% !important;
+    max-width: 100% !important;
+  }
+
+  .hero-cards {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    flex-direction: column !important;
+    align-items: center !important;
+  }
+}
+
+/* === PAGE NAV TOP === */
+.page-nav-top {
+  direction: rtl;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  width: min(100% - 24px, 1100px);
+  margin: 14px auto;
+  padding: 10px;
+  border-radius: 16px;
+  background: rgba(15, 52, 96, 0.88);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.14);
+  backdrop-filter: blur(8px);
+  position: relative;
+  z-index: 10;
+}
+.page-nav-top a,
+.page-nav-top a:visited {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 8px 18px;
+  border-radius: 999px;
+  text-decoration: none;
+  font-weight: 700;
+  color: #ffffff;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.18);
+  transition: background 0.2s, transform 0.2s;
+}
+.page-nav-top a:hover {
+  background: rgba(0, 180, 216, 0.28);
+  transform: translateY(-2px);
+}
+@media (max-width: 480px) {
+  .page-nav-top {
+    width: calc(100% - 20px);
+    gap: 8px;
+    padding: 8px;
+  }
+  .page-nav-top a {
+    flex: 1 1 auto;
+    min-width: 90px;
+    padding: 8px 12px;
+    font-size: 0.9rem;
+  }
+}
+</style>
+</head>
+<body>
+<nav class="page-nav-top" aria-label="تنقل الصفحة العلوي"><a href="index.html" class="nav-home">الرئيسية</a></nav>
+
+<!-- ════════ NAV ════════ -->
+<nav class="top-nav">
+  <div class="nav-logo">🎓 نظرية إمكانية التعميم</div>
+  <div class="nav-links">
+<a href="1.1.1.html" class="nl">← السابق</a><a href="index.html" class="nl">الرئيسية</a><a href="2.1.html" class="nl">التالي →</a>
+
+    <a href="#universe" class="nav-link">درجة الكون</a>
+    <a href="#components" class="nav-link">مكونات التباين</a>
+    <a href="#errors" class="nav-link">تباين الخطأ</a>
+    <a href="#coefficients" class="nav-link">المعاملات</a>
+    <a href="#insights" class="nav-link">الاستنتاجات</a>
+  </div>
+</nav>
+
+<!-- ════════ HERO ════════ -->
+<section class="hero">
+  <div class="hero-bg-art"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-chapter">📐 الفصل الأول — القسم 1.1.2</div>
+    <h1>من <span class="accent">درجة الكون</span><br>إلى قرار موثوق</h1>
+    <p class="hero-sub">
+      كيف ننتقل من نتائج دراسة G إلى تصميم دراسة D — وكيف نقيس الخطأ ونحسب موثوقية القياس؟
+    </p>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="num">σ²(τ)</div>
+        <div class="lbl">تباين درجة الكون</div>
+      </div>
+      <div class="hero-stat">
+        <div class="num">σ²(Δ)</div>
+        <div class="lbl">الخطأ المطلق</div>
+      </div>
+      <div class="hero-stat">
+        <div class="num">σ²(δ)</div>
+        <div class="lbl">الخطأ النسبي</div>
+      </div>
+      <div class="hero-stat">
+        <div class="num">Eρ²</div>
+        <div class="lbl">معامل التعميم</div>
+      </div>
+      <div class="hero-stat">
+        <div class="num">Φ</div>
+        <div class="lbl">مؤشر الاعتمادية</div>
+      </div>
+    </div>
+  </div>
+</section>
+<hr class="divider">
+
+<!-- ════════ SECTION 1: الخريطة المفاهيمية ════════ -->
+<section class="sec sec-alt" id="overview">
+  <div class="sec-inner">
+    <div class="center fade-up">
+      <span class="sec-tag tag-navy">الخريطة الكاملة</span>
+      <h2 class="sec-title">رحلة من G إلى D</h2>
+      <p class="sec-desc center" style="margin: 0 auto 40px;">قبل الغوص في التفاصيل — إليك الصورة الكاملة لكيفية ترابط المفاهيم</p>
+    </div>
+
+    <div class="fade-up" style="background: white; border-radius: var(--r); padding: 40px; box-shadow: var(--shadow-md);">
+      <div class="flow-row" style="gap: 12px; flex-wrap: wrap;">
+        <div class="flow-node fn-g">
+          🔬 دراسة G<br>
+          <span style="font-weight: 400; font-size: 0.78rem; opacity: 0.8;">تقدير σ²(p), σ²(t), σ²(r)...</span>
+        </div>
+        <div class="fn-arrow">→</div>
+        <div class="flow-node fn-d">
+          ⚖️ اختيار n'ₜ, n'ᵣ<br>
+          <span style="font-weight: 400; font-size: 0.78rem; opacity: 0.8;">حجم عينة دراسة D</span>
+        </div>
+        <div class="fn-arrow">→</div>
+        <div class="flow-node fn-error">
+          📉 تباين الخطأ<br>
+          <span style="font-weight: 400; font-size: 0.78rem; opacity: 0.8;">σ²(Δ) و σ²(δ)</span>
+        </div>
+        <div class="fn-arrow">→</div>
+        <div class="flow-node fn-coeff">
+          📊 المعاملات<br>
+          <span style="font-weight: 400; font-size: 0.78rem; opacity: 0.8;">Eρ² و Φ</span>
+        </div>
+        <div class="fn-arrow">→</div>
+        <div class="flow-node fn-decision">
+          ✅ القرار الأمثل<br>
+          <span style="font-weight: 400; font-size: 0.78rem; opacity: 0.8;">تصميم إجراء القياس</span>
+        </div>
+      </div>
+
+      <div class="insight insight-blue" style="margin-top: 30px;">
+        <div class="i-icon">🔑</div>
+        <div>
+          <div class="i-title">المنطق الأساسي</div>
+          <div class="i-text">
+            دراسة G تعطيك مكونات التباين "الخام" من العالم اللانهائي. دراسة D تطبّق معادلات بسيطة لتحويلها إلى إجراء قياس محدد (n'ₜ موضوعاً و n'ᵣ مقيِّماً). ثم تحسب الخطأ والمعاملات لتقرر إن كان هذا التصميم كافياً لأغراضك.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ SECTION 2: درجة الكون ════════ -->
+<section class="sec" id="universe" style="background: var(--bg);">
+  <div class="sec-inner">
+    <div class="center fade-up">
+      <span class="sec-tag tag-teal">المفهوم الجوهري</span>
+      <h2 class="sec-title">ما هي درجة الكون؟</h2>
+      <p class="sec-desc center" style="margin: 0 auto 40px;">Universe Score — الدرجة "الحقيقية" التي يسعى القياس للوصول إليها</p>
+    </div>
+
+    <div class="universe-scene fade-up">
+      <p style="text-align:center; opacity: 0.7; font-size: 0.9rem; margin-bottom: 28px; position: relative; z-index: 2;">
+        كل شخص لو قاسيناه على <strong style="color:#4dd9e8">جميع</strong> موضوعات الكون وجميع مقيِّميه — متوسط تلك الدرجات = <strong style="color: #6ee7b7;">درجة الكونه</strong>
+      </p>
+
+      <div class="universe-person-row">
+        <!-- Person 1 -->
+        <div class="person-block">
+          <div class="person-avatar" style="background: rgba(0,180,216,0.2);">👩‍🎓</div>
+          <div style="font-size: 0.85rem; font-weight: 700; color: rgba(255,255,255,0.9);">سارة</div>
+          <div class="person-score-wrap">
+            <div class="obs-score"><span class="lbl">t₁,r₁</span><span class="val">3.2</span></div>
+            <div class="obs-score"><span class="lbl">t₂,r₂</span><span class="val">3.8</span></div>
+            <div class="obs-score"><span class="lbl">t₃,r₁</span><span class="val">3.5</span></div>
+            <div class="obs-score"><span class="lbl">... ∞</span><span class="val">...</span></div>
+          </div>
+          <div class="univ-score-badge" style="background: rgba(0,201,167,0.25); color: #6ee7b7;">μₚ ≈ 3.5</div>
+        </div>
+
+        <div class="arrow-right">→</div>
+
+        <!-- Person 2 -->
+        <div class="person-block">
+          <div class="person-avatar" style="background: rgba(123,45,139,0.2);">👨‍🎓</div>
+          <div style="font-size: 0.85rem; font-weight: 700; color: rgba(255,255,255,0.9);">خالد</div>
+          <div class="person-score-wrap">
+            <div class="obs-score"><span class="lbl">t₁,r₁</span><span class="val">2.1</span></div>
+            <div class="obs-score"><span class="lbl">t₂,r₂</span><span class="val">2.9</span></div>
+            <div class="obs-score"><span class="lbl">t₃,r₁</span><span class="val">2.4</span></div>
+            <div class="obs-score"><span class="lbl">... ∞</span><span class="val">...</span></div>
+          </div>
+          <div class="univ-score-badge" style="background: rgba(244,162,97,0.25); color: #fbbf24;">μₚ ≈ 2.5</div>
+        </div>
+
+        <div class="arrow-right">→</div>
+
+        <!-- Person 3 -->
+        <div class="person-block">
+          <div class="person-avatar" style="background: rgba(244,196,48,0.15);">👩‍🎓</div>
+          <div style="font-size: 0.85rem; font-weight: 700; color: rgba(255,255,255,0.9);">ليلى</div>
+          <div class="person-score-wrap">
+            <div class="obs-score"><span class="lbl">t₁,r₁</span><span class="val">4.5</span></div>
+            <div class="obs-score"><span class="lbl">t₂,r₂</span><span class="val">4.0</span></div>
+            <div class="obs-score"><span class="lbl">t₃,r₁</span><span class="val">4.8</span></div>
+            <div class="obs-score"><span class="lbl">... ∞</span><span class="val">...</span></div>
+          </div>
+          <div class="univ-score-badge" style="background: rgba(0,150,160,0.25); color: #4dd9e8;">μₚ ≈ 4.4</div>
+        </div>
+
+        <div class="arrow-right">→</div>
+
+        <!-- Variance result -->
+        <div class="person-block" style="background: rgba(255,255,255,0.05); border-radius: 16px; padding: 20px; border: 1px solid rgba(255,255,255,0.1);">
+          <div style="font-size: 1.8rem; margin-bottom: 10px;">📊</div>
+          <div style="font-size: 0.85rem; font-weight: 700; color: #4dd9e8; margin-bottom: 14px;">تباين درجات الكون</div>
+          <div style="font-family: 'Georgia', serif; font-size: 1.2rem; font-weight: 700; direction: ltr; margin-bottom: 8px;">σ²(τ) = σ²(p)</div>
+          <div style="font-size: 0.8rem; opacity: 0.7; line-height: 1.7;">يعكس الفروق الحقيقية<br>بين الأشخاص</div>
+          <div style="margin-top: 12px; padding: 8px 14px; background: rgba(0,201,167,0.2); border-radius: 10px; font-weight: 700; color: #4dd9e8; font-family: 'Georgia', serif;">σ̂²(τ) = 0.25</div>
+        </div>
+      </div>
+
+      <div class="universe-formula">
+        <div class="eq-label">تعريف درجة الكون للنموذج العشوائي p × T × R</div>
+        <div style="direction: ltr; font-family: 'Georgia', serif; font-size: 1.1rem; font-weight: 600;">
+          μₚ ≡ E<sub>T</sub> E<sub>R</sub> X<sub>pTR</sub> = μ + νₚ
+        </div>
+      </div>
+
+      <div class="insight insight-dark" style="margin-top: 20px; position: relative; z-index: 2;">
+        <div class="i-icon">💡</div>
+        <div>
+          <div class="i-title">الفرق عن نظرية الاختبار التقليدية</div>
+          <div class="i-text">
+            في النظرية التقليدية: الدرجة الحقيقية = متوسط افتراضي على إعادات لانهائية لنفس الاختبار. 
+            في نظرية G: درجة الكون = متوسط عبر جميع شروط كون التعميم (موضوعات × مقيِّمون). 
+            <strong style="color: #4dd9e8;">الفرق الجوهري: نظرية G تُحدد بوضوح ما الذي يُعمَّم إليه.</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ SECTION 3: مكونات تباين دراسة D ════════ -->
+<section class="sec sec-alt" id="components">
+  <div class="sec-inner">
+    <div class="center fade-up">
+      <span class="sec-tag tag-amber">دراسة D</span>
+      <h2 class="sec-title">القاعدة الذهبية: من G إلى D</h2>
+      <p class="sec-desc center" style="margin: 0 auto 40px;">
+        مكونات التباين في G تُقلَّص بحجم العينة للحصول على مكونات D — معادلة بسيطة وقوية
+      </p>
+    </div>
+
+    <div class="rule-card fade-up">
+      <div class="rule-header">
+        📐 القاعدة — المعادلة 1.6
+        <span style="font-family: 'Georgia', serif; font-size: 0.85rem; background: rgba(255,255,255,0.15); padding: 3px 12px; border-radius: 50px; margin-right: 10px;">σ̂²(ᾱ)</span>
+      </div>
+      <div class="rule-body">
+        <p style="font-size: 0.9rem; color: #555; line-height: 1.9; margin-bottom: 20px;">
+          لتحويل أي مكوّن تباين من دراسة G إلى دراسة D، انظر: هل يحتوي التأثير على (t)؟ أم (r)؟ أم كليهما؟ ثم اقسم على حجم العينة المقابل.
+        </p>
+        <div class="rule-grid">
+          <div class="rule-item ri-t">
+            <div class="cond">⚙️ التأثير يحتوي على t فقط</div>
+            <div class="formula">σ̂²(ᾱ) = σ̂²(α) / n'ₜ</div>
+            <div class="meaning">
+              أمثلة: σ²(t)، σ²(pt)<br>
+              اقسم على عدد الموضوعات
+            </div>
+          </div>
+          <div class="rule-item ri-r">
+            <div class="cond">⚙️ التأثير يحتوي على r فقط</div>
+            <div class="formula">σ̂²(ᾱ) = σ̂²(α) / n'ᵣ</div>
+            <div class="meaning">
+              أمثلة: σ²(r)، σ²(pr)<br>
+              اقسم على عدد المقيِّمين
+            </div>
+          </div>
+          <div class="rule-item ri-tr">
+            <div class="cond">⚙️ التأثير يحتوي على t و r معاً</div>
+            <div class="formula">σ̂²(ᾱ) = σ̂²(α) / (n'ₜ × n'ᵣ)</div>
+            <div class="meaning">
+              أمثلة: σ²(tr)، σ²(ptr)<br>
+              اقسم على حاصل ضرب الاثنين
+            </div>
+          </div>
+        </div>
+
+        <!-- Example: n't=3, n'r=2 -->
+        <div style="background: #f0f4ff; border-radius: 16px; padding: 24px; margin-top: 24px;">
+          <div style="font-size: 0.95rem; font-weight: 700; color: var(--navy); margin-bottom: 16px;">
+            📌 تطبيق المثال — سميث تختار n'ₜ = 3 موضوعات و n'ᵣ = 2 مقيِّمين
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; direction: ltr;">
+            <div style="background: white; border-radius: 10px; padding: 12px; text-align: center; border: 1px solid #c7d2fe;">
+              <div style="font-size: 0.7rem; color: #888; margin-bottom: 4px;">σ²(p)</div>
+              <div style="font-size: 0.85rem; color: #999;">÷ (لا شيء)</div>
+              <div style="font-size: 1.1rem; font-weight: 700; color: #3730a3; font-family:'Georgia',serif;">.25</div>
+            </div>
+            <div style="background: #fef3c7; border-radius: 10px; padding: 12px; text-align: center; border: 1px solid #fcd34d;">
+              <div style="font-size: 0.7rem; color: #888; margin-bottom: 4px;">σ²(T) = .06 ÷ 3</div>
+              <div style="font-size: 1.1rem; font-weight: 700; color: #92400e; font-family:'Georgia',serif;">.02</div>
+            </div>
+            <div style="background: #d1fae5; border-radius: 10px; padding: 12px; text-align: center; border: 1px solid #6ee7b7;">
+              <div style="font-size: 0.7rem; color: #888; margin-bottom: 4px;">σ²(R) = .02 ÷ 2</div>
+              <div style="font-size: 1.1rem; font-weight: 700; color: #065f46; font-family:'Georgia',serif;">.01</div>
+            </div>
+            <div style="background: #ede9fe; border-radius: 10px; padding: 12px; text-align: center; border: 1px solid #c4b5fd;">
+              <div style="font-size: 0.7rem; color: #888; margin-bottom: 4px;">σ²(pT) = .15 ÷ 3</div>
+              <div style="font-size: 1.1rem; font-weight: 700; color: #5b21b6; font-family:'Georgia',serif;">.05</div>
+            </div>
+            <div style="background: #fef2f2; border-radius: 10px; padding: 12px; text-align: center; border: 1px solid #fca5a5;">
+              <div style="font-size: 0.7rem; color: #888; margin-bottom: 4px;">σ²(pR) = .04 ÷ 2</div>
+              <div style="font-size: 1.1rem; font-weight: 700; color: #991b1b; font-family:'Georgia',serif;">.02</div>
+            </div>
+            <div style="background: #f1f5f9; border-radius: 10px; padding: 12px; text-align: center; border: 1px solid #cbd5e1;">
+              <div style="font-size: 0.7rem; color: #888; margin-bottom: 4px;">σ²(TR) = .00 ÷ 6</div>
+              <div style="font-size: 1.1rem; font-weight: 700; color: #475569; font-family:'Georgia',serif;">.00</div>
+            </div>
+            <div style="background: #fdf4ff; border-radius: 10px; padding: 12px; text-align: center; border: 1px solid #d8b4fe;">
+              <div style="font-size: 0.7rem; color: #888; margin-bottom: 4px;">σ²(pTR) = .12 ÷ 6</div>
+              <div style="font-size: 1.1rem; font-weight: 700; color: #6d28d9; font-family:'Georgia',serif;">.02</div>
+            </div>
+            <div style="background: var(--navy); border-radius: 10px; padding: 12px; text-align: center;">
+              <div style="font-size: 0.7rem; color: rgba(255,255,255,0.7); margin-bottom: 4px;">÷ 3×2 = 6</div>
+              <div style="font-size: 0.72rem; color: rgba(255,255,255,0.8);">ptr → pTR</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ SECTION 4: تباين الخطأ ════════ -->
+<section class="sec" id="errors" style="background: var(--bg);">
+  <div class="sec-inner">
+    <div class="center fade-up">
+      <span class="sec-tag tag-red">تباين الخطأ</span>
+      <h2 class="sec-title">نوعان من الخطأ — لا نوع واحد</h2>
+      <p class="sec-desc center" style="margin: 0 auto 40px;">
+        الخطأ المطلق عندما تهمك الدرجة نفسها. الخطأ النسبي عندما يهمك ترتيبك بين الآخرين.
+      </p>
+    </div>
+
+    <!-- Visual intuition -->
+    <div class="fade-up" style="background: white; border-radius: var(--r); padding: 36px; box-shadow: var(--shadow-md); margin-bottom: 28px;">
+      <div style="display: grid; grid-template-columns: 1fr auto 1fr; gap: 20px; align-items: center;">
+        <div style="text-align: center;">
+          <div style="font-size: 3rem; margin-bottom: 10px;">🎯</div>
+          <div style="font-size: 1.05rem; font-weight: 700; color: var(--deep); margin-bottom: 8px;">الخطأ المطلق</div>
+          <div style="font-size: 0.85rem; color: #555; line-height: 1.8;">هل درجة أحمد <em>كـ3.5</em><br>تعكس قدرته الحقيقية؟<br><span style="color: #dc2626; font-weight: 600;">السؤال: كم تنحرف عن درجة الكون؟</span></div>
+          <div style="margin-top: 14px; padding: 8px 16px; background: #fef2f2; border-radius: 50px; font-size: 0.82rem; color: #dc2626; font-weight: 700; display: inline-block;">يُستخدم عند التفسير المرجعي للمحك</div>
+        </div>
+        <div style="text-align: center; font-size: 2rem; color: #ccc;">⇔</div>
+        <div style="text-align: center;">
+          <div style="font-size: 3rem; margin-bottom: 10px;">📊</div>
+          <div style="font-size: 1.05rem; font-weight: 700; color: var(--deep); margin-bottom: 8px;">الخطأ النسبي</div>
+          <div style="font-size: 0.85rem; color: #555; line-height: 1.8;">هل أحمد <em>أفضل من سارة</em>؟<br>هل ترتيبه ثابت بين الموضوعات؟<br><span style="color: #2563eb; font-weight: 600;">السؤال: كم تنحرف عن انحرافه المتوقع؟</span></div>
+          <div style="margin-top: 14px; padding: 8px 16px; background: #eff6ff; border-radius: 50px; font-size: 0.82rem; color: #2563eb; font-weight: 700; display: inline-block;">يُستخدم عند المقارنة بين الأفراد</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="error-compare fade-up">
+      <!-- Absolute error -->
+      <div class="error-card">
+        <div class="error-header error-header-abs">
+          <div class="error-symbol">σ²(Δ)</div>
+          <div>
+            <h3>تباين الخطأ المطلق</h3>
+            <div style="font-size: 0.8rem; opacity: 0.85;">Absolute Error Variance</div>
+          </div>
+        </div>
+        <div class="error-body">
+          <div style="font-size: 0.85rem; color: #666; margin-bottom: 14px; line-height: 1.8;">الخطأ = الفرق بين الدرجة الملحوظة ودرجة الكون</div>
+          <div class="error-formula ef-abs">Δₚ = X<sub>pTR</sub> − μₚ</div>
+          <p style="font-size: 0.82rem; color: #555; margin-bottom: 16px; line-height: 1.8;">يتضمن <strong>جميع</strong> مكونات التباين عدا σ²(p) — أي كل ما ليس الشخص نفسه</p>
+          <div class="comp-list">
+            <div class="comp-item excluded"><div class="comp-tick tick-no">✗</div><div class="comp-name">σ²(p)</div><div class="comp-desc">درجة الكون — ليست خطأ</div></div>
+            <div class="comp-item included"><div class="comp-tick tick-yes">✓</div><div class="comp-name">σ²(T)</div><div class="comp-desc">صعوبة الموضوع</div></div>
+            <div class="comp-item included"><div class="comp-tick tick-yes">✓</div><div class="comp-name">σ²(R)</div><div class="comp-desc">شدة المقيِّم</div></div>
+            <div class="comp-item included"><div class="comp-tick tick-yes">✓</div><div class="comp-name">σ²(pT)</div><div class="comp-desc">تفاعل شخص×موضوع</div></div>
+            <div class="comp-item included"><div class="comp-tick tick-yes">✓</div><div class="comp-name">σ²(pR)</div><div class="comp-desc">تفاعل شخص×مقيِّم</div></div>
+            <div class="comp-item included"><div class="comp-tick tick-yes">✓</div><div class="comp-name">σ²(TR)</div><div class="comp-desc">تفاعل موضوع×مقيِّم</div></div>
+            <div class="comp-item included"><div class="comp-tick tick-yes">✓</div><div class="comp-name">σ²(pTR)</div><div class="comp-desc">خطأ متبقٍّ</div></div>
+          </div>
+          <div class="result-box rb-abs">
+            <div class="rb-icon">🔢</div>
+            <div>
+              <div class="rb-label">عند n'ₜ=3, n'ᵣ=2</div>
+              <div class="rb-val">σ̂(Δ) = .35</div>
+            </div>
+            <div class="rb-desc">خطأ معياري مطلق — مجال ثقة 68%: الدرجة ± 0.35</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Relative error -->
+      <div class="error-card">
+        <div class="error-header error-header-rel">
+          <div class="error-symbol">σ²(δ)</div>
+          <div>
+            <h3>تباين الخطأ النسبي</h3>
+            <div style="font-size: 0.8rem; opacity: 0.85;">Relative Error Variance</div>
+          </div>
+        </div>
+        <div class="error-body">
+          <div style="font-size: 0.85rem; color: #666; margin-bottom: 14px; line-height: 1.8;">الخطأ = الفرق بين انحراف الشخص الملحوظ وانحرافه الحقيقي</div>
+          <div class="error-formula ef-rel">δₚ = (X<sub>pTR</sub> − μ<sub>TR</sub>) − (μₚ − μ)</div>
+          <p style="font-size: 0.82rem; color: #555; margin-bottom: 16px; line-height: 1.8;">يتضمن فقط التأثيرات التي تؤثر على <strong>ترتيب الأشخاص النسبي</strong> — التفاعلات مع الشخص</p>
+          <div class="comp-list">
+            <div class="comp-item excluded"><div class="comp-tick tick-no">✗</div><div class="comp-name">σ²(p)</div><div class="comp-desc">درجة الكون</div></div>
+            <div class="comp-item excluded"><div class="comp-tick tick-no">✗</div><div class="comp-name">σ²(T)</div><div class="comp-desc">لا يغير الترتيب (يؤثر على الجميع)</div></div>
+            <div class="comp-item excluded"><div class="comp-tick tick-no">✗</div><div class="comp-name">σ²(R)</div><div class="comp-desc">لا يغير الترتيب (يؤثر على الجميع)</div></div>
+            <div class="comp-item included"><div class="comp-tick tick-yes">✓</div><div class="comp-name">σ²(pT)</div><div class="comp-desc">يغيّر ترتيب الأشخاص!</div></div>
+            <div class="comp-item included"><div class="comp-tick tick-yes">✓</div><div class="comp-name">σ²(pR)</div><div class="comp-desc">يغيّر ترتيب الأشخاص!</div></div>
+            <div class="comp-item excluded"><div class="comp-tick tick-no">✗</div><div class="comp-name">σ²(TR)</div><div class="comp-desc">لا يتفاعل مع الأشخاص</div></div>
+            <div class="comp-item included"><div class="comp-tick tick-yes">✓</div><div class="comp-name">σ²(pTR)</div><div class="comp-desc">خطأ متبقٍّ</div></div>
+          </div>
+          <div class="result-box rb-rel" style="border-color: #3b82f6;">
+            <div class="rb-icon">🔢</div>
+            <div>
+              <div class="rb-label">عند n'ₜ=3, n'ᵣ=2</div>
+              <div class="rb-val" style="color: #2563eb;">σ̂(δ) = .30</div>
+            </div>
+            <div class="rb-desc">دائماً ≤ الخطأ المطلق لأنه يتضمن مكونات أقل</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="insight insight-amber fade-up" style="margin-top: 28px;">
+      <div class="i-icon">🧠</div>
+      <div>
+        <div class="i-title">لماذا σ̂(δ) أصغر من σ̂(Δ) دائماً؟</div>
+        <div class="i-text">
+          لأن σ²(T) وσ²(R) — رغم أنهما يُضيفان خطأً للدرجات المطلقة — <strong>لا يُغيِّران ترتيب الأشخاص النسبي</strong>. فإذا كان الموضوع صعباً على الجميع، فإن ذلك لا يُقلب ترتيبهم. لهذا يُستبعدان من حساب الخطأ النسبي، فيصبح الخطأ أصغر.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ SECTION 5: الحاسبة التفاعلية ════════ -->
+<section class="sec sec-alt">
+  <div class="sec-inner">
+    <div class="center fade-up">
+      <span class="sec-tag tag-teal">تجربة حية</span>
+      <h2 class="sec-title">جرّب بنفسك: أثر حجم العينة</h2>
+      <p class="sec-desc center" style="margin: 0 auto 40px;">
+        حرّك المؤشرات وشاهد كيف يتغير الخطأ والمعاملات — وأيُّهما أكثر تأثيراً: الموضوعات أم المقيِّمون؟
+      </p>
+    </div>
+
+    <div class="sem-chart-container fade-up">
+      <div class="sem-controls">
+        <div class="sem-control-group">
+          <label>📋 عدد الموضوعات (n'ₜ)</label>
+          <input type="range" id="ntSlider" min="1" max="8" value="3" step="1">
+          <span class="sem-val" id="ntVal">3</span>
+        </div>
+        <div class="sem-control-group">
+          <label>👩‍⚖️ عدد المقيِّمين (n'ᵣ)</label>
+          <input type="range" id="nrSlider" min="1" max="6" value="2" step="1">
+          <span class="sem-val" id="nrVal">2</span>
+        </div>
+      </div>
+
+      <div class="sem-results" id="semResults">
+        <div class="sem-result-pill pill-abs">σ̂(Δ) = <span id="semAbsVal">0.35</span></div>
+        <div class="sem-result-pill pill-rel">σ̂(δ) = <span id="semRelVal">0.30</span></div>
+        <div class="sem-result-pill pill-g">Eρ̂² = <span id="gCoeffVal">0.74</span></div>
+        <div class="sem-result-pill pill-phi">Φ̂ = <span id="phiVal">0.68</span></div>
+      </div>
+
+      <!-- Bar chart via SVG -->
+      <div class="bar-chart-wrap">
+        <canvas id="barChart" width="800" height="200" style="width:100%; height:200px;"></canvas>
+      </div>
+
+      <div style="display: flex; gap: 14px; justify-content: center; margin-top: 16px; flex-wrap: wrap; font-size: 0.82rem; color: #666;">
+        <span style="display:flex;align-items:center;gap:5px;"><span style="width:14px;height:14px;background:#ef4444;border-radius:3px;display:inline-block;"></span>σ²(T)</span>
+        <span style="display:flex;align-items:center;gap:5px;"><span style="width:14px;height:14px;background:#3b82f6;border-radius:3px;display:inline-block;"></span>σ²(R)</span>
+        <span style="display:flex;align-items:center;gap:5px;"><span style="width:14px;height:14px;background:#8b5cf6;border-radius:3px;display:inline-block;"></span>σ²(pT)</span>
+        <span style="display:flex;align-items:center;gap:5px;"><span style="width:14px;height:14px;background:#f97316;border-radius:3px;display:inline-block;"></span>σ²(pR)</span>
+        <span style="display:flex;align-items:center;gap:5px;"><span style="width:14px;height:14px;background:#ec4899;border-radius:3px;display:inline-block;"></span>σ²(pTR)</span>
+      </div>
+
+      <div id="insightBox" class="insight insight-green" style="margin-top: 20px;">
+        <div class="i-icon">💡</div>
+        <div>
+          <div class="i-title" id="insightTitle">الاستنتاج</div>
+          <div class="i-text" id="insightText">حرّك المؤشرات لمشاهدة تحليل حي</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ SECTION 6: المعاملات ════════ -->
+<section class="sec" id="coefficients" style="background: var(--bg);">
+  <div class="sec-inner">
+    <div class="center fade-up">
+      <span class="sec-tag tag-purple">المعاملات</span>
+      <h2 class="sec-title">Eρ² وΦ — متى تستخدم أيهما؟</h2>
+      <p class="sec-desc center" style="margin: 0 auto 40px;">
+        كلاهما مقياس للاعتمادية، لكنهما يُجيبان على سؤالين مختلفين
+      </p>
+    </div>
+
+    <div class="coeff-grid fade-up">
+      <!-- G Coefficient -->
+      <div class="coeff-card">
+        <div class="coeff-header ch-g">
+          <div class="coeff-symbol">Eρ²</div>
+          <div>
+            <div class="coeff-name">معامل التعميم</div>
+            <div class="coeff-name-en">G Coefficient / Generalizability Coefficient</div>
+          </div>
+        </div>
+        <div class="coeff-body">
+          <div class="coeff-formula">
+            Eρ² = σ²(τ) / [σ²(τ) + σ²(δ)]
+          </div>
+          <p>يُقاس بنسبة تباين درجات الكون إلى مجموع تباين الكون والخطأ <strong>النسبي</strong>. وهو نظير معامل الثبات في النظرية التقليدية.</p>
+          <p style="margin-top: 12px;"><strong>متى يُستخدم؟</strong> عندما يهمك <em>ترتيب الأشخاص مقارنة بغيرهم</em> — اختبارات التنافس والتصنيف.</p>
+          <div class="coeff-example">
+            <div class="val">0.74</div>
+            <div class="ctx">
+              عند n'ₜ=3, n'ᵣ=2<br>
+              = .25 / (.25 + .09)<br>
+              <strong>قراءة: 74% من التباين حقيقي</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Phi -->
+      <div class="coeff-card">
+        <div class="coeff-header ch-phi">
+          <div class="coeff-symbol">Φ</div>
+          <div>
+            <div class="coeff-name">مؤشر الاعتمادية</div>
+            <div class="coeff-name-en">Dependability Index / Phi</div>
+          </div>
+        </div>
+        <div class="coeff-body">
+          <div class="coeff-formula" style="border-color: #7c3aed;">
+            Φ = σ²(τ) / [σ²(τ) + σ²(Δ)]
+          </div>
+          <p>يستخدم الخطأ <strong>المطلق</strong> σ²(Δ) بدلاً من النسبي. لهذا هو دائماً أصغر من Eρ² أو يساويه.</p>
+          <p style="margin-top: 12px;"><strong>متى يُستخدم؟</strong> عندما يهمك <em>المستوى المطلق للأداء</em> — اجتياز/رسوب، مرجعي للمحك.</p>
+          <div class="coeff-example coeff-example-phi">
+            <div class="val">0.68</div>
+            <div class="ctx">
+              عند n'ₜ=3, n'ᵣ=2<br>
+              = .25 / (.25 + .12)<br>
+              <strong>أصغر من Eρ² (0.74) دائماً</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Decision Guide -->
+    <div class="fade-up" style="background: white; border-radius: var(--r); padding: 36px; box-shadow: var(--shadow-md); margin-top: 28px;">
+      <h3 style="font-size: 1.2rem; font-weight: 700; color: var(--deep); margin-bottom: 24px; text-align: center;">🗺️ دليل اختيار المعامل المناسب</h3>
+      <div class="table-wrap"><table class="interp-table">
+        <thead>
+          <tr>
+            <th>السياق</th>
+            <th>نوع القرار</th>
+            <th>السؤال</th>
+            <th>المعامل المناسب</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>اختبار ترتيبي تنافسي</td>
+            <td><span class="badge badge-blue">نسبي</span></td>
+            <td>من الأفضل؟</td>
+            <td style="font-family:'Georgia',serif; font-weight:700; color:#059669;">Eρ²</td>
+          </tr>
+          <tr>
+            <td>اختبار اجتياز/رسوب</td>
+            <td><span class="badge badge-red">مطلق</span></td>
+            <td>هل تجاوز الحد؟</td>
+            <td style="font-family:'Georgia',serif; font-weight:700; color:#7c3aed;">Φ</td>
+          </tr>
+          <tr>
+            <td>شهادة مهنية بمعيار محدد</td>
+            <td><span class="badge badge-red">مطلق</span></td>
+            <td>هل أتقن المهارة؟</td>
+            <td style="font-family:'Georgia',serif; font-weight:700; color:#7c3aed;">Φ</td>
+          </tr>
+          <tr>
+            <td>تقييم بحثي للفروق</td>
+            <td><span class="badge badge-blue">نسبي</span></td>
+            <td>أيُّ المجموعات أفضل؟</td>
+            <td style="font-family:'Georgia',serif; font-weight:700; color:#059669;">Eρ²</td>
+          </tr>
+          <tr>
+            <td>قياس مستوى أداء مقابل معيار</td>
+            <td><span class="badge badge-orange">كلاهما</span></td>
+            <td>مستوى + ترتيب</td>
+            <td style="font-family:'Georgia',serif; font-weight:700; color:#444;">Eρ² و Φ معاً</td>
+          </tr>
+        </tbody>
+      </table></div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ SECTION 7: ماذا لو اختلف تصميم G عن D؟ ════════ -->
+<section class="sec sec-alt">
+  <div class="sec-inner">
+    <div class="center fade-up">
+      <span class="sec-tag tag-navy">تصاميم مختلفة</span>
+      <h2 class="sec-title">دراسة G ≠ دراسة D بالضرورة!</h2>
+      <p class="sec-desc center" style="margin: 0 auto 40px;">
+        من أهم مزايا نظرية إمكانية التعميم: يمكنك تقدير المكونات بتصميم واحد، ثم تطبيق نتائجه على تصاميم مختلفة لدراسة D
+      </p>
+    </div>
+
+    <div class="grid-2 fade-up">
+      <div class="card">
+        <div style="font-size: 2rem; margin-bottom: 12px;">🔬</div>
+        <h3 style="font-size: 1.05rem; font-weight: 700; color: var(--deep); margin-bottom: 10px;">دراسة G (متقاطعة كاملاً)</h3>
+        <div style="font-family:'Georgia',serif; font-size: 1rem; font-weight: 700; color: var(--navy); background: #f0f4ff; padding: 10px 16px; border-radius: 10px; direction: ltr; text-align: center; margin-bottom: 12px;">p × t × r</div>
+        <p style="font-size: 0.88rem; color: #555; line-height: 1.8;">
+          جمعت سميث بيانات متقاطعة كاملة لتقدير جميع مكونات التباين. هذا يتطلب مواردَ أكثر لكنه يُعطي أقصى معلومات.
+        </p>
+      </div>
+      <div class="card">
+        <div style="font-size: 2rem; margin-bottom: 12px;">⚖️</div>
+        <h3 style="font-size: 1.05rem; font-weight: 700; color: var(--deep); margin-bottom: 10px;">دراسة D (يمكن أن تكون مختلفة)</h3>
+        <div style="font-family:'Georgia',serif; font-size: 1rem; font-weight: 700; color: #059669; background: #f0fdf4; padding: 10px 16px; border-radius: 10px; direction: ltr; text-align: center; margin-bottom: 12px;">p × (R:T) أو p × T × R</div>
+        <p style="font-size: 0.88rem; color: #555; line-height: 1.8;">
+          قد تختار سميث تصميماً متداخلاً في الممارسة الفعلية (كل مقيِّم لموضوع محدد) لأسباب لوجستية. مكونات G تسمح بتقدير ذلك.
+        </p>
+      </div>
+      <div class="card">
+        <div style="font-size: 2rem; margin-bottom: 12px;">↔️</div>
+        <h3 style="font-size: 1.05rem; font-weight: 700; color: var(--deep); margin-bottom: 10px;">كون التعميم أضيق</h3>
+        <p style="font-size: 0.88rem; color: #555; line-height: 1.8;">
+          قد تُقرر سميث تثبيت الموضوعات (Fixed T) في إجراء القياس — هذا يُضيِّق كون التعميم ويُغير صيغة حساب الخطأ وما يدخل في σ²(τ).
+        </p>
+      </div>
+      <div class="card">
+        <div style="font-size: 2rem; margin-bottom: 12px;">📏</div>
+        <h3 style="font-size: 1.05rem; font-weight: 700; color: var(--deep); margin-bottom: 10px;">المرونة هي الميزة الأكبر</h3>
+        <p style="font-size: 0.88rem; color: #555; line-height: 1.8;">
+          نظرية G لا تكتفي بالسماح بهذه الاختلافات — بل <strong>تشجّع</strong> الباحثين على اختبار سيناريوهات متعددة قبل اتخاذ القرار النهائي بشأن تصميم إجراء القياس.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ SECTION 8: الاستنتاجات الجوهرية ════════ -->
+<section class="sec sec-dark" id="insights">
+  <div class="sec-inner">
+    <div class="center fade-up">
+      <span class="sec-tag" style="background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.9);">خلاصة المقال</span>
+      <h2 class="sec-title light">الدروس المستخلصة</h2>
+      <p class="sec-desc light center" style="margin: 0 auto 40px;">ما يجب أن يبقى معك بعد قراءة هذا القسم</p>
+    </div>
+    <div class="summary-grid fade-up">
+      <div class="summary-card sc-teal">
+        <h4>🔗 القاعدة الذهبية للتحويل</h4>
+        <p>للانتقال من مكونات G إلى مكونات D: اقسم على n'ₜ إن كان التأثير يحتوي t، وعلى n'ᵣ إن يحتوي r، وعلى حاصل ضربهما إن يحتوي كليهما. σ²(p) لا يتغير أبداً.</p>
+      </div>
+      <div class="summary-card sc-mint">
+        <h4>📐 درجة الكون = الهدف الأسمى</h4>
+        <p>كل إجراء قياس يسعى لتقدير درجة الكون — المتوسط الافتراضي عبر جميع شروط الكون. تباينها σ²(τ) = σ²(p) هو مقياس التباين الحقيقي بين الأشخاص.</p>
+      </div>
+      <div class="summary-card sc-amber">
+        <h4>⚖️ خطأن — لا خطأ واحد</h4>
+        <p>σ²(Δ) للتفسيرات المطلقة (المحك) يتضمن جميع مصادر الخطأ. σ²(δ) للتفسيرات النسبية (الترتيب) يتضمن فقط تفاعلات الشخص. والأول دائماً ≥ الثاني.</p>
+      </div>
+      <div class="summary-card sc-pink">
+        <h4>🎯 معاملان — لسؤالين مختلفين</h4>
+        <p>Eρ² للمقارنات النسبية (يستخدم σ²(δ)). Φ للتفسيرات المطلقة (يستخدم σ²(Δ)). الفرق بينهما يُشير إلى تأثير العوامل كـ σ²(T) وσ²(R) على الدرجات المطلقة.</p>
+      </div>
+    </div>
+
+    <!-- Final big insight -->
+    <div class="insight insight-dark fade-up" style="margin-top: 28px; padding: 28px 32px;">
+      <div class="i-icon">🏆</div>
+      <div>
+        <div class="i-title" style="font-size: 1.05rem;">الاستنتاج العملي الأهم من مثال سميث</div>
+        <div class="i-text" style="font-size: 0.92rem;">
+          زيادة <strong style="color:#4dd9e8;">عدد الموضوعات</strong> تُخفض الخطأ وترفع المعاملات بشكل أسرع بكثير من زيادة <strong style="color:#6ee7b7;">عدد المقيِّمين</strong>، لأن σ²(t)=.06 > σ²(r)=.02 وكذلك σ²(pt)=.15 > σ²(pr)=.04.
+          <br><br>
+          <strong style="color: white;">القاعدة الذهبية في التصميم: خصِّص الموارد المحدودة حيث توجد أكبر مصادر التباين.</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+<footer>
+  <p style="font-size: 1rem; color: white; margin-bottom: 8px;">📖 استناداً إلى <strong>Generalizability Theory</strong> — Robert L. Brennan</p>
+  <p>الفصل الأول، القسم 1.1.2 — درجات الكون ومكونات تباين دراسة D والمعاملات</p>
+  <p style="margin-top: 12px; font-size: 0.78rem; opacity: 0.4;">دليل بصري تعليمي مُبسَّط</p>
+</footer>
+
+<script>
+// ══════════ INTERSECTION OBSERVER ══════════
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+}, { threshold: 0.08 });
+document.querySelectorAll('.fade-up').forEach(el => io.observe(el));
+
+// ══════════ G STUDY VARIANCE COMPONENTS ══════════
+const GVC = { p:.25, t:.06, r:.02, pt:.15, pr:.04, tr:.00, ptr:.12 };
+
+function calcD(nt, nr) {
+  return {
+    p:   GVC.p,
+    T:   GVC.t  / nt,
+    R:   GVC.r  / nr,
+    pT:  GVC.pt / nt,
+    pR:  GVC.pr / nr,
+    TR:  GVC.tr / (nt*nr),
+    pTR: GVC.ptr/ (nt*nr)
+  };
+}
+
+function calcStats(d) {
+  const tau   = d.p;
+  const delta = d.T + d.R + d.pT + d.pR + d.TR + d.pTR;
+  const small = d.pT + d.pR + d.pTR;
+  const semAbs = Math.sqrt(delta);
+  const semRel = Math.sqrt(small);
+  const gCoeff = tau / (tau + small);
+  const phi    = tau / (tau + delta);
+  return { tau, delta, small, semAbs, semRel, gCoeff, phi, d };
+}
+
+// ══════════ CANVAS BAR CHART ══════════
+const canvas = document.getElementById('barChart');
+const ctx2   = canvas.getContext('2d');
+
+const COLORS = {
+  T: '#ef4444', R: '#3b82f6', pT: '#8b5cf6',
+  pR: '#f97316', TR: '#94a3b8', pTR: '#ec4899'
+};
+
+function drawChart(stats) {
+  const W = canvas.width, H = canvas.height;
+  ctx2.clearRect(0, 0, W, H);
+
+  const labels = ['T','R','pT','pR','TR','pTR'];
+  const maxVal = 0.08;
+  const barW   = 80;
+  const gap    = (W - labels.length * barW) / (labels.length + 1);
+  const topPad = 20, botPad = 40;
+  const chartH = H - topPad - botPad;
+
+  labels.forEach((k, i) => {
+    const val = stats.d[k] || 0;
+    const x   = gap + i * (barW + gap);
+    const bH  = (val / maxVal) * chartH;
+    const y   = topPad + chartH - bH;
+
+    // Bar
+    ctx2.fillStyle = COLORS[k];
+    ctx2.beginPath();
+    ctx2.roundRect(x, y, barW, bH, [6,6,0,0]);
+    ctx2.fill();
+
+    // Value label
+    ctx2.fillStyle = '#333';
+    ctx2.font = 'bold 13px Cairo';
+    ctx2.textAlign = 'center';
+    ctx2.fillText(val.toFixed(3), x + barW/2, y - 6);
+
+    // Bottom label
+    ctx2.fillStyle = '#555';
+    ctx2.font = '12px Georgia';
+    ctx2.fillText('σ²(' + k + ')', x + barW/2, H - 10);
+  });
+
+  // Guideline
+  const guideY = topPad + chartH - (0.05 / maxVal) * chartH;
+  ctx2.strokeStyle = 'rgba(0,0,0,0.1)';
+  ctx2.setLineDash([4,4]);
+  ctx2.beginPath();
+  ctx2.moveTo(0, guideY);
+  ctx2.lineTo(W, guideY);
+  ctx2.stroke();
+  ctx2.setLineDash([]);
+}
+
+// ══════════ UPDATE FUNCTION ══════════
+function update() {
+  const nt = parseInt(document.getElementById('ntSlider').value);
+  const nr = parseInt(document.getElementById('nrSlider').value);
+  document.getElementById('ntVal').textContent = nt;
+  document.getElementById('nrVal').textContent = nr;
+
+  const d = calcD(nt, nr);
+  const s = calcStats(d);
+
+  document.getElementById('semAbsVal').textContent = s.semAbs.toFixed(2);
+  document.getElementById('semRelVal').textContent = s.semRel.toFixed(2);
+  document.getElementById('gCoeffVal').textContent  = s.gCoeff.toFixed(2);
+  document.getElementById('phiVal').textContent      = s.phi.toFixed(2);
+
+  drawChart(s);
+
+  // Insight
+  const box = document.getElementById('insightBox');
+  const title = document.getElementById('insightTitle');
+  const text  = document.getElementById('insightText');
+
+  if (s.gCoeff >= 0.85) {
+    box.className = 'insight insight-green';
+    title.textContent = '✅ جودة ممتازة!';
+    text.textContent  = `مع ${nt} موضوع و${nr} مقيِّم، معامل التعميم Eρ²=${s.gCoeff.toFixed(2)} ممتاز. التصميم يُوفر قياساً موثوقاً جداً.`;
+  } else if (s.gCoeff >= 0.70) {
+    box.className = 'insight insight-amber';
+    title.textContent = '⚠️ جودة مقبولة — يمكن التحسين';
+    text.textContent  = `Eρ²=${s.gCoeff.toFixed(2)} مقبول. لتحسينه: جرّب زيادة الموضوعات أكثر من المقيِّمين لأن σ²(t) > σ²(r).`;
+  } else {
+    box.className = 'insight insight-red';
+    title.textContent = '❌ الجودة منخفضة — يحتاج تحسين';
+    text.textContent  = `Eρ²=${s.gCoeff.toFixed(2)} منخفض. زِد عدد الموضوعات والمقيِّمين. الزيادة في الموضوعات أفعل لأن σ²(pt) كبير.`;
+  }
+}
+
+document.getElementById('ntSlider').addEventListener('input', update);
+document.getElementById('nrSlider').addEventListener('input', update);
+
+// Init
+window.addEventListener('load', () => {
+  // DPR fix for canvas
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width  = canvas.offsetWidth  * dpr;
+  canvas.height = canvas.offsetHeight * dpr;
+  ctx2.scale(dpr, dpr);
+  canvas.style.width  = canvas.offsetWidth  + 'px';
+  canvas.style.height = canvas.offsetHeight + 'px';
+  update();
+});
+</script>
+
+<div class="page-nav-bottom" style="background:linear-gradient(135deg,#0a0a1a,#111827);"><a href="index.html" style="background:linear-gradient(135deg,#16213e,#0f3460);color:#fff;">&#x1F3E0; &#x627;&#x644;&#x631;&#x626;&#x64A;&#x633;&#x64A;&#x629;</a> <a href="1.1.1.html" style="background:linear-gradient(135deg,#4a5568,#2d3748);color:#fff;">&#x2190; &#x627;&#x644;&#x633;&#x627;&#x628;&#x642;</a> <a href="2.1.html" style="background:linear-gradient(135deg,#2b6cb0,#2c5282);color:#fff;">&#x627;&#x644;&#x62A;&#x627;&#x644;&#x64A; &#x2192;</a></div>
+</body>
+</html>

@@ -1,0 +1,1758 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ملخص وقضايا أخرى · §2.5</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+/* ══ TOKENS ══ */
+:root{
+  --bg:#f0f2f6; --surf:#fff;
+  --deep:#0e1525; --navy:#152040; --cobalt:#1c3a70;
+  --blue:#2355b0; --sky:#1c8fd4; --cyan:#0ba4cc;
+  --teal:#0b8878; --mint:#12c28a;
+  --amber:#d48a0c; --orange:#d95c12; --gold:#f0c227;
+  --violet:#6030a8; --purple:#8840d8;
+  --red:#c42020; --rose:#c02860;
+  --slate:#475670; --muted:#8898b4; --border:#dce3ef;
+  --r:16px; --sh:0 2px 14px rgba(14,21,37,.07); --shm:0 8px 30px rgba(14,21,37,.11);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'Cairo','Tajawal',sans-serif;background:var(--bg);color:var(--deep);direction:rtl;overflow-x:hidden;line-height:1.75;}
+
+.pgbar{position:fixed;top:0;left:0;right:0;z-index:1000;height:3px;background:var(--border);}
+.pgfill{height:100%;width:0%;background:linear-gradient(90deg,var(--blue),var(--cyan),var(--mint),var(--gold));transition:width .1s;}
+
+.nav{position:sticky;top:3px;z-index:900;background:rgba(255,255,255,.95);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);padding:0 30px;display:flex;align-items:stretch;box-shadow:var(--sh);}
+.nav-logo{font-size:.84rem;font-weight:700;color:var(--blue);display:flex;align-items:center;gap:8px;padding:12px 0;margin-left:18px;white-space:nowrap;}
+.nav-links{display:flex;overflow-x:auto;}
+.nl{padding:0 13px;height:49px;display:flex;align-items:center;font-size:.73rem;font-weight:700;color:var(--slate);text-decoration:none;white-space:nowrap;border-bottom:3px solid transparent;transition:all .2s;}
+.nl:hover{color:var(--blue);background:rgba(35,85,176,.04);}
+.nl.active{color:var(--blue);border-bottom-color:var(--blue);}
+
+/* HERO */
+.hero{background:linear-gradient(140deg,var(--deep) 0%,var(--navy) 55%,#0d2550 100%);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px 40px;position:relative;overflow:hidden;text-align:center;}
+.hero::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.023) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.023) 1px,transparent 1px);background-size:52px 52px;}
+/* Signal wave animation */
+.hero-signal{position:absolute;inset:0;pointer-events:none;}
+.signal-ring{position:absolute;border-radius:50%;border:1px solid;animation:ring-out 4s ease-out infinite;}
+@keyframes ring-out{0%{transform:translate(-50%,-50%) scale(.1);opacity:.7;}100%{transform:translate(-50%,-50%) scale(2.5);opacity:0;}}
+.hero-glow{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 700px 500px at 30% 40%,rgba(28,143,212,.1) 0%,transparent 60%),radial-gradient(ellipse 500px 400px at 78% 68%,rgba(12,194,138,.08) 0%,transparent 58%);}
+.hero-tag{display:inline-flex;align-items:center;gap:8px;background:rgba(28,143,212,.15);border:1px solid rgba(28,143,212,.3);color:#7dd3fc;padding:8px 22px;border-radius:50px;font-size:.78rem;font-weight:700;letter-spacing:1px;margin-bottom:28px;}
+.hero h1{font-size:clamp(2.5rem,6vw,4.5rem);font-weight:900;color:white;line-height:1.1;margin-bottom:18px;}
+.hero h1 em{font-style:normal;background:linear-gradient(120deg,#38bdf8,#34d399,#f0c227);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.hero-sub{font-size:1rem;color:rgba(255,255,255,.6);max-width:640px;margin:0 auto 50px;line-height:1.95;}
+.hero-chips{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+.hchip{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:15px 20px;min-width:140px;text-align:center;transition:all .3s;cursor:default;}
+.hchip:hover{background:rgba(255,255,255,.12);transform:translateY(-5px);}
+.hchip .sym{font-family:'Georgia',serif;font-size:1.4rem;font-weight:700;margin-bottom:4px;}
+.hchip .lbl{font-size:.7rem;color:rgba(255,255,255,.6);}
+
+/* SECTIONS */
+.sec{padding:68px 40px;}
+.sec-inner{max-width:1080px;margin:0 auto;}
+.sec-alt{background:#f8faff;}
+.sec-warm{background:#fffdf7;}
+.sec-dark{background:var(--deep);color:white;}
+.cx{text-align:center;}.cmx{margin:0 auto;}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:22px;}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+
+.tag{display:inline-block;padding:5px 15px;border-radius:50px;font-size:.73rem;font-weight:700;letter-spacing:1px;margin-bottom:12px;}
+.tb{background:linear-gradient(135deg,var(--blue),var(--sky));color:white;}
+.tt{background:linear-gradient(135deg,var(--teal),var(--mint));color:white;}
+.ta{background:linear-gradient(135deg,var(--amber),var(--orange));color:white;}
+.tv{background:linear-gradient(135deg,var(--violet),var(--purple));color:white;}
+.tg{background:linear-gradient(135deg,#9a8010,var(--gold));color:white;}
+.ts{background:var(--slate);color:white;}
+.tr{background:linear-gradient(135deg,var(--red),var(--rose));color:white;}
+
+h2.st{font-size:clamp(1.7rem,4vw,2.5rem);font-weight:900;color:var(--deep);margin-bottom:12px;}
+h2.st.wh{color:white;}
+.sdesc{font-size:.94rem;color:var(--slate);max-width:640px;line-height:1.9;margin-bottom:42px;}
+.sdesc.wh{color:rgba(255,255,255,.7);}
+
+.card{background:var(--surf);border-radius:var(--r);padding:26px;box-shadow:var(--sh);border:1px solid var(--border);transition:all .28s;}
+.card:hover{transform:translateY(-3px);box-shadow:var(--shm);}
+.dcard{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:var(--r);padding:24px;}
+
+.eq{background:#f4f7fd;border-radius:10px;padding:11px 16px;border-right:3px solid;font-family:'Georgia',serif;font-size:.94rem;direction:ltr;text-align:center;margin:8px 0;box-shadow:var(--sh);}
+.eq-b{border-color:var(--blue);} .eq-t{border-color:var(--teal);} .eq-a{border-color:var(--amber);}
+.eq-v{border-color:var(--violet);} .eq-g{border-color:var(--gold);} .eq-r{border-color:var(--red);}
+.eq-m{border-color:var(--mint);} .eq-c{border-color:var(--cyan);}
+.eq-main{background:linear-gradient(135deg,#eff6ff,#e0eeff);border-radius:14px;padding:20px 28px;border:2px solid rgba(35,85,176,.2);font-family:'Georgia',serif;font-size:1.05rem;direction:ltr;text-align:center;margin:16px 0;box-shadow:var(--shm);}
+
+.ins{border-radius:14px;padding:17px 21px;display:flex;gap:12px;margin:13px 0;}
+.ins .ico{font-size:1.4rem;flex-shrink:0;margin-top:2px;}
+.ins .ititle{font-weight:700;font-size:.87rem;margin-bottom:4px;}
+.ins .itext{font-size:.82rem;color:var(--slate);line-height:1.85;}
+.ib{background:#eff6ff;border:1.5px solid #93c5fd;} .ib .ititle{color:var(--blue);}
+.it{background:#f0fdf9;border:1.5px solid #5eead4;} .it .ititle{color:var(--teal);}
+.ia{background:#fffbeb;border:1.5px solid #fcd34d;} .ia .ititle{color:var(--amber);}
+.iv{background:#f5f3ff;border:1.5px solid #c4b5fd;} .iv .ititle{color:var(--violet);}
+.ig{background:#fefce8;border:1.5px solid #fef08a;} .ig .ititle{color:#854d0e;}
+.ir{background:#fff1f2;border:1.5px solid #fca5a5;} .ir .ititle{color:var(--red);}
+
+.bdg{display:inline-block;padding:3px 10px;border-radius:50px;font-size:.72rem;font-weight:700;}
+.bdb{background:#dbeafe;color:#1e40af;} .bdt{background:#d1fae5;color:#065f46;}
+.bda{background:#fef3c7;color:#92400e;} .bdv{background:#ede9fe;color:#4c1d95;}
+.bdg-y{background:#fef9c3;color:#854d0e;} .bdr{background:#fee2e2;color:#991b1b;}
+
+.divr{height:3px;border:none;background:linear-gradient(90deg,var(--blue),var(--cyan),var(--teal),var(--mint),var(--gold),var(--violet));}
+footer{background:var(--deep);color:rgba(255,255,255,.45);text-align:center;padding:38px 20px;font-size:.88rem;line-height:1.9;}
+
+.fu{opacity:0;transform:translateY(22px);transition:opacity .58s ease,transform .58s ease;}
+.fu.in{opacity:1;transform:translateY(0);}
+.fu:nth-child(2){transition-delay:.07s;}.fu:nth-child(3){transition-delay:.14s;}.fu:nth-child(4){transition-delay:.21s;}
+
+/* ════ SECTION SPECIFIC ════ */
+
+/* Summary table card */
+.sum-tbl{width:100%;border-collapse:separate;border-spacing:0;border-radius:var(--r);overflow:hidden;box-shadow:var(--shm);}
+.sum-tbl thead tr{background:linear-gradient(135deg,var(--deep),var(--navy));}
+.sum-tbl th{padding:13px 16px;font-size:.78rem;font-weight:700;color:white;text-align:center;}
+.sum-tbl th:first-child{text-align:right;}
+.sum-tbl tbody tr{background:white;transition:background .2s;}
+.sum-tbl tbody tr:nth-child(even){background:#f6f9ff;}
+.sum-tbl tbody tr:hover{background:#eff6ff;}
+.sum-tbl td{padding:12px 16px;font-size:.82rem;border-bottom:1px solid var(--border);text-align:center;vertical-align:middle;}
+.sum-tbl td:first-child{text-align:right;font-weight:600;}
+.sum-tbl td.math{font-family:'Georgia',serif;direction:ltr;}
+
+/* Signal vs Noise visual */
+.sn-visual{background:white;border-radius:var(--r);padding:36px;box-shadow:var(--shm);border:1px solid var(--border);}
+.sn-diagram{position:relative;height:180px;border-radius:14px;overflow:hidden;background:#0e1525;margin-bottom:20px;}
+.sn-canvas-wrap{position:absolute;inset:0;}
+.sn-label{position:absolute;top:10px;right:14px;font-size:.75rem;color:rgba(255,255,255,.7);font-weight:600;}
+
+/* Gauge */
+.gauge-row{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin-top:20px;}
+.gauge-box{text-align:center;padding:20px 24px;border-radius:16px;min-width:150px;}
+.gb-blue{background:#eff6ff;border:2px solid #93c5fd;}
+.gb-teal{background:#f0fdf9;border:2px solid #5eead4;}
+.gauge-sym{font-family:'Georgia',serif;font-size:1.4rem;font-weight:700;margin-bottom:6px;}
+.gauge-val{font-size:2rem;font-weight:900;margin:6px 0;}
+.gauge-lbl{font-size:.72rem;color:var(--muted);}
+
+/* ET visual */
+.et-circle-wrap{display:flex;justify-content:center;margin:24px 0;}
+.et-scene{position:relative;width:200px;height:200px;}
+
+/* Phi-lambda -->
+.phi-lam-chart{background:white;border-radius:var(--r);padding:32px;box-shadow:var(--shm);border:1px solid var(--border);}
+.phi-slider-ctrl{display:flex;flex-direction:column;align-items:center;gap:7px;margin-bottom:20px;}
+.phi-slider-ctrl label{font-size:.84rem;font-weight:700;color:var(--deep);}
+.phi-slider-ctrl input{width:260px;accent-color:var(--violet);}
+.sval{display:inline-block;background:var(--blue);color:white;font-weight:700;font-size:.88rem;padding:3px 14px;border-radius:50px;min-width:48px;text-align:center;}
+
+/* SN slider */
+.sn-slider-box{background:white;border-radius:var(--r);padding:28px;box-shadow:var(--shm);border:1px solid var(--border);}
+.sl-row{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-bottom:20px;}
+.sl-grp{text-align:center;}
+.sl-grp label{display:block;font-size:.8rem;font-weight:700;color:var(--slate);margin-bottom:5px;}
+
+/* total score */
+.ts-calc{background:white;border-radius:var(--r);padding:28px;box-shadow:var(--shm);border:1px solid var(--border);}
+.ts-row{display:flex;align-items:center;gap:12px;padding:12px 16px;background:#f4f7fd;border-radius:10px;margin-bottom:10px;border-right:3px solid var(--blue);}
+.ts-lhs{font-family:'Georgia',serif;font-size:.88rem;font-weight:700;direction:ltr;min-width:120px;color:var(--cobalt);}
+.ts-eq{font-size:.9rem;color:var(--muted);}
+.ts-comp{font-family:'Georgia',serif;font-size:.88rem;direction:ltr;flex:1;}
+.ts-result{font-family:'Georgia',serif;font-size:1rem;font-weight:700;color:var(--blue);}
+
+/* SB formula */
+.sb-box{background:linear-gradient(135deg,#fef9f0,#fef3c7);border-radius:var(--r);padding:28px;border:2px solid rgba(212,138,12,.25);}
+
+/* Relationship web */
+.rel-web{display:flex;flex-direction:column;gap:12px;}
+.rel-row{display:flex;align-items:center;gap:10px;background:white;border-radius:12px;padding:14px 18px;box-shadow:var(--sh);border:1px solid var(--border);}
+.rel-a{font-family:'Georgia',serif;font-weight:700;font-size:.9rem;direction:ltr;min-width:110px;}
+.rel-arr{color:var(--muted);font-size:1.2rem;flex-shrink:0;}
+.rel-b{font-family:'Georgia',serif;font-size:.88rem;direction:ltr;flex:1;}
+.rel-note{font-size:.74rem;color:var(--muted);margin-right:auto;text-align:right;}
+
+/* exercises */
+.ex-card{background:white;border-radius:var(--r);padding:24px;box-shadow:var(--sh);border:1px solid var(--border);border-right:4px solid var(--blue);}
+.ex-num{display:inline-block;background:var(--blue);color:white;font-size:.8rem;font-weight:700;padding:3px 10px;border-radius:50px;margin-bottom:10px;}
+.ex-text{font-size:.85rem;color:var(--slate);line-height:1.9;}
+.ex-hint{margin-top:10px;background:#eff6ff;border-radius:8px;padding:10px 14px;font-size:.78rem;color:#1e40af;}
+
+@media(max-width:860px){
+  .g2,.g3{grid-template-columns:1fr;}
+  .sec{padding:50px 20px;} .hero{padding:60px 20px;}
+  .nav{padding:0 14px;}
+}
+
+/* COMPREHENSIVE MOBILE RESPONSIVE FIXES */
+*, *::before, *::after { box-sizing: border-box; }
+html { max-width: 100%; }
+body { max-width: 100%; }
+img, svg, canvas, video, iframe { max-width: 100%; height: auto; }
+table { max-width: 100%; }
+
+.table-wrap {
+  width: 100%; max-width: 100%;
+  overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 12px;
+}
+.tbl-wrap { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.score-matrix-wrap { overflow-x: auto; }
+
+pre, code { white-space: pre-wrap; word-break: break-word; max-width: 100%; }
+
+/* Page bottom navigation */
+.page-nav-bottom {
+  display: flex; flex-wrap: wrap; gap: 12px;
+  justify-content: center; align-items: center;
+  padding: 28px 20px; text-align: center;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  margin-top: 40px;
+}
+.page-nav-bottom a {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 12px 28px; border-radius: 50px;
+  font-size: 0.95rem; font-weight: 700;
+  text-decoration: none; min-height: 48px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.page-nav-bottom a:hover { transform: translateY(-2px); }
+
+@media (max-width: 768px) {
+  .page-nav-bottom { padding: 18px 14px; gap: 8px; }
+  .page-nav-bottom a { font-size: 0.88rem; padding: 10px 18px; }
+}
+@media (max-width: 480px) {
+  .page-nav-bottom a { font-size: 0.82rem; padding: 8px 14px; min-height: 44px; width: 100%; justify-content: center; }
+}
+
+/* Overflow fixes */
+.eq-row { flex-wrap: wrap; gap: 8px; }
+.eq-formula { min-width: 0; }
+.sym-featured { flex-wrap: wrap; gap: 12px; }
+
+@media (max-width: 768px) {
+  /* Navigation */
+  .nav, .top-nav {
+    padding: 0 14px !important;
+    height: auto !important;
+    min-height: 52px;
+    flex-wrap: wrap !important;
+    gap: 4px;
+  }
+  .nav-links { flex-wrap: wrap !important; gap: 2px !important; overflow-x: visible !important; }
+  .nav a, .nav-link, .nl {
+    font-size: 0.78rem !important;
+    padding: 5px 9px !important;
+    white-space: normal !important;
+    height: auto !important;
+    min-height: 30px;
+    display: inline-flex !important;
+    align-items: center;
+  }
+  .nav-logo, .nav-brand { font-size: 0.85rem !important; white-space: normal !important; }
+
+  /* Hero */
+  .hero {
+    min-height: auto !important;
+    padding: 44px 14px !important;
+  }
+  .hero h1, .hero-t, .hero-title {
+    font-size: clamp(1.6rem, 7vw, 2.8rem) !important;
+    line-height: 1.25 !important;
+  }
+  .hero h2, .hero-sub, .hero-subtitle-line {
+    font-size: clamp(1.15rem, 4vw, 1.8rem) !important;
+  }
+  .hero p, .hero-desc { font-size: 0.95rem !important; }
+  .hero-content, .hero-c { max-width: 100% !important; width: 100% !important; }
+  .hero::before, .hero::after,
+  .hero-aura { width: 280px !important; height: 280px !important; opacity: 0.2 !important; }
+  .hero-ring, .hero-ring-2, .hr1, .hr2 { display: none !important; }
+  .hero-mesh, .hero-grid { opacity: 0.08 !important; }
+  .hero-badge, .hero-eyebrow { font-size: 0.68rem !important; padding: 5px 14px; }
+  .hero-meta { flex-wrap: wrap !important; gap: 8px; justify-content: center; }
+  .hero-meta-item { padding: 10px 14px; min-width: 0; flex: 1 1 40%; }
+  .hero-cards { gap: 10px; justify-content: center; }
+  .hero-pills { flex-wrap: wrap !important; gap: 8px; }
+  .hcard { min-width: 0 !important; padding: 14px 16px; }
+  .scroll-hint { display: none !important; }
+  .chapter-deco { display: none !important; }
+
+  /* Sections */
+  .section, .sec { padding: 44px 14px !important; }
+  .section-inner, .sec-inner, .sec-in { max-width: 100% !important; }
+  .section-header, .sec-header { margin-bottom: 28px; }
+
+  /* Grids */
+  .scenario-grid, .crossed-grid, .concepts-grid, .gstudy-layout,
+  .matrix-grid, .sym-grid-2, .sym-grid-3, .sym-card-grid,
+  .authors-grid, .design-compare, .asm-grid, .expect-grid,
+  .rel-grid, .vp-grid, .g2, .g3, .g4, .compare-grid,
+  .ms-grid, .concepts-grid { grid-template-columns: 1fr !important; gap: 16px !important; }
+
+  .hero-cards { grid-template-columns: 1fr 1fr !important; }
+
+  /* Flex */
+  .tree-row { flex-wrap: wrap !important; justify-content: center; }
+  .var-row { flex-wrap: wrap !important; gap: 6px; }
+  .step-item { flex-wrap: wrap !important; gap: 14px; }
+  .step-content { width: 100% !important; order: 1; }
+  .step-num { order: 0; }
+  .decomp, .decomp-live, .flow-row { flex-direction: column !important; align-items: center !important; }
+  .decomp-op, .dl-op, .fn-arrow { transform: rotate(90deg); }
+  .crow { flex-direction: column !important; }
+  .concept-row { flex-wrap: wrap; }
+
+  /* Padding */
+  .family-bg, .universe-card, .scenario-bg, .var-section-bg,
+  .source-card, .guide-card, .interactive-box, .score-matrix-wrap,
+  .assumption-wrap, .lm-box, .ins, .highlight-box, .warn-box,
+  .crossed-card, .concept-card, .section-card, .cbox {
+    padding: 20px 14px !important;
+  }
+  .intro-callout { padding: 18px 16px; }
+  .source-card { gap: 14px; }
+  .tree-connector { height: 20px; }
+  .tree-node { min-width: 120px !important; font-size: 0.82rem !important; padding: 10px 14px !important; }
+  .section-divider, .div { margin: 0 14px; }
+
+  /* Fixed widths */
+  .var-label { min-width: 50px !important; font-size: 0.78rem !important; }
+  .var-desc { min-width: 0 !important; flex: 1 1 100% !important; }
+  .var-value { min-width: 40px !important; }
+  .sym-featured-glyph { width: 44px !important; height: 44px !important; }
+
+  /* Tables */
+  .table-wrap {
+    margin: 0 -14px; padding: 0 14px;
+    width: calc(100% + 28px); border-radius: 0;
+  }
+  .tbl-wrap { margin: 0 -14px; padding: 0 14px; }
+
+  .prog-bar { z-index: 9999; }
+}
+
+@media (max-width: 480px) {
+  .hero { padding: 32px 10px !important; }
+  .hero h1, .hero-t, .hero-title { font-size: clamp(1.3rem, 8vw, 2rem) !important; }
+  .hero h2, .hero-sub { font-size: clamp(1rem, 5vw, 1.5rem) !important; }
+  .hero p, .hero-desc { font-size: 0.9rem !important; }
+  .nav, .top-nav { padding: 0 8px !important; min-height: 44px; gap: 2px !important; }
+  .nav a, .nav-link, .nl { font-size: 0.7rem !important; padding: 4px 7px !important; }
+
+  .section, .sec { padding: 28px 10px !important; }
+
+  .hero-cards { grid-template-columns: 1fr !important; }
+  .hero-pills { gap: 6px; }
+  .pill { padding: 8px 10px; }
+
+  .table-wrap {
+    margin: 0 -10px; padding: 0 10px;
+    width: calc(100% + 20px);
+  }
+  table { font-size: 0.72rem !important; }
+  td, th { padding: 5px 7px !important; }
+
+  .hero-card, .concept-card, .crossed-card, .scenario-item,
+  .step-content, .coeff-card, .card, .design-card, .sym-card,
+  .exp-card, .author-card, .hcard { padding: 12px !important; }
+
+  .tree-node { min-width: 100px !important; font-size: 0.78rem !important; }
+  .hero-meta-item { padding: 8px 10px; }
+
+  .btn, .btn-primary, .btn-ghost {
+    width: 100%; justify-content: center; min-height: 44px;
+  }
+}
+
+/* â•â•â•â•â•â• ADDITIONAL OVERFLOW FIXES â•â•â•â•â•â• */
+[style*="min-width:200px"], [style*="min-width: 200px"], [style*="min-width:220px"], [style*="min-width: 220px"],
+[style*="min-width:280px"], [style*="min-width: 280px"], [style*="min-width:500px"], [style*="min-width: 500px"] {
+  min-width: 0 !important;
+}
+[style*="width:480px"], [style*="width: 480px"], [style*="width:400px"], [style*="width: 400px"] {
+  max-width: 100% !important;
+  width: auto !important;
+}
+.flex-item, .sym-grid-2 > .sym-featured, .eq-row { flex-wrap: wrap; }
+.score-matrix { min-width: 0 !important; }
+.hcard, .pill { min-width: 0 !important; }
+.dt-node { max-width: 100% !important; }
+
+@media (max-width: 768px) {
+  .mat { grid-template-columns: repeat(auto-fill, minmax(32px, 1fr)) !important; }
+  .mc { width: 32px !important; height: 32px !important; font-size: 0.6rem !important; }
+  .hcard { min-width: 0 !important; }
+  .hero-meta-num { font-size: 1.5rem !important; }
+  .hero-meta-lbl { font-size: 0.68rem !important; }
+  .hero-meta-item { flex: 1 1 42% !important; }
+  .pill { min-width: 0 !important; flex: 1 1 30% !important; }
+}
+
+@media (max-width: 480px) {
+  .mat { grid-template-columns: repeat(auto-fill, minmax(28px, 1fr)) !important; }
+  .mc { width: 28px !important; height: 28px !important; font-size: 0.55rem !important; }
+}
+
+/* ==================================================
+   FINAL REAL MOBILE LAYOUT REBUILD
+   Must be the last CSS block in the file
+   ================================================== */
+*, *::before, *::after { box-sizing: border-box !important; }
+html, body {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  min-width: 0 !important;
+}
+img, svg, canvas, video, iframe {
+  max-width: 100% !important;
+  height: auto !important;
+}
+table { max-width: 100% !important; }
+
+/* Force all major containers to viewport width */
+@media (max-width: 768px) {
+  html, body {
+    overflow-x: clip !important;
+    min-width: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .hero,
+  .section,
+  .sec,
+  .container,
+  .wrapper,
+  .content,
+  .main,
+  .page,
+  .page-wrap,
+  .layout,
+  .shell,
+  .panel,
+  .chapter,
+  .chapter-wrap,
+  .story,
+  .story-wrap,
+  .book-page,
+  .section-dark,
+  .section-mid,
+  .intro-section,
+  .source-section,
+  .guide-section,
+  .sec-dark,
+  .sec-alt,
+  .sec-inner,
+  .section-inner,
+  .section-header,
+  .sec-header,
+  .family-bg,
+  .universe-card,
+  .scenario-bg,
+  .var-section-bg,
+  .source-card,
+  .index-card,
+  .guide-card,
+  .intro-body,
+  .interactive-box,
+  .score-matrix-wrap,
+  .assumption-wrap,
+  .lm-box,
+  .cbox,
+  .comparison-wrap,
+  .steps-flow,
+  .highlight-box,
+  .warn-box,
+  .insight-box,
+  .history-wrap {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+    transform: none !important;
+    left: auto !important;
+    right: auto !important;
+    box-sizing: border-box !important;
+  }
+
+  .hero {
+    min-height: auto !important;
+    height: auto !important;
+    padding-top: 36px !important;
+    padding-bottom: 36px !important;
+    text-align: center !important;
+    overflow: hidden !important;
+  }
+
+  .hero-content,
+  .hero-inner,
+  .hero-wrap,
+  .hero-text,
+  .hero-c,
+  .hero-content {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+    text-align: center !important;
+    transform: none !important;
+    position: relative !important;
+  }
+
+  .hero h1,
+  .hero-title,
+  .hero-t,
+  .hero-ta,
+  h1 {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    font-size: clamp(1.55rem, 8vw, 2.3rem) !important;
+    line-height: 1.25 !important;
+    text-align: center !important;
+    white-space: normal !important;
+    overflow-wrap: break-word !important;
+    word-break: normal !important;
+  }
+
+  .hero-sub,
+  .hero-subtitle-line,
+  .hero-s,
+  .hero-d,
+  .hero-desc,
+  .sec-lead,
+  .slead,
+  .section-desc,
+  .subtitle,
+  .lead {
+    max-width: 100% !important;
+    white-space: normal !important;
+    overflow-wrap: break-word !important;
+    width: 100% !important;
+  }
+
+  .grid,
+  .cards,
+  .hero-cards,
+  .hero-meta,
+  .hero-pills,
+  .scenario-grid,
+  .crossed-grid,
+  .concepts-grid,
+  .gstudy-layout,
+  .matrix-grid,
+  .design-compare,
+  .authors-grid,
+  .rel-grid,
+  .vp-grid,
+  .g2,
+  .g3,
+  .g4,
+  .asm-grid,
+  .expect-grid,
+  .sym-grid-2,
+  .sym-grid-3,
+  .sym-card-grid,
+  .compare-grid,
+  .ms-grid,
+  .crow {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    gap: 16px !important;
+    transform: none !important;
+  }
+
+  .hero-cards {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+  }
+
+  .card,
+  .hero-card,
+  .glass-card,
+  .info-card,
+  .concept-card,
+  .step-card,
+  .source-card,
+  .index-card,
+  .guide-card,
+  .hcard,
+  .pill,
+  .tree-node,
+  .dt-node,
+  .matrix-card,
+  .panel-card,
+  .design-card,
+  .design-header,
+  .design-body,
+  .crossed-card,
+  .scenario-item,
+  .step-content,
+  .author-card,
+  .sym-card,
+  .sym-featured,
+  .var-section-bg,
+  .intro-callout,
+  .eq-row,
+  .eq-main {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    transform: none !important;
+  }
+
+  [style*="min-width"],
+  [style*="width: 480"],
+  [style*="width:480"],
+  [style*="width: 400"],
+  [style*="width:400"] {
+    max-width: 100% !important;
+    min-width: 0 !important;
+    width: auto !important;
+  }
+
+  .nav,
+  .top-nav,
+  .page-nav,
+  .page-nav-bottom {
+    width: 100% !important;
+    max-width: 100% !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    white-space: normal !important;
+    overflow: visible !important;
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
+
+  .nav-links {
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    gap: 4px !important;
+    overflow: visible !important;
+    width: auto !important;
+  }
+
+  .nav a,
+  .nav-link,
+  .nl,
+  .top-nav a,
+  .page-nav a,
+  .page-nav-bottom a {
+    max-width: 100% !important;
+    white-space: normal !important;
+    text-align: center !important;
+    min-height: 36px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 4px 10px !important;
+    font-size: 0.75rem !important;
+  }
+
+  .nav-logo,
+  .nav-brand {
+    font-size: 0.82rem !important;
+    white-space: normal !important;
+    max-width: 100% !important;
+    overflow: visible !important;
+  }
+
+  /* Hide all decorative overlays, rings, meshes */
+  .hero::before,
+  .hero::after,
+  .hero-ring,
+  .hero-ring-2,
+  .hr1,
+  .hr2,
+  .hero-mesh,
+  .hero-grid,
+  .hero-aura,
+  .chapter-deco,
+  .decor,
+  .bg-shape,
+  .section-divider,
+  .rainbow,
+  .div,
+  .scroll-hint,
+  .starfield {
+    display: none !important;
+  }
+
+  /* Section dividers must not cause overflow */
+  .section-divider,
+  .div-a,
+  .div-r,
+  .div-s,
+  .div-v,
+  .div-g {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    max-width: 100% !important;
+  }
+
+  .table-wrap,
+  .tbl-wrap {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  /* Hero-specific containers */
+  .hero-badge,
+  .hero-eyebrow {
+    display: inline-flex !important;
+    max-width: 100% !important;
+    white-space: normal !important;
+  }
+
+  .hero-meta {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .hero-meta-item {
+    flex: 1 1 42% !important;
+    min-width: 0 !important;
+    max-width: 48% !important;
+  }
+
+  .hcard,
+  .pill {
+    min-width: 0 !important;
+    flex: 1 1 42% !important;
+    max-width: 48% !important;
+  }
+
+  .decomp-block,
+  .decomp-live .dl-block {
+    min-width: 0 !important;
+    flex: 1 1 auto !important;
+  }
+
+  /* Family tree and diagrams */
+  .family-bg {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  /* Force flex containers to wrap */
+  .concept-row,
+  .badge-row,
+  .hero-actions {
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+  }
+
+  .btn,
+  .btn-primary,
+  .btn-ghost,
+  .calc-btn {
+    min-height: 44px !important;
+    padding: 12px 24px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  html, body {
+    min-width: 0 !important;
+    width: 100% !important;
+  }
+
+  .hero,
+  .section,
+  .sec,
+  .container,
+  .wrapper,
+  .content,
+  .main,
+  .page,
+  .page-wrap {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+  }
+
+  .hero {
+    padding-top: 28px !important;
+    padding-bottom: 28px !important;
+  }
+
+  .hero h1,
+  .hero-title,
+  .hero-t,
+  .hero-ta,
+  h1 {
+    font-size: clamp(1.35rem, 8.5vw, 2rem) !important;
+    line-height: 1.28 !important;
+  }
+
+  h2 {
+    font-size: clamp(1.2rem, 6.5vw, 1.65rem) !important;
+  }
+
+  h3 {
+    font-size: clamp(1rem, 5.5vw, 1.35rem) !important;
+  }
+
+  .card,
+  .hero-card,
+  .glass-card,
+  .info-card,
+  .concept-card,
+  .step-card,
+  .source-card,
+  .crossed-card,
+  .scenario-item,
+  .design-card {
+    padding: 14px 10px !important;
+  }
+
+  .nav,
+  .top-nav {
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+  }
+
+  .nav a,
+  .nav-link,
+  .nl {
+    padding: 3px 6px !important;
+    font-size: 0.68rem !important;
+  }
+
+  .hero-meta-item {
+    flex: 1 1 100% !important;
+    max-width: 100% !important;
+  }
+
+  .hcard {
+    flex: 1 1 100% !important;
+    max-width: 100% !important;
+  }
+
+  .hero-cards {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    flex-direction: column !important;
+    align-items: center !important;
+  }
+}
+
+/* === PAGE NAV TOP === */
+.page-nav-top {
+  direction: rtl;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  width: min(100% - 24px, 1100px);
+  margin: 14px auto;
+  padding: 10px;
+  border-radius: 16px;
+  background: rgba(15, 52, 96, 0.88);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.14);
+  backdrop-filter: blur(8px);
+  position: relative;
+  z-index: 10;
+}
+.page-nav-top a,
+.page-nav-top a:visited {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 8px 18px;
+  border-radius: 999px;
+  text-decoration: none;
+  font-weight: 700;
+  color: #ffffff;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.18);
+  transition: background 0.2s, transform 0.2s;
+}
+.page-nav-top a:hover {
+  background: rgba(0, 180, 216, 0.28);
+  transform: translateY(-2px);
+}
+@media (max-width: 480px) {
+  .page-nav-top {
+    width: calc(100% - 20px);
+    gap: 8px;
+    padding: 8px;
+  }
+  .page-nav-top a {
+    flex: 1 1 auto;
+    min-width: 90px;
+    padding: 8px 12px;
+    font-size: 0.9rem;
+  }
+}
+</style>
+</head>
+<body>
+<nav class="page-nav-top" aria-label="تنقل الصفحة العلوي"><a href="index.html" class="nav-home">الرئيسية</a></nav>
+
+
+<div class="pgbar"><div class="pgfill" id="pg"></div></div>
+
+<nav class="nav">
+  <div class="nav-logo">📡 الفصل 2 · §2.5</div>
+  <div class="nav-links">
+<a href="2.4.html">السابق</a><a href="index.html">الرئيسية</a><a href="3.1.html">التالي</a>
+
+    <a href="#summary" class="nl active" data-s="summary">الملخص الكامل</a>
+    <a href="#sb"      class="nl" data-s="sb">سبيرمان–براون</a>
+    <a href="#sn"      class="nl" data-s="sn">إشارة / ضوضاء</a>
+    <a href="#et"      class="nl" data-s="et">نسبة التحمّل E/T</a>
+    <a href="#philam"  class="nl" data-s="philam">Φ(λ) ودرجة القطع</a>
+    <a href="#total"   class="nl" data-s="total">مقياس الدرجة الكلية</a>
+    <a href="#ex"      class="nl" data-s="ex">التدريبات</a>
+  </div>
+
+
+</nav>
+
+<!-- ═══ HERO ═══ -->
+<section class="hero" id="top">
+  <div class="hero-glow"></div>
+  <!-- animated signal rings -->
+  <div class="hero-signal">
+    <div class="signal-ring" style="width:100px;height:100px;left:25%;top:35%;border-color:rgba(28,143,212,.4);animation-delay:0s;"></div>
+    <div class="signal-ring" style="width:100px;height:100px;left:25%;top:35%;border-color:rgba(28,143,212,.3);animation-delay:1.3s;"></div>
+    <div class="signal-ring" style="width:100px;height:100px;left:25%;top:35%;border-color:rgba(12,194,138,.3);animation-delay:2.6s;"></div>
+    <div class="signal-ring" style="width:100px;height:100px;left:70%;top:60%;border-color:rgba(240,194,39,.25);animation-delay:.7s;"></div>
+  </div>
+  <div class="hero-tag">📊 الفصل الثاني — القسمان 2.5 و2.6</div>
+  <h1>ملخص · مؤشرات<br><em>إضافية</em></h1>
+  <p class="hero-sub">من نسبة الإشارة إلى الضوضاء، إلى نسبة تحمّل الخطأ، إلى درجة القطع Φ(λ) — أدوات أكثر ثراءً لتفسير القياس</p>
+  <div class="hero-chips">
+    <div class="hchip"><div class="sym" style="color:#38bdf8;">S/N</div><div class="lbl">الإشارة / الضوضاء</div></div>
+    <div class="hchip"><div class="sym" style="color:#6ee7b7;">E/T</div><div class="lbl">الخطأ / التحمّل</div></div>
+    <div class="hchip"><div class="sym" style="color:#fde047;">Φ(λ)</div><div class="lbl">مؤشر القطع</div></div>
+    <div class="hchip"><div class="sym" style="color:#c4b5fd;">n²·σ²</div><div class="lbl">مقياس الدرجة الكلية</div></div>
+  </div>
+</section>
+<hr class="divr">
+
+<!-- ═══ SECTION 1: الملخص الشامل ═══ -->
+<section class="sec sec-alt" id="summary">
+<div class="sec-inner">
+  <div class="cx fu">
+    <span class="tag tb">الجدول 2.11 — الملخص الشامل</span>
+    <h2 class="st">كل معادلات G وD في مكان واحد</h2>
+    <p class="sdesc cmx">جدول مرجعي كامل لتصميم G (p×i) وتصميم D (p×I) مع جميع المكوّنات والمعاملات</p>
+  </div>
+
+  <div class="fu" style="overflow-x:auto;">
+  <div class="table-wrap"><table class="sum-tbl">
+    <thead>
+      <tr>
+        <th style="text-align:right;">المكوّن / المؤشر</th>
+        <th>الرمز</th>
+        <th>المعادلة</th>
+        <th>الدور</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- G study -->
+      <tr style="background:#f0f6ff;">
+        <td colspan="4" style="font-weight:700;color:var(--blue);font-size:.82rem;padding:8px 16px;">── دراسة G (تصميم p × i) ──</td>
+      </tr>
+      <tr>
+        <td>مكوّن تباين الأشخاص</td>
+        <td class="math">σ²(p)</td>
+        <td class="math">[MS(p)−MS(pi)] / nᵢ</td>
+        <td><span class="bdg bdt">✓ تباين مرغوب</span></td>
+      </tr>
+      <tr>
+        <td>مكوّن تباين الفقرات</td>
+        <td class="math">σ²(i)</td>
+        <td class="math">[MS(i)−MS(pi)] / nₚ</td>
+        <td><span class="bdg bda">خطأ مطلق</span></td>
+      </tr>
+      <tr>
+        <td>مكوّن التباين المتبقي</td>
+        <td class="math">σ²(pi)</td>
+        <td class="math">MS(pi)</td>
+        <td><span class="bdg bda">خطأ مطلق ونسبي</span></td>
+      </tr>
+      <!-- D study -->
+      <tr style="background:#f0fdf9;">
+        <td colspan="4" style="font-weight:700;color:var(--teal);font-size:.82rem;padding:8px 16px;">── دراسة D (تصميم p × I) — بعد التقليص بـ nᵢ′ ──</td>
+      </tr>
+      <tr>
+        <td>تباين درجة الكون</td>
+        <td class="math">σ²(τ) = σ²(p)</td>
+        <td class="math">لا يتغير من G</td>
+        <td><span class="bdg bdt">✓ ثابت دائماً</span></td>
+      </tr>
+      <tr>
+        <td>مكوّن D للفقرات</td>
+        <td class="math">σ²(I) </td>
+        <td class="math">σ²(i) / nᵢ′</td>
+        <td><span class="bdg bda">خطأ مطلق فقط</span></td>
+      </tr>
+      <tr>
+        <td>مكوّن D المتبقي</td>
+        <td class="math">σ²(pI)</td>
+        <td class="math">σ²(pi) / nᵢ′</td>
+        <td><span class="bdg bda">خطأ مطلق ونسبي</span></td>
+      </tr>
+      <!-- Error variances -->
+      <tr style="background:#fff8f0;">
+        <td colspan="4" style="font-weight:700;color:var(--amber);font-size:.82rem;padding:8px 16px;">── تباينات الخطأ ──</td>
+      </tr>
+      <tr>
+        <td>الخطأ النسبي</td>
+        <td class="math">σ²(δ)</td>
+        <td class="math">σ²(pI) = σ²(pi)/nᵢ′</td>
+        <td><span class="bdg bdb">تفسير نسبي</span></td>
+      </tr>
+      <tr>
+        <td>الخطأ المطلق</td>
+        <td class="math">σ²(Δ)</td>
+        <td class="math">σ²(I)+σ²(pI) = [σ²(i)+σ²(pi)]/nᵢ′</td>
+        <td><span class="bdg bda">تفسير مطلق/محك</span></td>
+      </tr>
+      <tr>
+        <td>خطأ تقدير μ</td>
+        <td class="math">σ²(X̄)</td>
+        <td class="math">σ²(p)/nₚ′ + σ²(i)/nᵢ′ + σ²(pi)/(nₚ′nᵢ′)</td>
+        <td><span class="bdg bdb">تقدير المتوسط العام</span></td>
+      </tr>
+      <!-- Coefficients -->
+      <tr style="background:#f5f3ff;">
+        <td colspan="4" style="font-weight:700;color:var(--violet);font-size:.82rem;padding:8px 16px;">── المعاملات ──</td>
+      </tr>
+      <tr>
+        <td>معامل التعميم</td>
+        <td class="math">Eρ²</td>
+        <td class="math">σ²(p) / [σ²(p)+σ²(δ)]</td>
+        <td><span class="bdg bdv">≈ ألفا ≈ KR-20</span></td>
+      </tr>
+      <tr>
+        <td>مؤشر الاعتمادية</td>
+        <td class="math">Φ</td>
+        <td class="math">σ²(p) / [σ²(p)+σ²(Δ)]</td>
+        <td><span class="bdg bdv">تفسير محكي</span></td>
+      </tr>
+      <tr>
+        <td>تباين الدرجة الملحوظة المتوقع</td>
+        <td class="math">ES²(p)</td>
+        <td class="math">σ²(p) + σ²(δ)</td>
+        <td><span class="bdg bdb">مقام Eρ²</span></td>
+      </tr>
+    </tbody>
+  </table></div>
+  </div>
+</div>
+</section>
+
+<!-- ═══ SECTION 2: سبيرمان–براون ═══ -->
+<section class="sec" id="sb">
+<div class="sec-inner">
+  <div class="cx fu">
+    <span class="tag ta">الصلة بالنظرية التقليدية</span>
+    <h2 class="st">صيغة سبيرمان–براون وحدودها</h2>
+    <p class="sdesc cmx">Eρ̂² في تصميم p×I يُحسَب بصيغة سبيرمان–براون — لكن هذه الصيغة لا تعمل في التصاميم الأكثر تعقيداً</p>
+  </div>
+
+  <div class="sb-box fu">
+    <div class="g2">
+      <div>
+        <div style="font-size:.9rem;font-weight:700;color:var(--amber);margin-bottom:14px;">📐 صيغة سبيرمان–براون</div>
+        <div class="eq-main" style="font-size:.95rem;">r′ = (nᵢ′ · r) / [nᵢ + (nᵢ′ − nᵢ)r]</div>
+        <div style="margin-top:14px;font-size:.82rem;color:var(--slate);line-height:1.85;">
+          <strong>r</strong> = KR-20 للاختبار الأصلي (nᵢ فقرة)<br>
+          <strong>r′</strong> = الثبات المتوقع للاختبار الجديد (nᵢ′ فقرة)<br>
+          <strong>تكافؤ:</strong> r′ = Êρ² في تصميم p × I
+        </div>
+      </div>
+      <div>
+        <div style="font-size:.9rem;font-weight:700;color:var(--amber);margin-bottom:14px;">⚠️ حدود هذه الصيغة</div>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:.82rem;color:var(--slate);">
+            <span style="color:var(--red);font-weight:700;flex-shrink:0;">✗</span>
+            <span>لا تنطبق على التصاميم متعددة الأوجه (مقيِّمون + فقرات)</span>
+          </div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:.82rem;color:var(--slate);">
+            <span style="color:var(--red);font-weight:700;flex-shrink:0;">✗</span>
+            <span>لا تنطبق على أكوان التعميم المقيَّدة (وجه ثابت)</span>
+          </div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:.82rem;color:var(--slate);">
+            <span style="color:var(--red);font-weight:700;flex-shrink:0;">✗</span>
+            <span>لا تُحسب Φ أو σ²(Δ) — مقتصرة على Eρ² فقط</span>
+          </div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:.82rem;color:var(--slate);">
+            <span style="color:var(--red);font-weight:700;flex-shrink:0;">✗</span>
+            <span>لا تعمل مع التصاميم المتداخلة i:p</span>
+          </div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:.82rem;color:var(--slate);">
+            <span style="color:#16a34a;font-weight:700;flex-shrink:0;">✓</span>
+            <span>تعطي نفس نتائج نظرية التعميم في الحالة البسيطة p × I</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Interactive SB -->
+    <div style="background:white;border-radius:14px;padding:22px;margin-top:22px;border:1px solid var(--border);">
+      <div style="font-size:.88rem;font-weight:700;color:var(--deep);margin-bottom:16px;text-align:center;">🎛️ حاسبة سبيرمان–براون التفاعلية</div>
+      <div style="display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin-bottom:16px;">
+        <div style="text-align:center;">
+          <label style="font-size:.8rem;font-weight:700;color:var(--slate);display:block;margin-bottom:5px;">r (KR-20 الأصلي)</label>
+          <input type="number" id="sbR" value="0.844" min="0" max="1" step="0.001" style="width:110px;padding:8px;border:2px solid var(--border);border-radius:8px;text-align:center;font-family:'Georgia',serif;font-size:1rem;">
+        </div>
+        <div style="text-align:center;">
+          <label style="font-size:.8rem;font-weight:700;color:var(--slate);display:block;margin-bottom:5px;">nᵢ (فقرات الأصلي)</label>
+          <input type="number" id="sbNi" value="12" min="1" max="100" style="width:110px;padding:8px;border:2px solid var(--border);border-radius:8px;text-align:center;font-family:'Georgia',serif;font-size:1rem;">
+        </div>
+        <div style="text-align:center;">
+          <label style="font-size:.8rem;font-weight:700;color:var(--slate);display:block;margin-bottom:5px;">nᵢ′ (فقرات الجديد)</label>
+          <input type="range" id="sbNiP" min="1" max="40" value="12" style="width:160px;accent-color:var(--amber);">
+          <span class="sval" id="sbNiPV" style="background:var(--amber);">12</span>
+        </div>
+      </div>
+      <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;">
+        <div style="background:#fffbeb;border:2px solid #fcd34d;border-radius:12px;padding:14px 20px;text-align:center;">
+          <div style="font-size:.75rem;color:var(--muted);margin-bottom:4px;">r′ = Eρ̂²</div>
+          <div style="font-family:'Georgia',serif;font-size:1.6rem;font-weight:900;color:var(--amber);" id="sbResult">0.844</div>
+        </div>
+        <div style="background:#eff6ff;border:2px solid #93c5fd;border-radius:12px;padding:14px 20px;text-align:center;">
+          <div style="font-size:.75rem;color:var(--muted);margin-bottom:4px;">نسبة الطول nᵢ′/nᵢ</div>
+          <div style="font-family:'Georgia',serif;font-size:1.6rem;font-weight:900;color:var(--blue);" id="sbRatio">1.00</div>
+        </div>
+      </div>
+      <div id="sbIns" class="ins ib" style="margin-top:14px;">
+        <div class="ico">📊</div><div><div class="ititle" id="sbit">الاستنتاج</div><div class="itext" id="sbii">اسحب المؤشر</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ═══ SECTION 3: إشارة / ضوضاء ═══ -->
+<section class="sec sec-alt" id="sn">
+<div class="sec-inner">
+  <div class="cx fu">
+    <span class="tag tb">مؤشر بديل للاعتمادية</span>
+    <h2 class="st">نسبة الإشارة إلى الضوضاء S/N</h2>
+    <p class="sdesc cmx">مستوحاة من هندسة الاتصالات — تُقارن قوة التمييز بين الأشخاص بمقدار الخطأ</p>
+  </div>
+
+  <!-- Signal vs Noise diagram -->
+  <div class="sn-visual fu">
+    <div class="sn-diagram">
+      <canvas id="snCanvas" style="width:100%;height:100%;display:block;"></canvas>
+      <div class="sn-label">تصوير نبضات الإشارة والضوضاء في القياس</div>
+    </div>
+
+    <div class="g2">
+      <div>
+        <div style="font-size:.9rem;font-weight:700;color:var(--deep);margin-bottom:14px;">📡 التعريف والمعادلات</div>
+        <div class="eq eq-b" style="font-size:.88rem;">S/N(Δ) = σ²(p) / σ²(Δ) = Φ / (1−Φ)</div>
+        <div class="eq eq-t" style="font-size:.88rem;">S/N(δ) = σ²(p) / σ²(δ) = Eρ² / (1−Eρ²)</div>
+        <div style="margin-top:14px;">
+          <div style="font-size:.82rem;color:var(--slate);line-height:1.85;">
+            <strong style="color:var(--deep);">الإشارة</strong> = σ²(p) = تباين الفروق الحقيقية بين الأشخاص<br>
+            <strong style="color:var(--deep);">الضوضاء</strong> = σ²(δ) أو σ²(Δ) = الخطأ المعيق للتمييز
+          </div>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:.9rem;font-weight:700;color:var(--deep);margin-bottom:14px;">🔄 العلاقات العكسية</div>
+        <div class="rel-web">
+          <div class="rel-row">
+            <div class="rel-a" style="color:var(--violet);">Φ</div>
+            <div class="rel-arr">⟷</div>
+            <div class="rel-b">S/N(Δ) / [1 + S/N(Δ)]</div>
+          </div>
+          <div class="rel-row">
+            <div class="rel-a" style="color:var(--teal);">Eρ²</div>
+            <div class="rel-arr">⟷</div>
+            <div class="rel-b">S/N(δ) / [1 + S/N(δ)]</div>
+          </div>
+          <div class="rel-row">
+            <div class="rel-a" style="color:var(--blue);">S/N(Δ)</div>
+            <div class="rel-arr">⟷</div>
+            <div class="rel-b">Φ / (1 − Φ)</div>
+          </div>
+          <div class="rel-row">
+            <div class="rel-a" style="color:var(--cyan);">S/N(δ)</div>
+            <div class="rel-arr">⟷</div>
+            <div class="rel-b">Eρ² / (1 − Eρ²)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- S/N calculator -->
+    <div class="sn-slider-box" style="margin-top:22px;">
+      <div style="font-size:.88rem;font-weight:700;color:var(--deep);margin-bottom:16px;text-align:center;">🎛️ اكتشف نسبة الإشارة/الضوضاء لبيانات مثالك</div>
+      <div class="sl-row">
+        <div class="sl-grp">
+          <label>σ²(p)</label>
+          <input type="number" id="snSP" value="0.0574" step="0.001" min="0" max="2" style="width:100px;padding:8px;border:2px solid var(--border);border-radius:8px;text-align:center;font-family:'Georgia',serif;" oninput="calcSN()">
+        </div>
+        <div class="sl-grp">
+          <label>σ²(δ)</label>
+          <input type="number" id="snSD" value="0.0106" step="0.001" min="0.001" max="2" style="width:100px;padding:8px;border:2px solid var(--border);border-radius:8px;text-align:center;font-family:'Georgia',serif;" oninput="calcSN()">
+        </div>
+        <div class="sl-grp">
+          <label>σ²(Δ)</label>
+          <input type="number" id="snSA" value="0.0169" step="0.001" min="0.001" max="2" style="width:100px;padding:8px;border:2px solid var(--border);border-radius:8px;text-align:center;font-family:'Georgia',serif;" oninput="calcSN()">
+        </div>
+      </div>
+      <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;">
+        <div class="gauge-box gb-teal">
+          <div class="gauge-sym" style="color:var(--teal);">S/N(δ)</div>
+          <div class="gauge-val" id="snDelta" style="color:var(--teal);">5.40</div>
+          <div class="gauge-lbl">= Eρ²/(1−Eρ²)</div>
+        </div>
+        <div class="gauge-box gb-blue">
+          <div class="gauge-sym" style="color:var(--blue);">S/N(Δ)</div>
+          <div class="gauge-val" id="snDeltaAbs" style="color:var(--blue);">3.39</div>
+          <div class="gauge-lbl">= Φ/(1−Φ)</div>
+        </div>
+        <div class="gauge-box" style="background:#fefce8;border:2px solid #fef08a;">
+          <div class="gauge-sym" style="color:#854d0e;">Eρ²</div>
+          <div class="gauge-val" id="snGCoeff" style="color:#854d0e;">0.844</div>
+          <div class="gauge-lbl">من S/N(δ)</div>
+        </div>
+        <div class="gauge-box" style="background:#fdf4ff;border:2px solid #e9d5ff;">
+          <div class="gauge-sym" style="color:var(--violet);">Φ</div>
+          <div class="gauge-val" id="snPhi" style="color:var(--violet);">0.772</div>
+          <div class="gauge-lbl">من S/N(Δ)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ins ib fu" style="margin-top:20px;">
+    <div class="ico">💡</div>
+    <div>
+      <div class="ititle">لماذا S/N أحياناً أفضل من Eρ²؟</div>
+      <div class="itext">
+        عندما Eρ² = .84، فإن S/N(δ) = .84/.16 ≈ <strong>5.3</strong> — أي الإشارة أقوى 5 مرات من الضوضاء! هذا التفسير البديهي أكثر وضوحاً للمستخدمين غير المتخصصين. كلما كبر S/N كلما كان التمييز بين الأشخاص أوضح.
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ═══ SECTION 4: نسبة تحمّل الخطأ E/T ═══ -->
+<section class="sec" id="et">
+<div class="sec-inner">
+  <div class="cx fu">
+    <span class="tag tt">نسبة جديدة مقترحة كين 1996</span>
+    <h2 class="st">نسبة تحمّل الخطأ E/T</h2>
+    <p class="sdesc cmx">هل الأخطاء صغيرة بالقدر الكافي لتحقيق الغرض؟ — قارن الخطأ بحدود التحمّل المقبولة</p>
+  </div>
+
+  <div class="g2 fu" style="margin-bottom:24px;">
+    <div class="card" style="border-top:4px solid var(--teal);">
+      <div style="font-size:.88rem;font-weight:700;color:var(--teal);margin-bottom:12px;">📐 التعريف الأساسي</div>
+      <div class="eq eq-t">E/T = √[خطأ RMS / تحمّل RMS]</div>
+      <p style="font-size:.82rem;color:var(--slate);margin-top:10px;line-height:1.85;">
+        <strong>خطأ RMS</strong> = جذر متوسط مربعات الخطأ (مثلاً σ(Δ) أو σ(δ))<br>
+        <strong>تحمّل RMS</strong> = جذر متوسط مربعات حدود التحمّل المقبولة (مثلاً σ(p))
+      </p>
+      <div class="ins it" style="margin-top:12px;padding:12px 14px;">
+        <div class="ico" style="font-size:1rem;">✅</div>
+        <div><div class="itext">E/T صغيرة (< 1) = الأخطاء صغيرة نسبياً = قياس دقيق<br>E/T كبيرة (> 1) = الأخطاء كبيرة = قياس غير كافٍ</div></div>
+      </div>
+    </div>
+    <div class="card" style="border-top:4px solid var(--violet);">
+      <div style="font-size:.88rem;font-weight:700;color:var(--violet);margin-bottom:12px;">🔗 علاقتها بالمعاملات</div>
+      <div class="eq eq-v">E/T = √[(1−Φ)/Φ] &nbsp;(عندما خطأ=σ(Δ), تحمّل=σ(p))</div>
+      <div class="eq eq-t" style="margin-top:6px;">Φ = 1 / [1 + (E/T)²]</div>
+      <div class="eq eq-v" style="margin-top:6px;">E/T(δ) = √[(1−Eρ²)/Eρ²]</div>
+      <p style="font-size:.82rem;color:var(--slate);margin-top:10px;line-height:1.85;">تعلاقات ثنائية الاتجاه — إذا عرفت Φ حسبت E/T والعكس صحيح</p>
+    </div>
+  </div>
+
+  <!-- E/T with cut score -->
+  <div class="card fu" style="background:linear-gradient(135deg,#f5f3ff,#ede9fe);border-color:#c4b5fd;">
+    <div style="font-size:.9rem;font-weight:700;color:var(--violet);margin-bottom:14px;">🎯 حالة خاصة: نسبة التحمّل مع درجة قطع λ</div>
+    <div class="g2">
+      <div>
+        <p style="font-size:.83rem;color:var(--slate);line-height:1.85;margin-bottom:14px;">
+          عند التفسير المرجعي للمحك، نهتم بـ (μₚ − λ) لا بـ μₚ فقط. لذا تُضاف المسافة بين المتوسط ودرجة القطع إلى التحمّل.
+        </p>
+        <div class="eq eq-v" style="font-size:.84rem;">E/T(λ) = √[σ²(Δ) / (σ²(p)+(μ−λ)²)] &nbsp;(2.53)</div>
+        <div class="eq eq-v" style="font-size:.84rem;">Φ̂(λ) = [σ²(p)+(μ−λ)²] / [σ²(p)+(μ−λ)²+σ²(Δ)] &nbsp;(2.54)</div>
+      </div>
+      <div>
+        <div style="background:white;border-radius:14px;padding:18px;border:1px solid #c4b5fd;">
+          <div style="font-size:.82rem;font-weight:700;color:var(--violet);margin-bottom:10px;">🔍 تفسير Φ̂(λ)</div>
+          <p style="font-size:.82rem;color:var(--slate);line-height:1.85;">
+            كلما ابتعدت λ عن X̄: <br>
+            • (μ−λ)² يكبر<br>
+            • التحمّل يكبر<br>
+            • E/T(λ) تصغر<br>
+            • Φ̂(λ) تكبر!<br><br>
+            لأن القرار "أجاز/رسب" يصبح أسهل كلما كانت الدرجات أبعد عن درجة القطع.
+          </p>
+        </div>
+        <div class="ins iv" style="margin-top:10px;padding:12px 14px;">
+          <div class="ico" style="font-size:1rem;">📌</div>
+          <div><div class="itext">عندما λ = X̄: Φ̂(λ) = KR-21 — هذا أدنى قيمة لـ Φ̂(λ) وأصعب قرار!</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ═══ SECTION 5: Φ(λ) تفاعلية ═══ -->
+<section class="sec sec-alt" id="philam">
+<div class="sec-inner">
+  <div class="cx fu">
+    <span class="tag tg">تفاعلي</span>
+    <h2 class="st">Φ̂(λ) — أثر درجة القطع على الاعتمادية</h2>
+    <p class="sdesc cmx">شاهد كيف تتغير Φ̂(λ) مع تغيُّر درجة القطع — كلما ابتعدت λ عن المتوسط كلما ارتفعت الاعتمادية</p>
+  </div>
+
+  <div class="phi-lam-chart fu">
+    <div style="font-size:.85rem;font-weight:700;color:var(--slate);margin-bottom:8px;text-align:center;">
+      البيانات الاصطناعية رقم 1 عند nᵢ′=12 &nbsp;·&nbsp; X̄=0.5583 &nbsp;·&nbsp; σ̂²(p)=.0574 &nbsp;·&nbsp; σ̂²(Δ)=.0169 &nbsp;·&nbsp; σ̂²(X̄)=.0131
+    </div>
+    <div class="phi-slider-ctrl">
+      <label>درجة القطع λ</label>
+      <input type="range" id="lambdaSlider" min="0" max="1" step="0.01" value="0.5583">
+      <span class="sval" id="lambdaVal" style="background:var(--violet);">0.558</span>
+    </div>
+    <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-bottom:22px;">
+      <div style="background:#fdf4ff;border:2px solid #e9d5ff;border-radius:12px;padding:13px 18px;text-align:center;">
+        <div style="font-size:.72rem;color:var(--muted);margin-bottom:4px;">Φ̂(λ)</div>
+        <div style="font-family:'Georgia',serif;font-size:1.7rem;font-weight:900;color:var(--violet);" id="phiLamV">0.725</div>
+        <div style="font-size:.68rem;color:var(--muted);margin-top:2px;">(KR-21 عند λ=X̄)</div>
+      </div>
+      <div style="background:#eff6ff;border:2px solid #93c5fd;border-radius:12px;padding:13px 18px;text-align:center;">
+        <div style="font-size:.72rem;color:var(--muted);margin-bottom:4px;">E/T(λ)</div>
+        <div style="font-family:'Georgia',serif;font-size:1.7rem;font-weight:900;color:var(--blue);" id="etLamV">0.591</div>
+      </div>
+      <div style="background:#f5f3ff;border:2px solid #c4b5fd;border-radius:12px;padding:13px 18px;text-align:center;">
+        <div style="font-size:.72rem;color:var(--muted);margin-bottom:4px;">(μ−λ)²</div>
+        <div style="font-family:'Georgia',serif;font-size:1.7rem;font-weight:900;color:#6d28d9;" id="muLamSq">0.000</div>
+      </div>
+    </div>
+    <canvas id="phiChart" height="180" style="width:100%;max-height:180px;"></canvas>
+    <div id="phiIns" class="ins iv" style="margin-top:14px;">
+      <div class="ico">📊</div><div><div class="ititle" id="pit">الاستنتاج</div><div class="itext" id="pii">اسحب المؤشر</div></div>
+    </div>
+  </div>
+
+  <!-- Unbiased estimator -->
+  <div class="card fu" style="margin-top:20px;">
+    <div style="font-size:.88rem;font-weight:700;color:var(--red);margin-bottom:12px;">⚠️ تنبيه: التقدير غير المتحيز لـ (μ−λ)²</div>
+    <div class="g2">
+      <div>
+        <p style="font-size:.82rem;color:var(--slate);line-height:1.85;">(X̄ − λ)² مقدِّر <strong>متحيز</strong> لـ (μ − λ)². لأن التباين المُدمج في المربع يُضخِّم التقدير.</p>
+        <div class="eq eq-r" style="font-size:.88rem;">est[(μ−λ)²] = (X̄−λ)² − σ²(X̄) &nbsp;(2.55)</div>
+      </div>
+      <div>
+        <div class="ins ia" style="margin:0;padding:14px 18px;">
+          <div class="ico">🔗</div>
+          <div>
+            <div class="ititle">لماذا أُدخل σ²(X̄) في الفصل؟</div>
+            <div class="itext">هذا بالضبط سبب إدراج تباين خطأ تقدير μ (المعادلة 2.38) في المادة — كان ضرورياً لتصحيح تحيّز تقدير (μ−λ)² عند استخدامه في حساب Φ̂(λ).</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ═══ SECTION 6: مقياس الدرجة الكلية ═══ -->
+<section class="sec" id="total">
+<div class="sec-inner">
+  <div class="cx fu">
+    <span class="tag ts">مقياس بديل</span>
+    <h2 class="st">مقياس الدرجة الكلية vs مقياس متوسط الدرجة</h2>
+    <p class="sdesc cmx">نفس المعلومات — مقياسان مختلفان. الاختيار بينهما حسب السياق التطبيقي</p>
+  </div>
+
+  <!-- Scale choice visual -->
+  <div class="card fu" style="background:linear-gradient(135deg,#f0f8ff,#e0f2fe);border-color:#bae6fd;margin-bottom:24px;">
+    <div style="text-align:center;font-size:.9rem;font-weight:700;color:var(--sky);margin-bottom:16px;">⚙️ قاعدة التحويل: اضرب في (nᵢ′)²</div>
+    <div style="display:flex;align-items:center;gap:20px;justify-content:center;flex-wrap:wrap;">
+      <div style="background:white;border-radius:14px;padding:18px 22px;text-align:center;border:2px solid #93c5fd;min-width:160px;">
+        <div style="font-size:.75rem;color:var(--muted);margin-bottom:6px;">مقياس متوسط الدرجة (العرف)</div>
+        <div style="font-family:'Georgia',serif;font-size:1rem;font-weight:700;color:var(--blue);">σ²(p), σ²(δ), σ²(Δ)</div>
+      </div>
+      <div style="font-size:1.8rem;color:var(--sky);">× (nᵢ′)²</div>
+      <div style="font-size:2rem;color:var(--muted);">→</div>
+      <div style="background:white;border-radius:14px;padding:18px 22px;text-align:center;border:2px solid #67e8f9;min-width:160px;">
+        <div style="font-size:.75rem;color:var(--muted);margin-bottom:6px;">مقياس الدرجة الكلية</div>
+        <div style="font-family:'Georgia',serif;font-size:1rem;font-weight:700;color:var(--cyan);">(nᵢ′)²·σ²(p), ...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Numerical example -->
+  <div class="ts-calc fu">
+    <div style="font-size:.9rem;font-weight:700;color:var(--deep);margin-bottom:16px;">📌 مثال: البيانات الاصطناعية رقم 1 عند nᵢ′=12</div>
+    <div class="g2">
+      <div>
+        <div style="font-size:.8rem;font-weight:700;color:var(--muted);margin-bottom:10px;">مقياس متوسط الدرجة:</div>
+        <div class="ts-row"><div class="ts-lhs">σ̂²(p)</div><div class="ts-eq">=</div><div class="ts-comp">.0574</div></div>
+        <div class="ts-row" style="border-color:var(--teal);"><div class="ts-lhs">σ̂²(δ)</div><div class="ts-eq">=</div><div class="ts-comp">.0106</div></div>
+        <div class="ts-row" style="border-color:var(--amber);"><div class="ts-lhs">σ̂²(Δ)</div><div class="ts-eq">=</div><div class="ts-comp">.0169</div></div>
+        <div class="ts-row" style="border-color:var(--violet);"><div class="ts-lhs">σ̂²(X̄)</div><div class="ts-eq">=</div><div class="ts-comp">.0131</div></div>
+      </div>
+      <div>
+        <div style="font-size:.8rem;font-weight:700;color:var(--muted);margin-bottom:10px;">مقياس الدرجة الكلية (× 144 = 12²):</div>
+        <div class="ts-row"><div class="ts-lhs">144 × .0574</div><div class="ts-eq">=</div><div class="ts-result">8.27</div></div>
+        <div class="ts-row" style="border-color:var(--teal);"><div class="ts-lhs">144 × .0106</div><div class="ts-eq">=</div><div class="ts-result" style="color:var(--teal);">1.53</div></div>
+        <div class="ts-row" style="border-color:var(--amber);"><div class="ts-lhs">144 × .0169</div><div class="ts-eq">=</div><div class="ts-result" style="color:var(--amber);">2.43</div></div>
+        <div class="ts-row" style="border-color:var(--violet);"><div class="ts-lhs">144 × .0131</div><div class="ts-eq">=</div><div class="ts-result" style="color:var(--violet);">1.89</div></div>
+      </div>
+    </div>
+    <div class="ins ib" style="margin-top:16px;">
+      <div class="ico">💡</div>
+      <div>
+        <div class="ititle">المعاملات لا تتغير بتغيُّر المقياس</div>
+        <div class="itext">Eρ² وΦ متماثلان في كلا المقياسين لأنهما نسب — والنسبة ثابتة بين مقياسَين متناسبَين. ما يتغير هو الأرقام المطلقة فقط، مما قد يُسهِّل التواصل مع المستخدمين الذين يفكرون بالدرجة الكلية لا المتوسط.</div>
+      </div>
+    </div>
+
+    <!-- interactive scale converter -->
+    <div style="background:#f4f7fd;border-radius:14px;padding:20px;margin-top:16px;border:1px solid var(--border);">
+      <div style="font-size:.86rem;font-weight:700;color:var(--deep);margin-bottom:14px;text-align:center;">🎛️ محوّل المقياس — أدخل nᵢ′ وانظر التحويل</div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:6px;margin-bottom:14px;">
+        <label style="font-size:.8rem;font-weight:700;color:var(--slate);">nᵢ′</label>
+        <input type="range" id="scaleNi" min="1" max="30" value="12" style="width:200px;accent-color:var(--cyan);">
+        <span class="sval" id="scaleNiV" style="background:var(--cyan);">12</span>
+      </div>
+      <div id="scaleResults" style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;direction:ltr;font-size:.78rem;">
+        <!-- filled by JS -->
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ═══ SECTION 7: التدريبات ═══ -->
+<section class="sec sec-alt" id="ex">
+<div class="sec-inner">
+  <div class="cx fu">
+    <span class="tag ts">§ 2.6 التدريبات</span>
+    <h2 class="st">تدريبات مُختارة مع التوجيه</h2>
+    <p class="sdesc cmx">أبرز التدريبات مع مؤشرات الحل — النجمة (*) تدل على تدريبات الإجابات في ملحق الكتاب</p>
+  </div>
+
+  <div class="g2 fu">
+    <div class="ex-card" style="border-color:var(--teal);">
+      <span class="ex-num" style="background:var(--teal);">2.1 ★</span>
+      <div class="ex-text">
+        6 أشخاص × 3 مقيِّمين (تصميم p×r). قدِّر: (أ) مكوّنات التباين في G، (ب) عند nᵣ′=3: σ²(δ)، σ²(Δ)، Eρ²، Φ، (ج) تحقق من أن متوسط التغايرات = σ̂²(p).
+      </div>
+      <div class="ex-hint">💡 هذا تصميم p×r لا p×i — نفس المعادلات مع استبدال i بـ r. التغاير بين كل زوج من المقيِّمين = σ²(p).</div>
+    </div>
+    <div class="ex-card" style="border-color:var(--sky);">
+      <span class="ex-num" style="background:var(--sky);">2.2</span>
+      <div class="ex-text">
+        إجراء أنجوف: 5 مقيِّمين × 126 فقرة. SS(r)=.700، SS(i)=7.144، SS(ri)=13.353، X̄=.663. أوجد الخطأ المعياري لـ X̄.
+      </div>
+      <div class="ex-hint">💡 الخطأ المعياري لـ X̄ = √σ²(X̄). استخدم المعادلة 2.38 مع nₚ′=nᵣ′=5 وnᵢ′=126.</div>
+    </div>
+    <div class="ex-card" style="border-color:var(--amber);">
+      <span class="ex-num" style="background:var(--amber);">2.5 ★</span>
+      <div class="ex-text">
+        مكوّنات ITBS للرياضيات (32 فقرة) والتقدير (24 فقرة). أنشئ صوراً أقصر بحيث Eρ̂² ≥ .6 مع الحفاظ على نسبة أعداد الفقرات قدر الإمكان.
+      </div>
+      <div class="ex-hint">💡 اعكس معادلة Eρ²: nᵢ′ = Eρ² × σ²(pi) / [σ²(p)(1−Eρ²) − Eρ²·σ²(i)]. ثم ابحث عن أصغر nᵢ′ يحقق الشرط لكلا الاختبارين.</div>
+    </div>
+    <div class="ex-card" style="border-color:var(--violet);">
+      <span class="ex-num" style="background:var(--violet);">2.6</span>
+      <div class="ex-text">
+        تحقق من أن Φ̂(λ = X̄) = KR-21 = .725 للبيانات الاصطناعية رقم 1.
+      </div>
+      <div class="ex-hint">💡 عند λ = X̄: (μ−λ)² ≈ 0 (أو أكثر دقة: est[(μ−X̄)²] = −σ²(X̄) ≈ 0). استخدم المعادلة 2.54 مع σ²(X̄)=.0131 وσ²(p)=.0574 وσ²(Δ)=.0169.</div>
+    </div>
+    <div class="ex-card" style="border-color:var(--cyan);">
+      <span class="ex-num" style="background:var(--cyan);">2.7 ★</span>
+      <div class="ex-text">
+        QUASAR: متوسط التقدير 1.43 على مقياس (1–5)، درجة القطع λ=3. كم عدد المهام اللازمة لكي E/T(λ) > .5؟
+      </div>
+      <div class="ex-hint">💡 σ²(p)=.1286، σ²(pi)=.6620. احسب σ²(p)+(μ−λ)² = .1286+(1.43−3)² = .1286+2.4649 = 2.5935. ثم اعكس معادلة E/T(λ): nᵢ′ = σ²(pi) / [(2.5935)×(E/T)² − σ²(pi)/(infinity)]... استخدم E/T < .5.</div>
+    </div>
+    <div class="ex-card" style="border-color:var(--red);">
+      <span class="ex-num" style="background:var(--red);">2.8</span>
+      <div class="ex-text">
+        أثبت أن EMS(p) = σ²(pi) + nᵢ σ²(p).
+      </div>
+      <div class="ex-hint">💡 ابدأ من MS(p) = nᵢΣₚ(X̄ₚ−X̄)²/(nₚ−1). عوِّض X̄ₚ بـ (μ+νₚ+ν̄ᵢ|ₚ) وأخذ التوقع. استخدم أن E(νₚ²)=σ²(p) وE(ν̄ᵢ|ₚ²) = σ²(pi)/nᵢ.</div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ═══ SUMMARY ═══ -->
+<section class="sec sec-dark">
+<div class="sec-inner">
+  <div class="cx fu">
+    <span class="tag ts">الخلاصة النهائية</span>
+    <h2 class="st wh">ثروة المؤشرات في نظرية التعميم</h2>
+    <p class="sdesc wh cmx">لا يقتصر الأمر على Eρ² وΦ — المنظومة أثرى وأكثر مرونة</p>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px;" class="fu">
+    <div class="dcard">
+      <div style="font-size:1.5rem;margin-bottom:8px;">📡</div>
+      <h4 style="color:#7dd3fc;font-size:.9rem;margin-bottom:6px;">S/N — للمهندسين والتقنيين</h4>
+      <p style="font-size:.82rem;color:rgba(255,255,255,.68);line-height:1.8;">نسبة الإشارة/الضوضاء تُقدِّم نفس المعلومات بلغة أكثر وضوحاً: "الإشارة أقوى 5 مرات من الضوضاء" أوضح من "Eρ²=.84" للمستخدم غير المتخصص.</p>
+    </div>
+    <div class="dcard">
+      <div style="font-size:1.5rem;margin-bottom:8px;">⚖️</div>
+      <h4 style="color:#6ee7b7;font-size:.9rem;margin-bottom:6px;">E/T — للغرض المقصود</h4>
+      <p style="font-size:.82rem;color:rgba(255,255,255,.68);line-height:1.8;">نسبة تحمّل الخطأ تربط الخطأ بالغرض المقصود: هل الأخطاء صغيرة كفاية بالنسبة لما نريد تحقيقه؟ — سؤال أكثر عملية من "ما قيمة الثبات؟"</p>
+    </div>
+    <div class="dcard">
+      <div style="font-size:1.5rem;margin-bottom:8px;">🎯</div>
+      <h4 style="color:#fde047;font-size:.9rem;margin-bottom:6px;">Φ(λ) — للقرارات المرجعية للمحك</h4>
+      <p style="font-size:.82rem;color:rgba(255,255,255,.68);line-height:1.8;">مؤشر Φ مفيد — لكن Φ(λ) أكثر تحديداً: يعتمد على موقع درجة القطع. كلما ابتعدت λ عن X̄ كان القرار أسهل وΦ(λ) أعلى.</p>
+    </div>
+    <div class="dcard">
+      <div style="font-size:1.5rem;margin-bottom:8px;">🔢</div>
+      <h4 style="color:#c4b5fd;font-size:.9rem;margin-bottom:6px;">الدرجة الكلية — للتواصل العملي</h4>
+      <p style="font-size:.82rem;color:rgba(255,255,255,.68);line-height:1.8;">المعلمون والطلاب يفكرون بالدرجة الكلية لا المتوسط. التحويل بسيط (× nᵢ′²) والمعاملات تبقى ثابتة — مما يُسهِّل التواصل دون فقدان الدقة.</p>
+    </div>
+  </div>
+
+  <!-- Key connections final -->
+  <div class="dcard fu" style="margin-top:20px;text-align:center;">
+    <div style="font-size:.88rem;font-weight:700;color:rgba(255,255,255,.85);margin-bottom:14px;">🔑 شبكة العلاقات النهائية</div>
+    <div style="display:flex;gap:20px;justify-content:center;flex-wrap:wrap;font-size:.82rem;">
+      <div style="background:rgba(255,255,255,.07);border-radius:10px;padding:10px 16px;font-family:'Georgia',serif;direction:ltr;">S/N(δ) = Eρ²/(1−Eρ²)</div>
+      <div style="background:rgba(255,255,255,.07);border-radius:10px;padding:10px 16px;font-family:'Georgia',serif;direction:ltr;">E/T = √[(1−Φ)/Φ]</div>
+      <div style="background:rgba(255,255,255,.07);border-radius:10px;padding:10px 16px;font-family:'Georgia',serif;direction:ltr;">Φ̂(λ=X̄) = KR-21</div>
+      <div style="background:rgba(255,255,255,.07);border-radius:10px;padding:10px 16px;font-family:'Georgia',serif;direction:ltr;">(n′ᵢ)²·σ²(p) ↔ σ²(p)</div>
+    </div>
+  </div>
+</div>
+</section>
+
+<hr class="divr">
+<footer>
+  <p style="font-size:1rem;color:white;margin-bottom:8px;">📖 <strong>Generalizability Theory</strong> — Robert L. Brennan</p>
+  <p>الفصل الثاني — القسمان 2.5 (2.5.1، 2.5.2) و 2.6</p>
+  <p style="margin-top:10px;font-size:.76rem;opacity:.4;">الدليل البصري الشامل لمفاهيم القياس التربوي المتقدم</p>
+</footer>
+
+<script>
+/* ── PROGRESS + NAV ── */
+window.addEventListener('scroll',()=>{
+  const p=window.scrollY/(document.body.scrollHeight-window.innerHeight)*100;
+  document.getElementById('pg').style.width=p+'%';
+  const ss=['summary','sb','sn','et','philam','total','ex'];
+  let cur='summary';
+  ss.forEach(s=>{const el=document.getElementById(s);if(el&&el.getBoundingClientRect().top<110)cur=s;});
+  document.querySelectorAll('.nl').forEach(l=>l.classList.toggle('active',l.dataset.s===cur));
+},{passive:true});
+
+/* ── FADE ── */
+const io=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('in');});},{threshold:.07});
+document.querySelectorAll('.fu').forEach(el=>io.observe(el));
+
+/* ── SIGNAL NOISE CANVAS ── */
+const snCv=document.getElementById('snCanvas');
+const snCtx=snCv.getContext('2d');
+function drawSN(){
+  const W=snCv.offsetWidth,H=snCv.offsetHeight;
+  snCv.width=W*(window.devicePixelRatio||1);snCv.height=H*(window.devicePixelRatio||1);
+  snCtx.scale(window.devicePixelRatio||1,window.devicePixelRatio||1);
+  snCtx.clearRect(0,0,W,H);
+  const cx=W/2,cy=H/2;
+  // background
+  snCtx.fillStyle='#0e1525';snCtx.fillRect(0,0,W,H);
+  // grid lines
+  for(let x=0;x<W;x+=30){snCtx.beginPath();snCtx.strokeStyle='rgba(255,255,255,.05)';snCtx.moveTo(x,0);snCtx.lineTo(x,H);snCtx.stroke();}
+  for(let y=0;y<H;y+=20){snCtx.beginPath();snCtx.strokeStyle='rgba(255,255,255,.05)';snCtx.moveTo(0,y);snCtx.lineTo(W,y);snCtx.stroke();}
+  const t=Date.now()/1000;
+  // SIGNAL - smooth large wave σ²(p)
+  snCtx.beginPath();snCtx.strokeStyle='#38bdf8';snCtx.lineWidth=2.5;
+  for(let x=0;x<W;x++){
+    const v=Math.sin(x*.04+t)*40+Math.sin(x*.08+t*.7)*15;
+    x===0?snCtx.moveTo(x,cy+v):snCtx.lineTo(x,cy+v);
+  }
+  snCtx.stroke();
+  // NOISE - jagged small wave σ²(δ)
+  snCtx.beginPath();snCtx.strokeStyle='rgba(239,68,68,.7)';snCtx.lineWidth=1.5;
+  for(let x=0;x<W;x++){
+    const v=(Math.random()-.5)*18+Math.sin(x*.2+t*2)*5;
+    x===0?snCtx.moveTo(x,cy/2+v):snCtx.lineTo(x,cy/2+v);
+  }
+  snCtx.stroke();
+  // labels
+  snCtx.font='bold 12px Cairo';snCtx.fillStyle='#38bdf8';snCtx.textAlign='right';snCtx.fillText('الإشارة σ²(p)',W-10,cy+15);
+  snCtx.fillStyle='rgba(239,68,68,.9)';snCtx.fillText('الضوضاء σ²(δ)',W-10,cy/2+15);
+  requestAnimationFrame(drawSN);
+}
+drawSN();
+
+/* ── S/N CALCULATOR ── */
+function calcSN(){
+  const sp=parseFloat(document.getElementById('snSP').value)||.0574;
+  const sd=parseFloat(document.getElementById('snSD').value)||.0106;
+  const sa=parseFloat(document.getElementById('snSA').value)||.0169;
+  const snD=sp/sd,snA=sp/sa;
+  const g=sp/(sp+sd),phi=sp/(sp+sa);
+  document.getElementById('snDelta').textContent=snD.toFixed(2);
+  document.getElementById('snDeltaAbs').textContent=snA.toFixed(2);
+  document.getElementById('snGCoeff').textContent=g.toFixed(3);
+  document.getElementById('snPhi').textContent=phi.toFixed(3);
+}
+['snSP','snSD','snSA'].forEach(id=>document.getElementById(id).addEventListener('input',calcSN));
+calcSN();
+
+/* ── SPEARMAN-BROWN ── */
+function calcSB(){
+  const r=parseFloat(document.getElementById('sbR').value)||.844;
+  const ni=parseFloat(document.getElementById('sbNi').value)||12;
+  const niP=parseInt(document.getElementById('sbNiP').value)||12;
+  document.getElementById('sbNiPV').textContent=niP;
+  const rp=(niP*r)/(ni+(niP-ni)*r);
+  const ratio=(niP/ni).toFixed(2);
+  document.getElementById('sbResult').textContent=Math.min(1,Math.max(0,rp)).toFixed(3);
+  document.getElementById('sbRatio').textContent=ratio;
+  const t=document.getElementById('sbit'),i=document.getElementById('sbii'),b=document.getElementById('sbIns');
+  if(niP>ni){b.className='ins it';t.textContent='✅ تطويل الاختبار';i.textContent=`زيادة من ${ni} إلى ${niP} فقرة (×${ratio}) ترفع Eρ² من ${r} إلى ${rp.toFixed(3)}.`;}
+  else if(niP<ni){b.className='ins ia';t.textContent='⚠️ تقصير الاختبار';i.textContent=`تقليل من ${ni} إلى ${niP} فقرة يُخفض Eρ² من ${r} إلى ${rp.toFixed(3)}. تأكد من قبولية هذا الانخفاض.`;}
+  else{b.className='ins ib';t.textContent='➡️ نفس الطول';i.textContent='nᵢ′ = nᵢ → r′ = r بلا تغيير.';}
+}
+['sbR','sbNi','sbNiP'].forEach(id=>document.getElementById(id).addEventListener('input',calcSB));
+calcSB();
+
+/* ── Φ(λ) CHART ── */
+const phiCv=document.getElementById('phiChart');
+const phiCtx=phiCv.getContext('2d');
+const sp_=.0574,sdelta_=.0169,sxbar_=.0131,muX=.5583;
+
+function unbiasedMuLam(lam){return Math.max(0,Math.pow(muX-lam,2)-sxbar_);}
+function phiLam(lam){const ml=unbiasedMuLam(lam);return(sp_+ml)/(sp_+ml+sdelta_);}
+function etLam(lam){const ml=unbiasedMuLam(lam);return Math.sqrt(sdelta_/(sp_+ml));}
+
+function drawPhiChart(curLam){
+  const W=phiCv.offsetWidth,H=phiCv.offsetHeight;
+  phiCv.width=W*(window.devicePixelRatio||1);phiCv.height=H*(window.devicePixelRatio||1);
+  phiCtx.scale(window.devicePixelRatio||1,window.devicePixelRatio||1);
+  phiCtx.clearRect(0,0,W,H);
+  const pad={t:18,r:18,b:30,l:45},cw=W-pad.l-pad.r,ch=H-pad.t-pad.b;
+  const xs=l=>(l-0)/(1-0)*cw+pad.l;
+  const ys=v=>(1-v)*ch+pad.t;
+  // grid
+  [.7,.75,.8,.85,.9,.95,1].forEach(v=>{
+    phiCtx.beginPath();phiCtx.strokeStyle='rgba(0,0,0,.07)';phiCtx.lineWidth=1;
+    phiCtx.moveTo(pad.l,ys(v));phiCtx.lineTo(pad.l+cw,ys(v));phiCtx.stroke();
+    phiCtx.fillStyle='#94a3b8';phiCtx.font='10px Cairo';phiCtx.textAlign='right';
+    phiCtx.fillText(v.toFixed(2),pad.l-4,ys(v)+4);
+  });
+  [0,.25,.5,.75,1].forEach(l=>{
+    phiCtx.fillStyle='#94a3b8';phiCtx.font='10px Cairo';phiCtx.textAlign='center';
+    phiCtx.fillText(l.toFixed(2),xs(l),H-pad.b+14);
+  });
+  // Phi(λ) curve
+  phiCtx.beginPath();phiCtx.strokeStyle='#7c3aed';phiCtx.lineWidth=2.5;phiCtx.setLineDash([]);
+  for(let lam=0;lam<=1;lam+=.01){const v=phiLam(lam);lam<.01?phiCtx.moveTo(xs(lam),ys(v)):phiCtx.lineTo(xs(lam),ys(v));}
+  phiCtx.stroke();
+  // KR-21 reference line
+  const kr21=phiLam(muX);
+  phiCtx.beginPath();phiCtx.strokeStyle='rgba(217,119,6,.4)';phiCtx.lineWidth=1.5;phiCtx.setLineDash([5,4]);
+  phiCtx.moveTo(pad.l,ys(kr21));phiCtx.lineTo(pad.l+cw,ys(kr21));phiCtx.stroke();phiCtx.setLineDash([]);
+  phiCtx.fillStyle='#d97706';phiCtx.font='10px Cairo';phiCtx.textAlign='left';phiCtx.fillText('KR-21=.725',pad.l+4,ys(kr21)-3);
+  // X̄ vertical line
+  phiCtx.beginPath();phiCtx.strokeStyle='rgba(100,100,100,.3)';phiCtx.lineWidth=1.2;phiCtx.setLineDash([3,3]);
+  phiCtx.moveTo(xs(muX),pad.t);phiCtx.lineTo(xs(muX),H-pad.b);phiCtx.stroke();phiCtx.setLineDash([]);
+  phiCtx.fillStyle='#475670';phiCtx.font='10px Cairo';phiCtx.textAlign='center';phiCtx.fillText('X̄=.558',xs(muX),pad.t+10);
+  // current lambda dot
+  const cv=phiLam(curLam);
+  phiCtx.beginPath();phiCtx.fillStyle='#7c3aed';phiCtx.arc(xs(curLam),ys(cv),5,0,Math.PI*2);phiCtx.fill();
+  // legend
+  phiCtx.fillStyle='#7c3aed';phiCtx.fillRect(W-120,pad.t,16,3);phiCtx.textAlign='left';phiCtx.font='bold 10px Cairo';phiCtx.fillText('Φ̂(λ)',W-100,pad.t+5);
+  phiCtx.fillStyle='#475670';phiCtx.font='10px Cairo';phiCtx.textAlign='center';phiCtx.fillText('λ',W/2,H-2);
+}
+
+function updatePhiLam(){
+  const lam=parseFloat(document.getElementById('lambdaSlider').value);
+  document.getElementById('lambdaVal').textContent=lam.toFixed(3);
+  const pv=phiLam(lam),ev=etLam(lam),ml=unbiasedMuLam(lam);
+  document.getElementById('phiLamV').textContent=pv.toFixed(3);
+  document.getElementById('etLamV').textContent=ev.toFixed(3);
+  document.getElementById('muLamSq').textContent=ml.toFixed(4);
+  const kc=document.getElementById('phiIns'),kt=document.getElementById('pit'),ki=document.getElementById('pii');
+  const distX=Math.abs(lam-muX);
+  if(distX<.01){kc.className='ins iv';kt.textContent='🎯 λ = X̄ — القيمة الدنيا';ki.textContent=`عند λ = X̄: Φ̂(λ) = ${pv.toFixed(3)} وهي KR-21 — أصعب قرار وأدنى اعتمادية للقرار المرجعي.`;}
+  else if(pv>.85){kc.className='ins it';kt.textContent='✅ اعتمادية قرار عالية';ki.textContent=`λ = ${lam.toFixed(3)} بعيدة عن X̄ → Φ̂(λ) = ${pv.toFixed(3)} → القرار المرجعي موثوق.`;}
+  else{kc.className='ins ib';kt.textContent='⚠️ اعتمادية قرار متوسطة';ki.textContent=`λ = ${lam.toFixed(3)} → Φ̂(λ) = ${pv.toFixed(3)}. لتحسين الاعتمادية: ابتعد بـ λ عن X̄ أو زِد nᵢ′.`;}
+  const pc=document.getElementById('phiChart');
+  if(pc.offsetWidth>0){const dpr=window.devicePixelRatio||1;pc.width=pc.offsetWidth*dpr;pc.height=pc.offsetHeight*dpr;phiCtx.scale(dpr,dpr);pc.style.width=pc.offsetWidth+'px';pc.style.height=pc.offsetHeight+'px';drawPhiChart(lam);}
+}
+document.getElementById('lambdaSlider').addEventListener('input',updatePhiLam);
+
+/* ── SCALE CONVERTER ── */
+function updateScale(){
+  const ni=parseInt(document.getElementById('scaleNi').value)||12;
+  document.getElementById('scaleNiV').textContent=ni;
+  const n2=ni*ni;
+  const labels=['σ̂²(p)','σ̂²(δ)','σ̂²(Δ)','σ̂²(X̄)'];
+  const vals=[.0574,.0106,.0169,.0131];
+  const colors=['#1e40af','#065f46','#92400e','#4c1d95'];
+  const sr=document.getElementById('scaleResults');
+  sr.innerHTML='';
+  vals.forEach((v,i)=>{
+    const d=document.createElement('div');
+    d.style.cssText='background:white;border-radius:9px;padding:10px;text-align:center;border:1px solid #e2e8f0;';
+    d.innerHTML=`<div style="font-size:.68rem;color:#94a3b8;margin-bottom:3px;font-family:'Georgia',serif;">${labels[i]}</div>
+      <div style="font-family:'Georgia',serif;font-size:.8rem;color:${colors[i]};">${v}</div>
+      <div style="font-size:.7rem;color:#94a3b8;margin:2px 0;">× ${n2}</div>
+      <div style="font-family:'Georgia',serif;font-size:1rem;font-weight:700;color:${colors[i]};">${(v*n2).toFixed(2)}</div>`;
+    sr.appendChild(d);
+  });
+}
+document.getElementById('scaleNi').addEventListener('input',updateScale);
+updateScale();
+
+window.addEventListener('load',()=>{
+  updatePhiLam();
+  updateScale();
+  // resize canvas
+  const dpr=window.devicePixelRatio||1;
+  ['phiChart'].forEach(id=>{
+    const cv=document.getElementById(id);
+    if(cv){cv.width=cv.offsetWidth*dpr;cv.height=cv.offsetHeight*dpr;
+      cv.getContext('2d').scale(dpr,dpr);
+      cv.style.width=cv.offsetWidth+'px';cv.style.height=cv.offsetHeight+'px';}
+  });
+  updatePhiLam();
+});
+window.addEventListener('resize',()=>{updatePhiLam();});
+</script>
+
+<div class="page-nav-bottom" style="background:linear-gradient(135deg,#0a0a1a,#111827);"><a href="index.html" style="background:linear-gradient(135deg,#16213e,#0f3460);color:#fff;">&#x1F3E0; &#x627;&#x644;&#x631;&#x626;&#x64A;&#x633;&#x64A;&#x629;</a> <a href="2.4.html" style="background:linear-gradient(135deg,#4a5568,#2d3748);color:#fff;">&#x2190; &#x627;&#x644;&#x633;&#x627;&#x628;&#x642;</a> <a href="3.1.html" style="background:linear-gradient(135deg,#2b6cb0,#2c5282);color:#fff;">&#x627;&#x644;&#x62A;&#x627;&#x644;&#x64A; &#x2192;</a></div>
+</body>
+</html>

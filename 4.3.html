@@ -1,0 +1,1624 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>4.3 — الإجراءات المبسطة للنماذج المختلطة</title>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+:root{
+  --void:#030309;--deep:#05050d;--cosmos:#070712;
+  --emerald:#065f46;--emerald-lt:#6ee7b7;--emerald-md:#10b981;
+  --teal:#0d9488;--teal-lt:#5eead4;
+  --indigo:#3730a3;--indigo-lt:#818cf8;
+  --violet:#7c3aed;--violet-lt:#c4b5fd;
+  --gold:#c9a84c;--gold-lt:#e8cc7a;--gold-dk:#7a6230;
+  --rose:#be185d;--rose-lt:#f9a8d4;
+  --amber:#d97706;--amber-lt:#fcd34d;
+  --sky:#0284c7;--sky-lt:#7dd3fc;
+  --ivory:#f0ece0;--id:rgba(240,236,224,.76);--im:rgba(240,236,224,.46);--ig:rgba(240,236,224,.13);
+  --be:rgba(110,231,183,.28);--bv:rgba(196,181,253,.22);--bg:rgba(201,168,76,.22);
+  --ge:0 0 24px rgba(16,185,129,.2);--gv:0 0 24px rgba(124,58,237,.18);--gt:0 0 22px rgba(13,148,136,.18);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Cairo',sans-serif;background:var(--void);color:var(--ivory);direction:rtl;line-height:1.88;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;z-index:1;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.022'/%3E%3C/svg%3E");background-size:200px;opacity:.38}
+canvas#sf{position:fixed;inset:0;z-index:0;pointer-events:none}
+
+/* NAV */
+.nav{position:sticky;top:0;z-index:1000;height:56px;padding:0 38px;display:flex;align-items:center;justify-content:space-between;background:rgba(3,3,9,.92);backdrop-filter:blur(20px);border-bottom:1px solid rgba(110,231,183,.1)}
+.nav-brand{font-family:'Amiri',serif;font-size:.88rem;color:var(--emerald-lt);display:flex;align-items:center;gap:8px}
+.nav-dot{width:6px;height:6px;border-radius:50%;background:var(--emerald-md);box-shadow:0 0 8px var(--emerald-lt);animation:pd 3s ease-in-out infinite}
+@keyframes pd{0%,100%{opacity:.7;box-shadow:0 0 6px var(--emerald-md)}50%{opacity:1;box-shadow:0 0 18px var(--emerald-lt)}}
+.nav-links{display:flex;gap:2px;flex-wrap:wrap}
+.nav-link{padding:4px 11px;border-radius:50px;font-size:.72rem;font-weight:600;color:var(--im);text-decoration:none;border:1px solid transparent;transition:all .25s;white-space:nowrap}
+.nav-link:hover{color:var(--emerald-lt);border-color:var(--be);background:rgba(110,231,183,.06)}
+
+/* HERO */
+.hero{position:relative;z-index:2;min-height:80vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px 40px 55px;text-align:center;overflow:hidden}
+.hero-aura{position:absolute;width:620px;height:620px;top:50%;left:50%;transform:translate(-50%,-50%);background:radial-gradient(ellipse,rgba(16,185,129,.07) 0%,rgba(13,148,136,.04) 40%,transparent 70%);pointer-events:none;animation:ab 11s ease-in-out infinite}
+@keyframes ab{0%,100%{transform:translate(-50%,-50%) scale(1)}50%{transform:translate(-50%,-50%) scale(1.18)}}
+.hero-r{position:absolute;border-radius:50%;border:1px solid;top:50%;left:50%;pointer-events:none}
+.hr1{width:500px;height:500px;border-color:rgba(110,231,183,.07);animation:sp 65s linear infinite}
+.hr2{width:800px;height:800px;border-color:rgba(94,234,212,.04);animation:sp 100s linear infinite reverse}
+.hr1::after{content:'';position:absolute;width:5px;height:5px;border-radius:50%;background:var(--emerald-lt);box-shadow:0 0 10px var(--emerald-lt);top:-2.5px;left:50%;transform:translateX(-50%)}
+.hr2::after{content:'';position:absolute;width:4px;height:4px;border-radius:50%;background:var(--teal-lt);box-shadow:0 0 8px var(--teal-lt);top:-2px;left:50%;transform:translateX(-50%)}
+@keyframes sp{from{transform:translate(-50%,-50%) rotate(0)}to{transform:translate(-50%,-50%) rotate(360deg)}}
+.hero-c{position:relative;z-index:3;max-width:800px}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,rgba(16,185,129,.13),rgba(16,185,129,.04));border:1px solid rgba(110,231,183,.3);color:var(--emerald-lt);padding:6px 20px;border-radius:50px;font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-bottom:26px;animation:fi .8s .2s both}
+@keyframes fi{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+.hero-t{font-family:'Amiri',serif;font-size:clamp(2rem,4.8vw,3.9rem);font-weight:700;line-height:1.2;margin-bottom:10px;animation:fi .8s .35s both}
+.hero-te{background:linear-gradient(135deg,var(--emerald-lt),var(--teal-lt));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-s{font-family:'Amiri',serif;font-size:clamp(1rem,2vw,1.6rem);font-style:italic;color:var(--im);margin-bottom:20px;animation:fi .8s .5s both}
+.hero-d{font-size:.92rem;color:var(--im);max-width:560px;margin:0 auto 34px;line-height:1.95;animation:fi .8s .65s both}
+.hero-pills{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;animation:fi .8s .8s both}
+.pill{background:rgba(255,255,255,.022);border:1px solid rgba(255,255,255,.06);border-radius:11px;padding:13px 17px;text-align:center;transition:all .35s;cursor:default}
+.pill:hover{transform:translateY(-3px)}
+.pill-n{font-size:1.25rem;font-weight:900;line-height:1;direction:ltr}
+.pill-l{font-size:.65rem;font-weight:600;color:var(--im);margin-top:3px}
+
+/* SECTIONS */
+.sec{position:relative;z-index:2;padding:72px 50px}
+.sec-in{max-width:1100px;margin:0 auto}
+.div{position:relative;z-index:2;height:1px;margin:0 50px}
+.div-e{background:linear-gradient(90deg,transparent,rgba(6,95,70,.6) 15%,var(--emerald-lt) 50%,rgba(6,95,70,.6) 85%,transparent);opacity:.22}
+.div-v{background:linear-gradient(90deg,transparent,rgba(124,58,237,.4) 15%,var(--violet-lt) 50%,rgba(124,58,237,.4) 85%,transparent);opacity:.2}
+.div-g{background:linear-gradient(90deg,transparent,var(--gold-dk) 15%,var(--gold-lt) 50%,var(--gold-dk) 85%,transparent);opacity:.18}
+.div-t{background:linear-gradient(90deg,transparent,rgba(13,148,136,.4) 15%,var(--teal-lt) 50%,rgba(13,148,136,.4) 85%,transparent);opacity:.2}
+
+.stag{font-size:.68rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.stag::before{content:'';display:inline-block;width:24px;height:1px}
+.stag-e{color:var(--emerald-lt)}.stag-e::before{background:linear-gradient(90deg,transparent,var(--emerald-lt))}
+.stag-v{color:var(--violet-lt)}.stag-v::before{background:linear-gradient(90deg,transparent,var(--violet-lt))}
+.stag-g{color:var(--gold-lt)}.stag-g::before{background:linear-gradient(90deg,transparent,var(--gold-lt))}
+.stag-t{color:var(--teal-lt)}.stag-t::before{background:linear-gradient(90deg,transparent,var(--teal-lt))}
+.stag-num{opacity:.55;font-size:.63rem}
+.stit{font-family:'Amiri',serif;font-size:clamp(1.7rem,3vw,2.65rem);font-weight:700;color:var(--ivory);line-height:1.25;margin-bottom:14px}
+.stit .ae{color:var(--emerald-lt)}.stit .av{color:var(--violet-lt)}.stit .at{color:var(--teal-lt)}.stit .ag{color:var(--gold-lt)}
+.slead{font-size:.92rem;color:var(--im);max-width:660px;line-height:1.95;margin-bottom:40px}
+
+.fu{opacity:0;transform:translateY(28px);transition:opacity .7s cubic-bezier(.22,1,.36,1),transform .7s cubic-bezier(.22,1,.36,1)}
+.fu.in{opacity:1;transform:none}
+.fu:nth-child(2){transition-delay:.08s}.fu:nth-child(3){transition-delay:.16s}.fu:nth-child(4){transition-delay:.24s}
+
+/* TEXT */
+.para{font-size:.92rem;color:var(--id);line-height:2.05;margin-bottom:20px;text-align:justify}
+.para strong{color:var(--ivory);font-weight:600}
+.para em{color:var(--emerald-lt);font-style:normal}
+.para:first-of-type::first-letter{font-family:'Amiri',serif;font-size:3.6rem;font-weight:700;color:var(--emerald-lt);float:right;margin-left:8px;margin-top:-4px;line-height:.88;text-shadow:0 0 20px rgba(110,231,183,.3)}
+
+/* EQ */
+.eq{background:rgba(0,0,0,.5);border:1px solid rgba(110,231,183,.14);border-radius:11px;padding:16px 20px;margin:10px 0;direction:ltr;position:relative;transition:all .3s}
+.eq:hover{border-color:rgba(110,231,183,.34);background:rgba(110,231,183,.04)}
+.eq-line{font-family:'Georgia',serif;font-size:1.04rem;color:var(--emerald-lt);text-align:center;letter-spacing:.02em}
+.eq-sub{font-size:.73rem;color:var(--im);text-align:center;direction:rtl;margin-top:6px}
+.eq-num{position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:.65rem;color:rgba(110,231,183,.45);font-weight:700}
+
+/* RULE */
+.rule{background:linear-gradient(135deg,rgba(201,168,76,.08),rgba(201,168,76,.02));border:1px solid rgba(201,168,76,.2);border-radius:13px;padding:22px 26px;margin:18px 0}
+.rule-num{font-size:.66rem;letter-spacing:.12em;color:var(--gold-dk);font-weight:700;text-transform:uppercase;margin-bottom:5px}
+.rule-t{font-size:.84rem;font-weight:700;color:var(--gold-lt);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.rule-t::before{content:'⊕';color:var(--gold-lt)}
+.rule-body{font-family:'Georgia',serif;font-size:.9rem;color:var(--id);direction:ltr;background:rgba(0,0,0,.3);border-radius:7px;padding:10px 14px;margin-top:8px;text-align:center}
+.rule-ar{font-size:.83rem;color:var(--id);line-height:1.85;margin-top:10px;direction:rtl}
+.rules-trio{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin:22px 0}
+.rule-card{border-radius:13px;padding:20px;text-align:center;transition:all .4s;cursor:default;border:1px solid}
+.rule-card:hover{transform:translateY(-4px)}
+.rc-tau{background:rgba(110,231,183,.06);border-color:rgba(110,231,183,.22)}
+.rc-tau:hover{box-shadow:var(--ge)}
+.rc-delta{background:rgba(249,168,212,.06);border-color:rgba(249,168,212,.2)}
+.rc-delta:hover{box-shadow:0 0 24px rgba(249,168,212,.18)}
+.rc-sm{background:rgba(94,234,212,.06);border-color:rgba(94,234,212,.2)}
+.rc-sm:hover{box-shadow:var(--gt)}
+.rc-sym{font-family:'Georgia',serif;font-size:2rem;direction:ltr;margin-bottom:8px;display:block;line-height:1}
+.rc-tau .rc-sym{color:var(--emerald-lt)}.rc-delta .rc-sym{color:var(--rose-lt)}.rc-sm .rc-sym{color:var(--teal-lt)}
+.rc-name{font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px}
+.rc-tau .rc-name{color:var(--emerald-md)}.rc-delta .rc-name{color:var(--rose-lt)}.rc-sm .rc-name{color:var(--teal-lt)}
+.rc-def{font-size:.78rem;color:var(--im);line-height:1.7}
+
+/* INSIGHT */
+.ins{border-radius:13px;padding:22px 26px;margin:18px 0;position:relative;overflow:hidden}
+.ins-e{background:linear-gradient(135deg,rgba(16,185,129,.07),rgba(16,185,129,.02));border:1px solid rgba(110,231,183,.2)}
+.ins-v{background:linear-gradient(135deg,rgba(124,58,237,.07),rgba(124,58,237,.02));border:1px solid rgba(196,181,253,.2)}
+.ins-g{background:linear-gradient(135deg,rgba(201,168,76,.07),rgba(201,168,76,.02));border:1px solid rgba(201,168,76,.2)}
+.ins-t{background:linear-gradient(135deg,rgba(13,148,136,.07),rgba(13,148,136,.02));border:1px solid rgba(94,234,212,.2)}
+.ins-a{background:linear-gradient(135deg,rgba(217,119,6,.07),rgba(217,119,6,.02));border:1px solid rgba(252,211,77,.2)}
+.ins::before{content:'';position:absolute;top:0;right:0;width:120px;height:120px;border-radius:50%;pointer-events:none}
+.ins-e::before{background:radial-gradient(rgba(110,231,183,.08),transparent 70%)}
+.ins-v::before{background:radial-gradient(rgba(196,181,253,.08),transparent 70%)}
+.ins-g::before{background:radial-gradient(rgba(201,168,76,.08),transparent 70%)}
+.ins-a::before{background:radial-gradient(rgba(252,211,77,.08),transparent 70%)}
+.ins-tag{font-size:.64rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.ins-tag::after{content:'';flex:1;height:1px;background:currentColor;opacity:.2}
+.ins-e .ins-tag{color:var(--emerald-lt)}.ins-v .ins-tag{color:var(--violet-lt)}.ins-g .ins-tag{color:var(--gold-lt)}.ins-t .ins-tag{color:var(--teal-lt)}.ins-a .ins-tag{color:var(--amber-lt)}
+.ins-text{font-family:'Amiri',serif;font-size:1.02rem;color:var(--ivory);line-height:1.9}
+
+/* CALLOUT */
+.callout{margin:26px 0;padding:20px 28px;border-radius:0 12px 12px 0;position:relative}
+.callout-e{background:rgba(16,185,129,.05);border-right:3px solid var(--emerald-lt)}
+.callout-v{background:rgba(124,58,237,.05);border-right:3px solid var(--violet-lt)}
+.callout-a{background:rgba(217,119,6,.05);border-right:3px solid var(--amber-lt)}
+.callout::before{content:'❝';font-family:'Georgia',serif;font-size:2.8rem;opacity:.13;position:absolute;top:4px;right:12px;line-height:1}
+.callout-e::before{color:var(--emerald-lt)}.callout-v::before{color:var(--violet-lt)}.callout-a::before{color:var(--amber-lt)}
+.callout p{font-family:'Amiri',serif;font-size:1.02rem;color:var(--ivory);line-height:1.9;font-style:italic}
+
+/* NOTE */
+.note{padding:11px 16px;background:rgba(255,255,255,.022);border:1px solid rgba(255,255,255,.06);border-radius:8px;font-size:.77rem;color:var(--im);line-height:1.8;margin:8px 0}
+
+/* TWO-PANEL CONDITION BOX */
+.cond-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:22px 0}
+.cond-card{border-radius:13px;padding:20px 22px;border:1px solid}
+.cc-rand{background:rgba(16,185,129,.06);border-color:rgba(110,231,183,.22)}
+.cc-fixed{background:rgba(217,119,6,.06);border-color:rgba(252,211,77,.22)}
+.cc-head{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px}
+.cc-rand .cc-head{color:var(--emerald-lt)}.cc-fixed .cc-head{color:var(--amber-lt)}
+.cc-sym{font-family:'Georgia',serif;font-size:1.4rem;direction:ltr;margin-bottom:8px;display:block}
+.cc-rand .cc-sym{color:var(--emerald-lt)}.cc-fixed .cc-sym{color:var(--amber-lt)}
+.cc-body{font-size:.8rem;color:var(--im);line-height:1.75}
+
+/* TABLES */
+.tbl-wrap{overflow-x:auto;margin:18px 0}
+.tbl{width:100%;border-collapse:separate;border-spacing:0 4px;direction:ltr;max-width:100%}
+.tbl thead th{font-size:.67rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:0 14px 10px;border-bottom:1px solid rgba(110,231,183,.15);color:rgba(110,231,183,.55);text-align:center}
+.tbl thead th:first-child{text-align:right}
+.tbl tbody tr{transition:background .2s}
+.tbl tbody tr:hover td{background:rgba(110,231,183,.04)}
+.tbl tbody td{padding:10px 14px;background:rgba(255,255,255,.022);font-size:.8rem;color:var(--id);border-top:1px solid rgba(255,255,255,.03);border-bottom:1px solid rgba(255,255,255,.03)}
+.tbl tbody td:first-child{font-family:'Georgia',serif;color:var(--emerald-lt);border-right:2px solid rgba(110,231,183,.2);border-radius:0 8px 8px 0;direction:ltr}
+.tbl tbody td:last-child{border-radius:8px 0 0 8px}
+.tbl-f{font-family:'Georgia',serif;font-size:.78rem;direction:ltr}
+.ct{color:#6ee7b7 !important;font-weight:700}.cd{color:#f87171 !important;font-weight:700}.cb{color:var(--gold-lt) !important;font-weight:700}
+
+/* CHART BOXES */
+.chart-box{background:linear-gradient(135deg,rgba(3,6,12,.92),rgba(5,8,16,1));border-radius:18px;padding:26px;margin:22px 0}
+.cb-e{border:1px solid rgba(16,185,129,.2)}.cb-v{border:1px solid rgba(124,58,237,.2)}.cb-g{border:1px solid rgba(201,168,76,.2)}.cb-t{border:1px solid rgba(13,148,136,.2)}
+.chart-title{font-size:.84rem;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.ct-e{color:var(--emerald-lt)}.ct-v{color:var(--violet-lt)}.ct-g{color:var(--gold-lt)}.ct-t{color:var(--teal-lt)}
+.chart-sub{font-size:.71rem;color:var(--im);margin-bottom:14px}
+
+/* CONTROLS */
+.ctrl-row{display:flex;flex-wrap:wrap;gap:18px;margin-bottom:16px}
+.cg{display:flex;flex-direction:column;gap:5px;flex:1;min-width:140px}
+.cl{font-size:.71rem;font-weight:700;color:var(--im);letter-spacing:.04em}
+.cv{font-size:1.35rem;font-weight:900;font-family:'Cairo',sans-serif;line-height:1}
+input[type=range]{-webkit-appearance:none;appearance:none;height:3px;border-radius:2px;outline:none;width:100%;cursor:pointer}
+input[type=range].re{background:rgba(16,185,129,.25)}
+input[type=range].re::-webkit-slider-thumb{-webkit-appearance:none;width:15px;height:15px;border-radius:50%;background:var(--emerald-md);border:2px solid var(--emerald-lt);box-shadow:0 0 7px var(--emerald-md);cursor:pointer;transition:all .2s}
+input[type=range].rv{background:rgba(124,58,237,.25)}
+input[type=range].rv::-webkit-slider-thumb{-webkit-appearance:none;width:15px;height:15px;border-radius:50%;background:var(--violet-lt);border:2px solid #fff;box-shadow:0 0 7px var(--violet-lt);cursor:pointer}
+input[type=range].rt{background:rgba(13,148,136,.25)}
+input[type=range].rt::-webkit-slider-thumb{-webkit-appearance:none;width:15px;height:15px;border-radius:50%;background:var(--teal-lt);border:2px solid #fff;box-shadow:0 0 7px var(--teal-lt);cursor:pointer}
+input[type=range].ra{background:rgba(217,119,6,.25)}
+input[type=range].ra::-webkit-slider-thumb{-webkit-appearance:none;width:15px;height:15px;border-radius:50%;background:var(--amber-lt);border:2px solid #fff;box-shadow:0 0 7px var(--amber-lt);cursor:pointer}
+
+/* METRICS */
+.met-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px;margin:12px 0}
+.met{background:rgba(255,255,255,.023);border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:13px;text-align:center}
+.met-sym{font-family:'Georgia',serif;font-size:.8rem;direction:ltr;margin-bottom:3px;color:var(--im)}
+.met-val{font-size:1.45rem;font-weight:900;font-family:'Cairo',sans-serif;line-height:1;transition:all .25s}
+.met-lbl{font-size:.61rem;color:var(--ig);margin-top:3px}
+
+/* TABS */
+.tabs{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.tab{padding:6px 16px;border-radius:50px;font-size:.74rem;font-weight:600;border:1px solid;cursor:pointer;transition:all .3s}
+.tab-e{border-color:rgba(110,231,183,.3);color:var(--emerald-lt)}
+.tab-e.on{background:rgba(110,231,183,.1);border-color:rgba(110,231,183,.6)}
+.tab-v{border-color:rgba(196,181,253,.3);color:var(--violet-lt)}
+.tab-v.on{background:rgba(196,181,253,.08);border-color:rgba(196,181,253,.6)}
+.tab-a{border-color:rgba(252,211,77,.3);color:var(--amber-lt)}
+.tab-a.on{background:rgba(252,211,77,.07);border-color:rgba(252,211,77,.6)}
+.panel{display:none}.panel.on{display:block}
+.panel-in{border:1px solid rgba(255,255,255,.07);border-radius:13px;padding:20px 24px;margin-top:2px}
+
+/* EQ ROW */
+.eqr{display:flex;align-items:baseline;gap:10px;padding:8px 13px;background:rgba(0,0,0,.3);border-radius:7px;margin:5px 0;direction:ltr;transition:all .25s}
+.eqr:hover{background:rgba(110,231,183,.05)}
+.eqr-s{font-family:'Georgia',serif;font-size:.88rem;min-width:120px;color:var(--emerald-lt)}
+.eqr-e{color:var(--im);font-size:.9rem}
+.eqr-v{font-size:1.05rem;font-weight:700;font-family:'Cairo',sans-serif;color:var(--gold-lt)}
+.eqr-d{font-size:.72rem;color:var(--im);direction:rtl;margin-right:auto}
+
+/* CALCULATOR */
+.calc{background:linear-gradient(135deg,rgba(4,8,18,.95),rgba(3,6,14,1));border:1px solid rgba(16,185,129,.18);border-radius:17px;padding:28px;margin:20px 0}
+.calc-t{font-size:.85rem;font-weight:700;color:var(--emerald-lt);margin-bottom:18px;display:flex;align-items:center;gap:8px}
+.ms-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;margin-bottom:16px}
+.ms-inp{display:flex;flex-direction:column;gap:4px}
+.ms-lbl{font-size:.7rem;color:var(--im);font-family:'Georgia',serif;direction:ltr}
+input[type=number]{background:rgba(255,255,255,.036);border:1px solid rgba(16,185,129,.22);border-radius:7px;padding:7px 11px;color:var(--ivory);font-size:.88rem;font-family:'Cairo',sans-serif;width:100%;outline:none;transition:border-color .2s;direction:ltr;text-align:center}
+input[type=number]:focus{border-color:rgba(16,185,129,.55)}
+.calc-btn{margin-top:6px;padding:9px 26px;background:linear-gradient(135deg,rgba(16,185,129,.28),rgba(16,185,129,.1));border:1px solid rgba(110,231,183,.45);border-radius:50px;color:var(--emerald-lt);font-size:.82rem;font-weight:700;cursor:pointer;transition:all .3s;font-family:'Cairo',sans-serif}
+.calc-btn:hover{background:linear-gradient(135deg,rgba(16,185,129,.45),rgba(16,185,129,.2));box-shadow:var(--ge)}
+.calc-out{margin-top:14px}
+
+/* COMPARISON TABLE (Random vs Mixed) */
+.comp-2col{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:18px 0}
+.comp-card{border-radius:12px;padding:18px 20px;border:1px solid}
+.comp-e{background:rgba(16,185,129,.06);border-color:rgba(110,231,183,.2)}
+.comp-a{background:rgba(217,119,6,.06);border-color:rgba(252,211,77,.2)}
+.comp-head{font-size:.66rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px}
+.comp-e .comp-head{color:var(--emerald-lt)}.comp-a .comp-head{color:var(--amber-lt)}
+
+/* VENN CANVAS */
+.venn-pair{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:20px 0}
+
+/* FOOTER */
+.footer{position:relative;z-index:2;padding:40px;border-top:1px solid rgba(110,231,183,.08);text-align:center;background:var(--void)}
+.footer-t{font-family:'Amiri',serif;font-size:1.05rem;color:var(--emerald-lt);margin-bottom:6px}
+.footer-s{font-size:.76rem;color:var(--im)}
+.footer-c{font-size:.64rem;color:var(--ig);margin-top:12px;letter-spacing:.08em}
+
+@media(max-width:760px){.sec{padding:50px 18px}.div{margin:0 18px}.rules-trio,.cond-grid,.comp-2col,.venn-pair{grid-template-columns:1fr}.ms-grid{grid-template-columns:1fr 1fr}}
+
+/* COMPREHENSIVE MOBILE RESPONSIVE FIXES */
+*, *::before, *::after { box-sizing: border-box; }
+html { max-width: 100%; }
+body { max-width: 100%; }
+img, svg, canvas, video, iframe { max-width: 100%; height: auto; }
+table { max-width: 100%; }
+
+.table-wrap {
+  width: 100%; max-width: 100%;
+  overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 12px;
+}
+.tbl-wrap { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.score-matrix-wrap { overflow-x: auto; }
+
+pre, code { white-space: pre-wrap; word-break: break-word; max-width: 100%; }
+
+/* Page bottom navigation */
+.page-nav-bottom {
+  display: flex; flex-wrap: wrap; gap: 12px;
+  justify-content: center; align-items: center;
+  padding: 28px 20px; text-align: center;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  margin-top: 40px;
+}
+.page-nav-bottom a {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 12px 28px; border-radius: 50px;
+  font-size: 0.95rem; font-weight: 700;
+  text-decoration: none; min-height: 48px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.page-nav-bottom a:hover { transform: translateY(-2px); }
+
+@media (max-width: 768px) {
+  .page-nav-bottom { padding: 18px 14px; gap: 8px; }
+  .page-nav-bottom a { font-size: 0.88rem; padding: 10px 18px; }
+}
+@media (max-width: 480px) {
+  .page-nav-bottom a { font-size: 0.82rem; padding: 8px 14px; min-height: 44px; width: 100%; justify-content: center; }
+}
+
+/* Overflow fixes */
+.eq-row { flex-wrap: wrap; gap: 8px; }
+.eq-formula { min-width: 0; }
+.sym-featured { flex-wrap: wrap; gap: 12px; }
+
+@media (max-width: 768px) {
+  /* Navigation */
+  .nav, .top-nav {
+    padding: 0 14px !important;
+    height: auto !important;
+    min-height: 52px;
+    flex-wrap: wrap !important;
+    gap: 4px;
+  }
+  .nav-links { flex-wrap: wrap !important; gap: 2px !important; overflow-x: visible !important; }
+  .nav a, .nav-link, .nl {
+    font-size: 0.78rem !important;
+    padding: 5px 9px !important;
+    white-space: normal !important;
+    height: auto !important;
+    min-height: 30px;
+    display: inline-flex !important;
+    align-items: center;
+  }
+  .nav-logo, .nav-brand { font-size: 0.85rem !important; white-space: normal !important; }
+
+  /* Hero */
+  .hero {
+    min-height: auto !important;
+    padding: 44px 14px !important;
+  }
+  .hero h1, .hero-t, .hero-title {
+    font-size: clamp(1.6rem, 7vw, 2.8rem) !important;
+    line-height: 1.25 !important;
+  }
+  .hero h2, .hero-sub, .hero-subtitle-line {
+    font-size: clamp(1.15rem, 4vw, 1.8rem) !important;
+  }
+  .hero p, .hero-desc { font-size: 0.95rem !important; }
+  .hero-content, .hero-c { max-width: 100% !important; width: 100% !important; }
+  .hero::before, .hero::after,
+  .hero-aura { width: 280px !important; height: 280px !important; opacity: 0.2 !important; }
+  .hero-ring, .hero-ring-2, .hr1, .hr2 { display: none !important; }
+  .hero-mesh, .hero-grid { opacity: 0.08 !important; }
+  .hero-badge, .hero-eyebrow { font-size: 0.68rem !important; padding: 5px 14px; }
+  .hero-meta { flex-wrap: wrap !important; gap: 8px; justify-content: center; }
+  .hero-meta-item { padding: 10px 14px; min-width: 0; flex: 1 1 40%; }
+  .hero-cards { gap: 10px; justify-content: center; }
+  .hero-pills { flex-wrap: wrap !important; gap: 8px; }
+  .hcard { min-width: 0 !important; padding: 14px 16px; }
+  .scroll-hint { display: none !important; }
+  .chapter-deco { display: none !important; }
+
+  /* Sections */
+  .section, .sec { padding: 44px 14px !important; }
+  .section-inner, .sec-inner, .sec-in { max-width: 100% !important; }
+  .section-header, .sec-header { margin-bottom: 28px; }
+
+  /* Grids */
+  .scenario-grid, .crossed-grid, .concepts-grid, .gstudy-layout,
+  .matrix-grid, .sym-grid-2, .sym-grid-3, .sym-card-grid,
+  .authors-grid, .design-compare, .asm-grid, .expect-grid,
+  .rel-grid, .vp-grid, .g2, .g3, .g4, .compare-grid,
+  .ms-grid, .concepts-grid { grid-template-columns: 1fr !important; gap: 16px !important; }
+
+  .hero-cards { grid-template-columns: 1fr 1fr !important; }
+
+  /* Flex */
+  .tree-row { flex-wrap: wrap !important; justify-content: center; }
+  .var-row { flex-wrap: wrap !important; gap: 6px; }
+  .step-item { flex-wrap: wrap !important; gap: 14px; }
+  .step-content { width: 100% !important; order: 1; }
+  .step-num { order: 0; }
+  .decomp, .decomp-live, .flow-row { flex-direction: column !important; align-items: center !important; }
+  .decomp-op, .dl-op, .fn-arrow { transform: rotate(90deg); }
+  .crow { flex-direction: column !important; }
+  .concept-row { flex-wrap: wrap; }
+
+  /* Padding */
+  .family-bg, .universe-card, .scenario-bg, .var-section-bg,
+  .source-card, .guide-card, .interactive-box, .score-matrix-wrap,
+  .assumption-wrap, .lm-box, .ins, .highlight-box, .warn-box,
+  .crossed-card, .concept-card, .section-card, .cbox {
+    padding: 20px 14px !important;
+  }
+  .intro-callout { padding: 18px 16px; }
+  .source-card { gap: 14px; }
+  .tree-connector { height: 20px; }
+  .tree-node { min-width: 120px !important; font-size: 0.82rem !important; padding: 10px 14px !important; }
+  .section-divider, .div { margin: 0 14px; }
+
+  /* Fixed widths */
+  .var-label { min-width: 50px !important; font-size: 0.78rem !important; }
+  .var-desc { min-width: 0 !important; flex: 1 1 100% !important; }
+  .var-value { min-width: 40px !important; }
+  .sym-featured-glyph { width: 44px !important; height: 44px !important; }
+
+  /* Tables */
+  .table-wrap {
+    margin: 0 -14px; padding: 0 14px;
+    width: calc(100% + 28px); border-radius: 0;
+  }
+  .tbl-wrap { margin: 0 -14px; padding: 0 14px; }
+
+  .prog-bar { z-index: 9999; }
+}
+
+@media (max-width: 480px) {
+  .hero { padding: 32px 10px !important; }
+  .hero h1, .hero-t, .hero-title { font-size: clamp(1.3rem, 8vw, 2rem) !important; }
+  .hero h2, .hero-sub { font-size: clamp(1rem, 5vw, 1.5rem) !important; }
+  .hero p, .hero-desc { font-size: 0.9rem !important; }
+  .nav, .top-nav { padding: 0 8px !important; min-height: 44px; gap: 2px !important; }
+  .nav a, .nav-link, .nl { font-size: 0.7rem !important; padding: 4px 7px !important; }
+
+  .section, .sec { padding: 28px 10px !important; }
+
+  .hero-cards { grid-template-columns: 1fr !important; }
+  .hero-pills { gap: 6px; }
+  .pill { padding: 8px 10px; }
+
+  .table-wrap {
+    margin: 0 -10px; padding: 0 10px;
+    width: calc(100% + 20px);
+  }
+  table { font-size: 0.72rem !important; }
+  td, th { padding: 5px 7px !important; }
+
+  .hero-card, .concept-card, .crossed-card, .scenario-item,
+  .step-content, .coeff-card, .card, .design-card, .sym-card,
+  .exp-card, .author-card, .hcard { padding: 12px !important; }
+
+  .tree-node { min-width: 100px !important; font-size: 0.78rem !important; }
+  .hero-meta-item { padding: 8px 10px; }
+
+  .btn, .btn-primary, .btn-ghost {
+    width: 100%; justify-content: center; min-height: 44px;
+  }
+}
+
+/* â•â•â•â•â•â• ADDITIONAL OVERFLOW FIXES â•â•â•â•â•â• */
+[style*="min-width:200px"], [style*="min-width: 200px"], [style*="min-width:220px"], [style*="min-width: 220px"],
+[style*="min-width:280px"], [style*="min-width: 280px"], [style*="min-width:500px"], [style*="min-width: 500px"] {
+  min-width: 0 !important;
+}
+[style*="width:480px"], [style*="width: 480px"], [style*="width:400px"], [style*="width: 400px"] {
+  max-width: 100% !important;
+  width: auto !important;
+}
+.flex-item, .sym-grid-2 > .sym-featured, .eq-row { flex-wrap: wrap; }
+.score-matrix { min-width: 0 !important; }
+.hcard, .pill { min-width: 0 !important; }
+.dt-node { max-width: 100% !important; }
+
+@media (max-width: 768px) {
+  .mat { grid-template-columns: repeat(auto-fill, minmax(32px, 1fr)) !important; }
+  .mc { width: 32px !important; height: 32px !important; font-size: 0.6rem !important; }
+  .hcard { min-width: 0 !important; }
+  .hero-meta-num { font-size: 1.5rem !important; }
+  .hero-meta-lbl { font-size: 0.68rem !important; }
+  .hero-meta-item { flex: 1 1 42% !important; }
+  .pill { min-width: 0 !important; flex: 1 1 30% !important; }
+}
+
+@media (max-width: 480px) {
+  .mat { grid-template-columns: repeat(auto-fill, minmax(28px, 1fr)) !important; }
+  .mc { width: 28px !important; height: 28px !important; font-size: 0.55rem !important; }
+}
+
+/* ==================================================
+   FINAL REAL MOBILE LAYOUT REBUILD
+   Must be the last CSS block in the file
+   ================================================== */
+*, *::before, *::after { box-sizing: border-box !important; }
+html, body {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  min-width: 0 !important;
+}
+img, svg, canvas, video, iframe {
+  max-width: 100% !important;
+  height: auto !important;
+}
+table { max-width: 100% !important; }
+
+/* Force all major containers to viewport width */
+@media (max-width: 768px) {
+  html, body {
+    overflow-x: clip !important;
+    min-width: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .hero,
+  .section,
+  .sec,
+  .container,
+  .wrapper,
+  .content,
+  .main,
+  .page,
+  .page-wrap,
+  .layout,
+  .shell,
+  .panel,
+  .chapter,
+  .chapter-wrap,
+  .story,
+  .story-wrap,
+  .book-page,
+  .section-dark,
+  .section-mid,
+  .intro-section,
+  .source-section,
+  .guide-section,
+  .sec-dark,
+  .sec-alt,
+  .sec-inner,
+  .section-inner,
+  .section-header,
+  .sec-header,
+  .family-bg,
+  .universe-card,
+  .scenario-bg,
+  .var-section-bg,
+  .source-card,
+  .index-card,
+  .guide-card,
+  .intro-body,
+  .interactive-box,
+  .score-matrix-wrap,
+  .assumption-wrap,
+  .lm-box,
+  .cbox,
+  .comparison-wrap,
+  .steps-flow,
+  .highlight-box,
+  .warn-box,
+  .insight-box,
+  .history-wrap {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+    transform: none !important;
+    left: auto !important;
+    right: auto !important;
+    box-sizing: border-box !important;
+  }
+
+  .hero {
+    min-height: auto !important;
+    height: auto !important;
+    padding-top: 36px !important;
+    padding-bottom: 36px !important;
+    text-align: center !important;
+    overflow: hidden !important;
+  }
+
+  .hero-content,
+  .hero-inner,
+  .hero-wrap,
+  .hero-text,
+  .hero-c,
+  .hero-content {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+    text-align: center !important;
+    transform: none !important;
+    position: relative !important;
+  }
+
+  .hero h1,
+  .hero-title,
+  .hero-t,
+  .hero-ta,
+  h1 {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    font-size: clamp(1.55rem, 8vw, 2.3rem) !important;
+    line-height: 1.25 !important;
+    text-align: center !important;
+    white-space: normal !important;
+    overflow-wrap: break-word !important;
+    word-break: normal !important;
+  }
+
+  .hero-sub,
+  .hero-subtitle-line,
+  .hero-s,
+  .hero-d,
+  .hero-desc,
+  .sec-lead,
+  .slead,
+  .section-desc,
+  .subtitle,
+  .lead {
+    max-width: 100% !important;
+    white-space: normal !important;
+    overflow-wrap: break-word !important;
+    width: 100% !important;
+  }
+
+  .grid,
+  .cards,
+  .hero-cards,
+  .hero-meta,
+  .hero-pills,
+  .scenario-grid,
+  .crossed-grid,
+  .concepts-grid,
+  .gstudy-layout,
+  .matrix-grid,
+  .design-compare,
+  .authors-grid,
+  .rel-grid,
+  .vp-grid,
+  .g2,
+  .g3,
+  .g4,
+  .asm-grid,
+  .expect-grid,
+  .sym-grid-2,
+  .sym-grid-3,
+  .sym-card-grid,
+  .compare-grid,
+  .ms-grid,
+  .crow {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    gap: 16px !important;
+    transform: none !important;
+  }
+
+  .hero-cards {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+  }
+
+  .card,
+  .hero-card,
+  .glass-card,
+  .info-card,
+  .concept-card,
+  .step-card,
+  .source-card,
+  .index-card,
+  .guide-card,
+  .hcard,
+  .pill,
+  .tree-node,
+  .dt-node,
+  .matrix-card,
+  .panel-card,
+  .design-card,
+  .design-header,
+  .design-body,
+  .crossed-card,
+  .scenario-item,
+  .step-content,
+  .author-card,
+  .sym-card,
+  .sym-featured,
+  .var-section-bg,
+  .intro-callout,
+  .eq-row,
+  .eq-main {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    transform: none !important;
+  }
+
+  [style*="min-width"],
+  [style*="width: 480"],
+  [style*="width:480"],
+  [style*="width: 400"],
+  [style*="width:400"] {
+    max-width: 100% !important;
+    min-width: 0 !important;
+    width: auto !important;
+  }
+
+  .nav,
+  .top-nav,
+  .page-nav,
+  .page-nav-bottom {
+    width: 100% !important;
+    max-width: 100% !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    white-space: normal !important;
+    overflow: visible !important;
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
+
+  .nav-links {
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    gap: 4px !important;
+    overflow: visible !important;
+    width: auto !important;
+  }
+
+  .nav a,
+  .nav-link,
+  .nl,
+  .top-nav a,
+  .page-nav a,
+  .page-nav-bottom a {
+    max-width: 100% !important;
+    white-space: normal !important;
+    text-align: center !important;
+    min-height: 36px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 4px 10px !important;
+    font-size: 0.75rem !important;
+  }
+
+  .nav-logo,
+  .nav-brand {
+    font-size: 0.82rem !important;
+    white-space: normal !important;
+    max-width: 100% !important;
+    overflow: visible !important;
+  }
+
+  /* Hide all decorative overlays, rings, meshes */
+  .hero::before,
+  .hero::after,
+  .hero-ring,
+  .hero-ring-2,
+  .hr1,
+  .hr2,
+  .hero-mesh,
+  .hero-grid,
+  .hero-aura,
+  .chapter-deco,
+  .decor,
+  .bg-shape,
+  .section-divider,
+  .rainbow,
+  .div,
+  .scroll-hint,
+  .starfield {
+    display: none !important;
+  }
+
+  /* Section dividers must not cause overflow */
+  .section-divider,
+  .div-a,
+  .div-r,
+  .div-s,
+  .div-v,
+  .div-g {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    max-width: 100% !important;
+  }
+
+  .table-wrap,
+  .tbl-wrap {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  /* Hero-specific containers */
+  .hero-badge,
+  .hero-eyebrow {
+    display: inline-flex !important;
+    max-width: 100% !important;
+    white-space: normal !important;
+  }
+
+  .hero-meta {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .hero-meta-item {
+    flex: 1 1 42% !important;
+    min-width: 0 !important;
+    max-width: 48% !important;
+  }
+
+  .hcard,
+  .pill {
+    min-width: 0 !important;
+    flex: 1 1 42% !important;
+    max-width: 48% !important;
+  }
+
+  .decomp-block,
+  .decomp-live .dl-block {
+    min-width: 0 !important;
+    flex: 1 1 auto !important;
+  }
+
+  /* Family tree and diagrams */
+  .family-bg {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  /* Force flex containers to wrap */
+  .concept-row,
+  .badge-row,
+  .hero-actions {
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+  }
+
+  .btn,
+  .btn-primary,
+  .btn-ghost,
+  .calc-btn {
+    min-height: 44px !important;
+    padding: 12px 24px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  html, body {
+    min-width: 0 !important;
+    width: 100% !important;
+  }
+
+  .hero,
+  .section,
+  .sec,
+  .container,
+  .wrapper,
+  .content,
+  .main,
+  .page,
+  .page-wrap {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+  }
+
+  .hero {
+    padding-top: 28px !important;
+    padding-bottom: 28px !important;
+  }
+
+  .hero h1,
+  .hero-title,
+  .hero-t,
+  .hero-ta,
+  h1 {
+    font-size: clamp(1.35rem, 8.5vw, 2rem) !important;
+    line-height: 1.28 !important;
+  }
+
+  h2 {
+    font-size: clamp(1.2rem, 6.5vw, 1.65rem) !important;
+  }
+
+  h3 {
+    font-size: clamp(1rem, 5.5vw, 1.35rem) !important;
+  }
+
+  .card,
+  .hero-card,
+  .glass-card,
+  .info-card,
+  .concept-card,
+  .step-card,
+  .source-card,
+  .crossed-card,
+  .scenario-item,
+  .design-card {
+    padding: 14px 10px !important;
+  }
+
+  .nav,
+  .top-nav {
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+  }
+
+  .nav a,
+  .nav-link,
+  .nl {
+    padding: 3px 6px !important;
+    font-size: 0.68rem !important;
+  }
+
+  .hero-meta-item {
+    flex: 1 1 100% !important;
+    max-width: 100% !important;
+  }
+
+  .hcard {
+    flex: 1 1 100% !important;
+    max-width: 100% !important;
+  }
+
+  .hero-cards {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    flex-direction: column !important;
+    align-items: center !important;
+  }
+}
+
+/* === PAGE NAV TOP === */
+.page-nav-top {
+  direction: rtl;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  width: min(100% - 24px, 1100px);
+  margin: 14px auto;
+  padding: 10px;
+  border-radius: 16px;
+  background: rgba(15, 52, 96, 0.88);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.14);
+  backdrop-filter: blur(8px);
+  position: relative;
+  z-index: 10;
+}
+.page-nav-top a,
+.page-nav-top a:visited {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 8px 18px;
+  border-radius: 999px;
+  text-decoration: none;
+  font-weight: 700;
+  color: #ffffff;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.18);
+  transition: background 0.2s, transform 0.2s;
+}
+.page-nav-top a:hover {
+  background: rgba(0, 180, 216, 0.28);
+  transform: translateY(-2px);
+}
+@media (max-width: 480px) {
+  .page-nav-top {
+    width: calc(100% - 20px);
+    gap: 8px;
+    padding: 8px;
+  }
+  .page-nav-top a {
+    flex: 1 1 auto;
+    min-width: 90px;
+    padding: 8px 12px;
+    font-size: 0.9rem;
+  }
+}
+</style>
+</head>
+<body>
+<nav class="page-nav-top" aria-label="تنقل الصفحة العلوي"><a href="index.html" class="nav-home">الرئيسية</a></nav>
+
+<canvas id="sf"></canvas>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-brand"><div class="nav-dot"></div>نظرية إمكانية التعميم — الفصل 4</div>
+  <div class="nav-links">
+<a href="4.2.html">السابق</a><a href="index.html">الرئيسية</a><a href="4.4.html">التالي</a>
+
+    <a class="nav-link" href="#intro">المقدمة</a>
+    <a class="nav-link" href="#def">تعريف الثبات</a>
+    <a class="nav-link" href="#s431">4.3.1 القواعد</a>
+    <a class="nav-link" href="#s432">4.3.2 مخططات فن</a>
+    <a class="nav-link" href="#compare">المقارنة</a>
+    <a class="nav-link" href="#limits">الحدود</a>
+    <a class="nav-link" href="#calc">الحاسبة</a>
+  </div>
+
+
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-aura"></div>
+  <div class="hero-r hr1"></div>
+  <div class="hero-r hr2"></div>
+  <div class="hero-c">
+    <div class="hero-badge">الفصل الرابع — القسم 4.3</div>
+    <h1 class="hero-t"><span class="hero-te">الإجراءات المبسطة</span><br>للنماذج المختلطة</h1>
+    <p class="hero-s">Simplified Procedures for Mixed Models · Brennan (2001)</p>
+    <p class="hero-d">عندما يكون بعض الأوجه ثابتاً وبعضها عشوائياً — ثلاث قواعد تُعيد تعريف τ وΔ وδ في كون التعميم المقيَّد، مع رسوم تفاعلية تُظهر الفرق فوراً</p>
+    <div class="hero-pills">
+      <div class="pill" style="border-color:rgba(110,231,183,.2)"><div class="pill-n" style="color:var(--emerald-lt)">n′=N′</div><div class="pill-l">الوجه الثابت</div></div>
+      <div class="pill" style="border-color:rgba(252,211,77,.2)"><div class="pill-n" style="color:var(--amber-lt)">ℛ ∪ 𝓕</div><div class="pill-l">عشوائي + ثابت</div></div>
+      <div class="pill" style="border-color:rgba(196,181,253,.2)"><div class="pill-n" style="color:var(--violet-lt)">3 قواعد</div><div class="pill-l">4.3.1 – 4.3.3</div></div>
+      <div class="pill" style="border-color:rgba(94,234,212,.2)"><div class="pill-n" style="color:var(--teal-lt)">σ²(τ)↑</div><div class="pill-l">تباين الكون يرتفع</div></div>
+      <div class="pill" style="border-color:rgba(249,168,212,.2)"><div class="pill-n" style="color:var(--rose-lt)">σ²(δ)↓</div><div class="pill-l">الخطأ النسبي ينخفض</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- INTRO -->
+<div class="div div-e"></div>
+<section class="sec" id="intro">
+<div class="sec-in">
+  <div class="stag stag-e fu"><span class="stag-num">4.3</span> السياق والشروط</div>
+  <h2 class="stit fu">متى يُستخدم <span class="ae">كون تعميم مقيَّد؟</span></h2>
+  <p class="slead fu">كثيراً ما يرغب الباحث في تقييد كون التعميم — أي اعتبار بعض الأوجه ثابتة لا عشوائية. هذا يُغير الخطأ والمعاملات بطرق منضبطة.</p>
+
+  <p class="para fu">حتى هذه النقطة كان يُفترض أن جميع الأوجه في كلٍّ من كون الملاحظات المقبولة وكون التعميم لا نهائية الحجم. غير أن الباحث كثيراً ما يرغب في النظر في <strong>كون تعميم مقيَّد</strong>، أي كون يشتمل فقط على جزء فرعي من الشروط الموجودة في كون الملاحظات المقبولة.</p>
+
+  <!-- Two conditions -->
+  <div class="cond-grid fu">
+    <div class="cond-card cc-rand">
+      <div class="cc-head">الشرط الأول — مكوّنات دراسة G</div>
+      <span class="cc-sym">σ²(α) من نموذج عشوائي</span>
+      <div class="cc-body">يجب أن تكون مكوّنات التباين المقدَّرة في دراسة G خاصةً بنموذج <strong style="color:var(--ivory)">تأثيرات عشوائية</strong> — لا نموذج مختلط.</div>
+    </div>
+    <div class="cond-card cc-fixed">
+      <div class="cc-head">الشرط الثاني — طبيعة الأوجه في D</div>
+      <span class="cc-sym">كل وجه: عشوائي أو ثابت</span>
+      <div class="cc-body">كل وجه في دراسة D إما <strong style="color:var(--ivory)">عشوائي</strong> (n′ &lt; N′ → ∞) أو <strong style="color:var(--ivory)">ثابت</strong> (n′ = N′ &lt; ∞) — لا حالات وسطى.</div>
+    </div>
+  </div>
+
+  <div class="note fu">إذا لم تنطبق هاتان الحالتان، فيمكن استخدام الإجراءات الأكثر عمومية الواردة في القسم 5.1.</div>
+</div>
+</section>
+
+<!-- DEFINITION OF FIXED FACE -->
+<div class="div div-v"></div>
+<section class="sec" id="def" style="background:linear-gradient(180deg,rgba(7,5,18,.9),var(--void))">
+<div class="sec-in">
+  <div class="stag stag-v fu">تعريف الوجه الثابت</div>
+  <h2 class="stit fu">متى يكون الوجه <span class="av">ثابتاً</span>؟</h2>
+  <p class="slead fu">الوجه الثابت ليس مجرد اختيار عملي — بل تعريف رياضي دقيق يشترط تطابق عينة D مع كون التعميم.</p>
+
+  <!-- Fixed vs Random side-by-side -->
+  <div class="comp-2col fu">
+    <div class="comp-card comp-e">
+      <div class="comp-head">الوجه العشوائي</div>
+      <div class="eqr" style="margin-bottom:6px"><span class="eqr-s" style="min-width:50px">الشرط</span><span class="eqr-e">&nbsp;</span><span class="eqr-v">n′ &lt; N′ → ∞</span></div>
+      <div style="font-size:.8rem;color:var(--im);line-height:1.75">حجم عينة دراسة D أصغر من عدد الشروط في كون التعميم اللانهائي. يسمح بالتعميم عبر أوجه جديدة.</div>
+    </div>
+    <div class="comp-card comp-a">
+      <div class="comp-head">الوجه الثابت — التعريف الدقيق</div>
+      <div class="eqr" style="margin-bottom:6px"><span class="eqr-s" style="min-width:50px;color:var(--amber-lt)">الشرط</span><span class="eqr-e">&nbsp;</span><span class="eqr-v" style="color:var(--amber-lt)">n′ = N′ &lt; ∞</span></div>
+      <div style="font-size:.8rem;color:var(--im);line-height:1.75">ينطوي على اعتبارَين: (1) عدد شروط كون التعميم <strong style="color:var(--ivory)">محدود</strong>. (2) حجم العينة <strong style="color:var(--ivory)">يساوي</strong> عدد شروط الكون — أي أن العينة <em style="color:var(--amber-lt)">هي</em> الكون.</div>
+    </div>
+  </div>
+
+  <div class="ins ins-a fu">
+    <div class="ins-tag">قيد جوهري لا يُتجاوز</div>
+    <p class="ins-text">في نظرية إمكانية التعميم <strong style="color:var(--amber-lt)">يُفترض دائماً</strong> أن التعميم مقصود — بالنسبة إلى وجه واحد على الأقل — إلى كون أوسع من ذلك الممثَّل فعلاً في دراسة D. لو ثُبِّتت جميع الأوجه لَمَا وُجد خطأ قياس أصلاً، بحكم التعريف.</p>
+  </div>
+
+  <!-- Notation clarification -->
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:20px 0" class="fu">
+    <div style="background:rgba(255,255,255,.022);border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:14px;text-align:center">
+      <div style="font-family:'Georgia',serif;font-size:1.1rem;color:var(--emerald-lt);direction:ltr;margin-bottom:4px">n</div>
+      <div style="font-size:.72rem;color:var(--im)">حجم عينة دراسة G لوجه ما</div>
+    </div>
+    <div style="background:rgba(255,255,255,.022);border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:14px;text-align:center">
+      <div style="font-family:'Georgia',serif;font-size:1.1rem;color:var(--emerald-lt);direction:ltr;margin-bottom:4px">N</div>
+      <div style="font-size:.72rem;color:var(--im)">حجم الوجه في كون الملاحظات المقبولة</div>
+    </div>
+    <div style="background:rgba(255,255,255,.022);border:1px solid rgba(252,211,77,.15);border-radius:10px;padding:14px;text-align:center">
+      <div style="font-family:'Georgia',serif;font-size:1.1rem;color:var(--amber-lt);direction:ltr;margin-bottom:4px">n′</div>
+      <div style="font-size:.72rem;color:var(--im)">حجم عينة دراسة D لوجه ما</div>
+    </div>
+    <div style="background:rgba(255,255,255,.022);border:1px solid rgba(252,211,77,.15);border-radius:10px;padding:14px;text-align:center">
+      <div style="font-family:'Georgia',serif;font-size:1.1rem;color:var(--amber-lt);direction:ltr;margin-bottom:4px">N′</div>
+      <div style="font-size:.72rem;color:var(--im)">حجم الوجه في كون التعميم</div>
+    </div>
+  </div>
+  <p class="para fu">الوجه ثابت عندما <em>n′ = N′ &lt; ∞</em>. علاوة على ذلك، بما أن شروط دراسة D يجب أن تكون محتواة في كون التعميم، فإن شروط الوجه الثابت في D هي <strong>الشروط نفسها</strong> الموجودة في كون التعميم — لا مجرد العدد نفسه.</p>
+</div>
+</section>
+
+<!-- 4.3.1 RULES -->
+<div class="div div-e"></div>
+<section class="sec" id="s431">
+<div class="sec-in">
+  <div class="stag stag-e fu"><span class="stag-num">4.3.1</span> القواعد</div>
+  <h2 class="stit fu">ثلاث قواعد — <span class="ae">تُعيد تعريف</span> المقادير</h2>
+  <p class="slead fu">في النماذج المختلطة نفس مكوّنات σ²(ᾱ) التي نوقشت في 4.1، لكن مجموعة الأوجه التي يدخل إليها كل مكوّن تتغير.</p>
+
+  <!-- ℛ and 𝓕 notation -->
+  <div style="display:flex;gap:14px;margin-bottom:22px;flex-wrap:wrap" class="fu">
+    <div style="background:rgba(16,185,129,.07);border:1px solid rgba(110,231,183,.22);border-radius:10px;padding:14px 18px;flex:1;min-width:200px;text-align:center">
+      <div style="font-family:'Georgia',serif;font-size:1.4rem;color:var(--emerald-lt);margin-bottom:6px;direction:ltr">ℛ</div>
+      <div style="font-size:.78rem;color:var(--im)">مجموعة <strong style="color:var(--ivory)">الأوجه العشوائية</strong> في كون التعميم</div>
+    </div>
+    <div style="background:rgba(217,119,6,.07);border:1px solid rgba(252,211,77,.22);border-radius:10px;padding:14px 18px;flex:1;min-width:200px;text-align:center">
+      <div style="font-family:'Georgia',serif;font-size:1.4rem;color:var(--amber-lt);margin-bottom:6px;direction:ltr">𝓕</div>
+      <div style="font-size:.78rem;color:var(--im)">مجموعة <strong style="color:var(--ivory)">الأوجه الثابتة</strong> في كون التعميم</div>
+    </div>
+    <div style="background:rgba(129,140,248,.07);border:1px solid rgba(129,140,248,.22);border-radius:10px;padding:14px 18px;flex:1;min-width:200px;text-align:center">
+      <div style="font-family:'Georgia',serif;font-size:1.1rem;color:var(--indigo-lt);margin-bottom:6px;direction:ltr">X̄<sub>pℛ.𝓕</sub></div>
+      <div style="font-size:.78rem;color:var(--im)">متوسط الدرجة الملحوظة في النموذج المختلط</div>
+    </div>
+  </div>
+
+  <!-- Three rules as cards -->
+  <div class="rules-trio fu">
+    <div class="rule-card rc-tau">
+      <span class="rc-sym">σ²(τ)</span>
+      <div class="rc-name">القاعدة 4.3.1</div>
+      <div class="rc-def">مجموع جميع σ²(ᾱ) التي تتضمن <strong style="color:var(--ivory)">τ</strong> ولا تتضمن أي مؤشر من مؤشرات <strong style="color:var(--emerald-lt)">ℛ</strong></div>
+      <div style="margin-top:10px;padding:8px;background:rgba(0,0,0,.35);border-radius:6px;font-family:'Georgia',serif;font-size:.8rem;color:var(--emerald-lt);direction:ltr">τ ∈ ᾱ  AND  ℛ ∩ ᾱ = ∅</div>
+    </div>
+    <div class="rule-card rc-delta">
+      <span class="rc-sym">σ²(Δ)</span>
+      <div class="rc-name">القاعدة 4.3.2</div>
+      <div class="rc-def">مجموع جميع σ²(ᾱ) التي تتضمن واحداً على الأقل من مؤشرات <strong style="color:var(--rose-lt)">ℛ</strong></div>
+      <div style="margin-top:10px;padding:8px;background:rgba(0,0,0,.35);border-radius:6px;font-family:'Georgia',serif;font-size:.8rem;color:var(--rose-lt);direction:ltr">ℛ ∩ ᾱ ≠ ∅</div>
+    </div>
+    <div class="rule-card rc-sm">
+      <span class="rc-sym">σ²(δ)</span>
+      <div class="rc-name">القاعدة 4.3.3</div>
+      <div class="rc-def">مجموع جميع σ²(ᾱ) التي تتضمن <strong style="color:var(--ivory)">τ</strong> ومؤشراً واحداً على الأقل من <strong style="color:var(--teal-lt)">ℛ</strong></div>
+      <div style="margin-top:10px;padding:8px;background:rgba(0,0,0,.35);border-radius:6px;font-family:'Georgia',serif;font-size:.8rem;color:var(--teal-lt);direction:ltr">τ ∈ ᾱ  AND  ℛ ∩ ᾱ ≠ ∅</div>
+    </div>
+  </div>
+
+  <!-- Comparison with random model rules -->
+  <h3 class="fu" style="font-family:'Amiri',serif;font-size:1.2rem;color:var(--ivory);margin:28px 0 14px">مقارنة القواعد: النموذج العشوائي ↔ النموذج المختلط</h3>
+  <div class="tbl-wrap fu">
+    <div class="table-wrap"><table class="tbl" style="direction:rtl;min-width:0">
+      <thead><tr><th>المقدار</th><th>النموذج العشوائي (4.1)</th><th>النموذج المختلط (4.3)</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>σ²(τ)</td>
+          <td class="tbl-f" style="direction:rtl;color:var(--im)">σ²(p) فقط — ᾱ = p</td>
+          <td class="tbl-f" style="direction:rtl;color:var(--emerald-lt)">σ²(p) + أي σ²(ᾱ) تتضمن p ولا تتضمن ℛ (مثل σ²(pH) عند H ثابت)</td>
+        </tr>
+        <tr>
+          <td>σ²(Δ)</td>
+          <td class="tbl-f" style="direction:rtl;color:var(--im)">جميع σ²(ᾱ) ما عدا σ²(p)</td>
+          <td class="tbl-f" style="direction:rtl;color:var(--rose-lt)">فقط σ²(ᾱ) التي تتضمن مؤشراً من ℛ (لا تشمل ما يخص الأوجه الثابتة فقط)</td>
+        </tr>
+        <tr>
+          <td>σ²(δ)</td>
+          <td class="tbl-f" style="direction:rtl;color:var(--im)">جميع σ²(ᾱ) تتضمن p ومؤشراً آخر</td>
+          <td class="tbl-f" style="direction:rtl;color:var(--teal-lt)">فقط σ²(ᾱ) تتضمن p ومؤشراً من ℛ (تأثيرات التفاعل مع الأوجه العشوائية)</td>
+        </tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <!-- Concrete example: p×I×H, H fixed -->
+  <h3 class="fu" style="font-family:'Amiri',serif;font-size:1.2rem;color:var(--ivory);margin:28px 0 14px">مثال تطبيقي: تصميم p × I × H — H ثابت، I عشوائي</h3>
+  <div class="tabs fu">
+    <button class="tab tab-e on" onclick="showEx('ea',this)">ℛ={I}, 𝓕={H} — H ثابت</button>
+    <button class="tab tab-v" onclick="showEx('eb',this)">ℛ={H}, 𝓕={I} — I ثابت</button>
+    <button class="tab tab-a" onclick="showEx('ec',this)">التصميم p×(I:H) — H ثابت</button>
+  </div>
+
+  <div id="ea" class="panel on fu">
+    <div class="panel-in" style="border-color:rgba(110,231,183,.2)">
+      <div style="font-family:'Amiri',serif;font-size:1.05rem;color:var(--ivory);margin-bottom:14px">p×I×H مع H ثابت: ℛ={I} فقط</div>
+      <div class="eqr"><span class="eqr-s" style="color:var(--emerald-lt)">σ²(τ)</span><span class="eqr-e">=</span><span class="eqr-v">σ²(p) + σ²(pH)</span><span class="eqr-d">p و pH لا تتضمنان مؤشر I</span></div>
+      <div class="eqr"><span class="eqr-s" style="color:var(--rose-lt)">σ²(Δ)</span><span class="eqr-e">=</span><span class="eqr-v">σ²(I)+σ²(pI)+σ²(IH)+σ²(pIH)</span><span class="eqr-d">كل ما يتضمن I (مؤشر ℛ)</span></div>
+      <div class="eqr"><span class="eqr-s" style="color:var(--teal-lt)">σ²(δ)</span><span class="eqr-e">=</span><span class="eqr-v">σ²(pI) + σ²(pIH)</span><span class="eqr-d">يتضمن p وI معاً</span></div>
+      <div style="margin-top:12px;padding:10px 14px;background:rgba(16,185,129,.05);border-radius:8px;font-size:.8rem;color:var(--emerald-lt)">
+        σ²(H) لا تدخل في أي من الثلاثة — لأن H ثابت وكل تطبيق يشمل الشروط نفسها.
+        σ²(pH) انتقلت من σ²(δ) إلى σ²(τ) مقارنةً بالنموذج العشوائي.
+      </div>
+    </div>
+  </div>
+
+  <div id="eb" class="panel fu">
+    <div class="panel-in" style="border-color:rgba(196,181,253,.2)">
+      <div style="font-family:'Amiri',serif;font-size:1.05rem;color:var(--ivory);margin-bottom:14px">p×I×H مع I ثابت: ℛ={H} فقط</div>
+      <div class="eqr"><span class="eqr-s" style="color:var(--emerald-lt)">σ²(τ)</span><span class="eqr-e">=</span><span class="eqr-v">σ²(p) + σ²(pI)</span><span class="eqr-d">p و pI لا تتضمنان مؤشر H</span></div>
+      <div class="eqr"><span class="eqr-s" style="color:var(--rose-lt)">σ²(Δ)</span><span class="eqr-e">=</span><span class="eqr-v">σ²(H)+σ²(pH)+σ²(IH)+σ²(pIH)</span><span class="eqr-d">كل ما يتضمن H (مؤشر ℛ)</span></div>
+      <div class="eqr"><span class="eqr-s" style="color:var(--teal-lt)">σ²(δ)</span><span class="eqr-e">=</span><span class="eqr-v">σ²(pH) + σ²(pIH)</span><span class="eqr-d">يتضمن p وH معاً</span></div>
+      <div style="margin-top:12px;padding:10px 14px;background:rgba(124,58,237,.05);border-radius:8px;font-size:.8rem;color:var(--violet-lt)">
+        σ²(I) لا تدخل في أي من الثلاثة — لأن I ثابت.
+        σ²(pI) انتقلت إلى σ²(τ) بدلاً من σ²(δ).
+      </div>
+    </div>
+  </div>
+
+  <div id="ec" class="panel fu">
+    <div class="panel-in" style="border-color:rgba(252,211,77,.2)">
+      <div style="font-family:'Amiri',serif;font-size:1.05rem;color:var(--ivory);margin-bottom:14px">p×(I:H) مع H ثابت: ℛ={I} فقط، σ²(i:h)=σ²(i)+σ²(ih)، σ²(pi:h)=σ²(pi)+σ²(pih)</div>
+      <div class="eqr"><span class="eqr-s" style="color:var(--emerald-lt)">σ²(τ)</span><span class="eqr-e">=</span><span class="eqr-v">σ²(p) + σ²(pH)</span><span class="eqr-d">p و pH — نفس نتيجة p×I×H</span></div>
+      <div class="eqr"><span class="eqr-s" style="color:var(--rose-lt)">σ²(Δ)</span><span class="eqr-e">=</span><span class="eqr-v">σ²(I:H) + σ²(pI:H)</span><span class="eqr-d">كل ما يتضمن I داخل H</span></div>
+      <div class="eqr"><span class="eqr-s" style="color:var(--teal-lt)">σ²(δ)</span><span class="eqr-e">=</span><span class="eqr-v">σ²(pI:H)</span><span class="eqr-d">= [σ²(pi)+σ²(pih)]/(n′ᵢn′ₕ)</span></div>
+      <div style="margin-top:12px;padding:10px 14px;background:rgba(217,119,6,.05);border-radius:8px;font-size:.8rem;color:var(--amber-lt)">
+        σ²(δ) أصغر من التصميم المتقاطع لأن σ²(pi) مقسوم على n′ᵢ×n′ₕ بدل n′ᵢ فقط.
+      </div>
+    </div>
+  </div>
+
+  <!-- EMS justification -->
+  <div class="ins ins-g fu" style="margin-top:24px">
+    <div class="ins-tag">تبرير القواعد من خلال متوسطات المربعات المتوقعة</div>
+    <p class="ins-text">في تصميم p×(I:H) عندما يكون H ثابتاً: σ²(p|H) = σ²(p) + σ²(ph)/nₕ — هذا بالضبط ما تعطيه القاعدة 4.3.1. المعادلة الأولى (النموذج العشوائي) تصبح: EMS(p) = σ²(pi:h) + nᵢnₕσ²(p). أما في النموذج المختلط: EMS(p) = σ²(pi:h|H) + nᵢnₕσ²(p|H). وبما أن σ²(pi:h|H) = σ²(pi:h)، فإن σ²(p|H) = σ²(p) + σ²(ph)/nₕ = σ²(τ) في المختلط.</p>
+  </div>
+</div>
+</section>
+
+<!-- 4.3.2 VENN DIAGRAMS -->
+<div class="div div-v"></div>
+<section class="sec" id="s432" style="background:linear-gradient(180deg,rgba(7,5,18,.9),var(--void))">
+<div class="sec-in">
+  <div class="stag stag-v fu"><span class="stag-num">4.3.2</span> مخططات فن</div>
+  <h2 class="stit fu">تصوُّر التغيير من <span class="av">عشوائي إلى ثابت</span></h2>
+  <p class="slead fu">عندما يُثبَّت H، تنتقل σ²(pH) من دائرة δ إلى دائرة τ — مما يرفع تباين الكون ويخفض الخطأ النسبي.</p>
+
+  <div class="venn-pair fu">
+    <div class="chart-box cb-e" style="padding:18px">
+      <div class="chart-title ct-e" style="font-size:.78rem">p×I×H — كلاهما عشوائيان (النموذج 4.1)</div>
+      <canvas id="vennRandom" style="width:100%;height:230px"></canvas>
+    </div>
+    <div class="chart-box cb-v" style="padding:18px">
+      <div class="chart-title ct-v" style="font-size:.78rem">p×I×H — H ثابت (النموذج المختلط 4.3)</div>
+      <canvas id="vennMixed" style="width:100%;height:230px"></canvas>
+    </div>
+  </div>
+
+  <p class="para fu">يتضح من الجدولين 4.1 و4.2 ومن الشكلَين 4.4 و4.5 أن تباين درجة الكون في كلٍّ من التصميمَين عندما يكون H ثابتاً هو:</p>
+  <div class="eq fu"><div class="eq-line">σ²(τ) = σ²(p) + σ²(pH)</div><div class="eq-sub">في كلٍّ من p×I×H و p×(I:H) عندما H ثابت — σ²(pH) تنتقل إلى τ</div></div>
+
+  <div class="ins ins-v fu">
+    <div class="ins-tag">الاكتشاف الجوهري — ما الذي يبقى ثابتاً وما الذي يتغير</div>
+    <p class="ins-text">
+      <strong style="color:var(--emerald-lt)">يبقى ثابتاً:</strong> التباين الملحوظ المتوقع ES²(p) = σ²(p)+σ²(δ) لا يتأثر بتثبيت H أو تحريره.<br><br>
+      <strong style="color:var(--amber-lt)">ما يتغير:</strong> الطريقة التي يُحلَّل بها ES²(p) — عند تثبيت H تسهم σ²(pH) في <em style="color:var(--emerald-lt)">σ²(τ)</em> بدلاً من σ²(δ). بالتالي: <strong style="color:var(--ivory)">σ²(τ) يرتفع + σ²(δ) ينخفض = Eρ² يرتفع</strong>.
+    </p>
+  </div>
+
+  <!-- Interactive Venn -->
+  <div class="chart-box cb-e fu">
+    <div class="chart-title ct-e">◈ تحرّك مكوّن σ²(pH) تفاعلياً — من δ إلى τ</div>
+    <div class="chart-sub">اضبط نسبة تثبيت H (0 = عشوائي كامل، 1 = ثابت كامل) وشاهد كيف تنتقل σ²(pH) بين τ وδ</div>
+    <div class="ctrl-row">
+      <div class="cg"><div class="cl">درجة تثبيت H</div><div class="cv" id="fixDegV" style="color:var(--amber-lt)">0.0</div><input type="range" class="ra" id="fixDeg" min="0" max="100" value="0"></div>
+      <div class="cg"><div class="cl">σ²(p) (تباين الأشخاص)</div><div class="cv" id="varPV" style="color:var(--emerald-lt)">.25</div><input type="range" class="re" id="varP" min="5" max="60" value="25"></div>
+      <div class="cg"><div class="cl">σ²(pH) (تفاعل p×H)</div><div class="cv" id="varPhV" style="color:var(--violet-lt)">.10</div><input type="range" class="rv" id="varPh" min="2" max="30" value="10"></div>
+    </div>
+    <div class="met-row" id="vennMetrics"></div>
+    <div class="ch-wrap"><canvas id="transChart" style="height:220px"></canvas></div>
+    <div id="vennInfo" style="margin-top:10px;font-size:.78rem;color:var(--im)"></div>
+  </div>
+</div>
+</section>
+
+<!-- COMPARISON: RANDOM vs MIXED -->
+<div class="div div-g"></div>
+<section class="sec" id="compare">
+<div class="sec-in">
+  <div class="stag stag-g fu">المقارنة الشاملة</div>
+  <h2 class="stit fu">العشوائي مقابل المختلط — <span class="ag">الأثر الكامل</span></h2>
+  <p class="slead fu">التصاميم المتداخلة مع تثبيت H تُنتج أصغر تباينات خطأ — لكن مع كون تعميم أضيق نطاقاً.</p>
+
+  <!-- σ²(δ) comparison: crossed vs nested, random vs mixed -->
+  <div class="chart-box cb-g fu">
+    <div class="chart-title ct-g">◈ مقارنة σ²(δ) للتصاميم الأربعة — مع تغيّر n′ᵢ</div>
+    <div class="chart-sub">لاحظ كيف يكون σ²(δ) دائماً أصغر في المتداخل منه في المتقاطع، وأصغر في المختلط منه في العشوائي</div>
+    <div class="ctrl-row">
+      <div class="cg"><div class="cl">n′ₕ</div><div class="cv" id="cNhV" style="color:var(--violet-lt)">3</div><input type="range" class="rv" id="cNhS" min="1" max="8" value="3"></div>
+    </div>
+    <div class="ch-wrap"><canvas id="compareChart" style="height:240px"></canvas></div>
+    <div id="compareInfo" style="margin-top:10px;font-size:.78rem;color:var(--im)"></div>
+  </div>
+
+  <!-- Key formula comparison -->
+  <h3 class="fu" style="font-family:'Amiri',serif;font-size:1.2rem;color:var(--ivory);margin:28px 0 14px">صيغ σ²(δ) — المقارنة المباشرة</h3>
+  <div class="comp-2col fu">
+    <div class="comp-card comp-e">
+      <div class="comp-head">النموذج العشوائي (كلاهما عشوائيان)</div>
+      <div style="font-size:.78rem;color:var(--im);margin-bottom:12px">ℛ = {I, H}</div>
+      <div class="eqr" style="margin:4px 0"><span class="eqr-s" style="font-size:.8rem;min-width:90px">p×I×H:</span><span style="font-family:'Georgia',serif;font-size:.82rem;color:var(--id)">σ²(pi)/n′ᵢ + σ²(ph)/n′ₕ + σ²(pih)/(n′ᵢn′ₕ)</span></div>
+      <div class="eqr" style="margin:4px 0"><span class="eqr-s" style="font-size:.8rem;min-width:90px">p×(I:H):</span><span style="font-family:'Georgia',serif;font-size:.82rem;color:var(--id)">[σ²(pi)+σ²(pih)]/(n′ᵢn′ₕ) + σ²(ph)/n′ₕ</span></div>
+    </div>
+    <div class="comp-card comp-a">
+      <div class="comp-head">النموذج المختلط (H ثابت)</div>
+      <div style="font-size:.78rem;color:var(--im);margin-bottom:12px">ℛ = {I} فقط</div>
+      <div class="eqr" style="margin:4px 0"><span class="eqr-s" style="font-size:.8rem;min-width:90px;color:var(--amber-lt)">p×I×H:</span><span style="font-family:'Georgia',serif;font-size:.82rem;color:var(--id)">σ²(pi)/n′ᵢ + σ²(pih)/(n′ᵢn′ₕ)</span></div>
+      <div class="eqr" style="margin:4px 0"><span class="eqr-s" style="font-size:.8rem;min-width:90px;color:var(--amber-lt)">p×(I:H):</span><span style="font-family:'Georgia',serif;font-size:.82rem;color:var(--id)">[σ²(pi)+σ²(pih)]/(n′ᵢn′ₕ)</span></div>
+    </div>
+  </div>
+
+  <div class="ins ins-t fu">
+    <div class="ins-tag">الاستنتاج العام</div>
+    <p class="ins-text">
+      بصورة عامة: تباين درجة الكون لا يتأثر ببنية تصميم D، أما تباينات الخطأ فإنها تتأثر.<br>
+      والقاعدة الجامعة: <strong style="color:var(--teal-lt)">التصاميم المتداخلة تؤدي — مع ثبات سائر الأمور — إلى تباينات خطأ أصغر من التصاميم المتقاطعة.</strong> وينطبق هذا الحكم على النماذج العشوائية والمختلطة على حدٍّ سواء.
+    </p>
+  </div>
+</div>
+</section>
+
+<!-- LIMITATIONS -->
+<div class="div div-t"></div>
+<section class="sec" id="limits" style="background:linear-gradient(180deg,rgba(7,5,18,.9),var(--void))">
+<div class="sec-in">
+  <div class="stag stag-t fu">القيود والتحفظات</div>
+  <h2 class="stit fu">إجراءات <span class="at">نافعة</span> — لكن ليست خالية من الحدود</h2>
+  <p class="slead fu">الإجراءات المبسطة فعّالة وعملية، لكن تطبيقها الصحيح يستلزم دقة في الشروط.</p>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:22px 0" class="fu">
+    <div class="ins ins-a" style="margin:0">
+      <div class="ins-tag">القيد الأول — نوع المكوّنات المستخدمة</div>
+      <p class="ins-text" style="font-size:.88rem">تستخدم الإجراءات <strong style="color:var(--amber-lt)">مكوّنات التأثيرات العشوائية σ²(ᾱ)</strong>، لا مكوّنات النموذج المختلط الفعلي. وهذا قيد منهجي يُعالَج بإجراءات القسم 5.1 الأكثر دقةً وتعقيداً.</p>
+    </div>
+    <div class="ins ins-v" style="margin:0">
+      <div class="ins-tag">القيد الثاني — تطابق الشروط لا مجرد العدد</div>
+      <p class="ins-text" style="font-size:.88rem">عند استخدام التقديرات العملية، يلزم أن تتضمن دراستا G وD <strong style="color:var(--violet-lt)">الشروط نفسها</strong> للأوجه الثابتة — لا مجرد العدد نفسه. وإن اختلفت الشروط، فإن التقديرات تكون تقريبية لا دقيقة.</p>
+    </div>
+  </div>
+
+  <div class="ins ins-e fu">
+    <div class="ins-tag">متى تتطابق الإجراءان المبسطة والدقيقة؟</div>
+    <p class="ins-text">في ظل شرط تطابق الشروط: الإجراءات المبسطة (4.3) والإجراءات الدقيقة (5.1) تعطيان <strong style="color:var(--emerald-lt)">المقدِّرات غير المتحيزة نفسها</strong> لتباين درجة الكون وتباينات الخطأ والمعاملات. أي أن الإجراءات المبسطة مثلى في هذه الحالة وتكفي تماماً.</p>
+  </div>
+
+  <div class="callout callout-a fu">
+    <p>يناقش القسم 4.5 طريقة أكثر أناقة لتصوُّر كون تعميم مقيَّد — وهي ترتكز على المفاهيم نفسها لكن بصياغة أكثر اتساقاً مع الإطار العام للنظرية.</p>
+  </div>
+</div>
+</section>
+
+<!-- FULL CALCULATOR -->
+<div class="div div-e"></div>
+<section class="sec" id="calc">
+<div class="sec-in">
+  <div class="stag stag-e fu">الحاسبة الشاملة</div>
+  <h2 class="stit fu">احسب النموذج <span class="ae">العشوائي والمختلط</span> معاً</h2>
+  <p class="slead fu">أدخل مكوّنات G وأحجام عينات D واختر أي الأوجه ثابت — تحصل على المقارنة الكاملة فوراً للتصميمَين.</p>
+
+  <div class="calc fu">
+    <div class="calc-t">⟨σ²⟩ مكوّنات دراسة G — التصميم p×i×h</div>
+    <div class="ms-grid">
+      <div class="ms-inp"><div class="ms-lbl">σ²(p)</div><input type="number" id="gp" value="0.300" step="0.001"></div>
+      <div class="ms-inp"><div class="ms-lbl">σ²(i)</div><input type="number" id="gi" value="0.060" step="0.001"></div>
+      <div class="ms-inp"><div class="ms-lbl">σ²(h)</div><input type="number" id="gh" value="0.080" step="0.001"></div>
+      <div class="ms-inp"><div class="ms-lbl">σ²(pi)</div><input type="number" id="gpi" value="0.120" step="0.001"></div>
+      <div class="ms-inp"><div class="ms-lbl">σ²(ph)</div><input type="number" id="gph" value="0.090" step="0.001"></div>
+      <div class="ms-inp"><div class="ms-lbl">σ²(ih)</div><input type="number" id="gih" value="0.020" step="0.001"></div>
+      <div class="ms-inp"><div class="ms-lbl">σ²(pih)</div><input type="number" id="gpih" value="0.150" step="0.001"></div>
+    </div>
+    <div class="calc-t" style="margin-top:14px">أحجام عينات دراسة D</div>
+    <div class="ms-grid">
+      <div class="ms-inp"><div class="ms-lbl">n′ᵢ</div><input type="number" id="ni" value="4" min="1"></div>
+      <div class="ms-inp"><div class="ms-lbl">n′ₕ</div><input type="number" id="nh" value="2" min="1"></div>
+    </div>
+    <button class="calc-btn" onclick="runCalc()">احسب النموذج العشوائي والمختلط ⟹</button>
+    <div class="calc-out" id="calcOut"></div>
+  </div>
+</div>
+</section>
+
+<div class="div div-e"></div>
+<footer class="footer">
+  <div class="footer-t">Generalizability Theory — Robert L. Brennan (2001)</div>
+  <div class="footer-s">الفصل 4 — القسم 4.3: الإجراءات المبسطة للنماذج المختلطة (ص 120–124)</div>
+  <div class="footer-c">دليل بصري تعليمي متكامل مع رسوم تفاعلية حقيقية النتائج</div>
+</footer>
+
+<script>
+/* ═══ STARFIELD ═══ */
+(()=>{
+  const c=document.getElementById('sf'),x=c.getContext('2d');let W,H,S=[];
+  function rz(){W=c.width=innerWidth;H=c.height=innerHeight}
+  function init(){S=[];const N=Math.floor(W*H/6000);
+    for(let i=0;i<N;i++)S.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*.85+.12,sp:Math.random()*.013+.003,tw:Math.random()*Math.PI*2,ts:Math.random()*.009+.003,br:Math.random(),col:Math.random()>.9?`rgba(16,185,129,`:`rgba(${210+Math.random()*45|0},${225+Math.random()*30|0},255,`});
+    for(let i=0;i<10;i++)S.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.7+1,sp:Math.random()*.005+.001,tw:Math.random()*Math.PI*2,ts:.005,br:.8,col:Math.random()>.5?`rgba(110,231,183,`:`rgba(94,234,212,`});
+  }
+  function draw(){x.clearRect(0,0,W,H);S.forEach(s=>{s.tw+=s.ts;const a=(s.br*.6+.4)*(.5+.5*Math.sin(s.tw));x.beginPath();x.arc(s.x,s.y,s.r,0,Math.PI*2);x.fillStyle=s.col+a.toFixed(2)+')';x.fill();s.y-=s.sp;if(s.y<0){s.y=H+2;s.x=Math.random()*W}});requestAnimationFrame(draw)}
+  rz();init();draw();addEventListener('resize',()=>{rz();init()});
+})();
+
+const io=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('in')}),{threshold:.06});
+document.querySelectorAll('.fu').forEach(e=>io.observe(e));
+addEventListener('scroll',()=>{const y=scrollY;document.querySelectorAll('.hr1,.hr2').forEach((r,i)=>{r.style.transform=`translate(-50%,-50%) rotate(${y*(i?.04:.06)}deg)`})});
+
+/* ═══ TABS ═══ */
+function showEx(id,btn){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+  btn.classList.add('on');
+}
+
+/* ═══ G GETTERS ═══ */
+function getG(){
+  const ids=['gp','gi','gh','gpi','gph','gih','gpih'];
+  const keys=['p','i','h','pi','ph','ih','pih'];
+  const g={};
+  ids.forEach((id,k)=>g[keys[k]]=+document.getElementById(id).value||0);
+  return g;
+}
+
+/* ═══ COMPUTE FUNCTIONS ═══ */
+function calcRandom(g,ni,nh){
+  // p×I×H random: τ=p, Δ=all except p, δ=pI+pH+pIH
+  const d={p:g.p,I:g.i/ni,H:g.h/nh,pI:g.pi/ni,pH:g.ph/nh,IH:g.ih/(ni*nh),pIH:g.pih/(ni*nh)};
+  const tau=d.p;
+  const varD=d.I+d.H+d.pI+d.pH+d.IH+d.pIH;
+  const vard=d.pI+d.pH+d.pIH;
+  const erho=tau/(tau+vard), phi=tau/(tau+varD);
+  return{d,tau,varD,vard,semD:Math.sqrt(varD),semd:Math.sqrt(vard),erho,phi,es2p:tau+vard};
+}
+
+function calcMixedHFixed(g,ni,nh){
+  // p×I×H, H fixed: ℛ={I}, τ=p+pH, Δ=I+pI+IH+pIH, δ=pI+pIH
+  const d={p:g.p,I:g.i/ni,H:g.h/nh,pI:g.pi/ni,pH:g.ph/nh,IH:g.ih/(ni*nh),pIH:g.pih/(ni*nh)};
+  const tau=d.p+d.pH;
+  const varD=d.I+d.pI+d.IH+d.pIH;        // contains I (∈ℛ)
+  const vard=d.pI+d.pIH;                   // contains p AND I
+  const erho=tau/(tau+vard), phi=tau/(tau+varD);
+  return{d,tau,varD,vard,semD:Math.sqrt(varD),semd:Math.sqrt(vard),erho,phi,es2p:tau+vard};
+}
+
+function calcNestedRandom(g,ni,nh){
+  // p×(I:H) random: σ²(i:h)=σ²(i)+σ²(ih), σ²(pi:h)=σ²(pi)+σ²(pih)
+  const gIH=g.i+g.ih, gPIH=g.pi+g.pih;
+  const d={p:g.p,H:g.h/nh,'I:H':gIH/(ni*nh),pH:g.ph/nh,'pI:H':gPIH/(ni*nh)};
+  const tau=d.p;
+  const varD=d.H+d['I:H']+d.pH+d['pI:H'];
+  const vard=d.pH+d['pI:H'];
+  const erho=tau/(tau+vard), phi=tau/(tau+varD);
+  return{d,tau,varD,vard,semD:Math.sqrt(varD),semd:Math.sqrt(vard),erho,phi,es2p:tau+vard};
+}
+
+function calcNestedMixedHFixed(g,ni,nh){
+  // p×(I:H), H fixed: ℛ={I}, τ=p+pH, Δ=I:H+pI:H, δ=pI:H
+  const gIH=g.i+g.ih, gPIH=g.pi+g.pih;
+  const d={p:g.p,H:g.h/nh,'I:H':gIH/(ni*nh),pH:g.ph/nh,'pI:H':gPIH/(ni*nh)};
+  const tau=d.p+d.pH;
+  const varD=d['I:H']+d['pI:H'];
+  const vard=d['pI:H'];
+  const erho=tau/(tau+vard), phi=tau/(tau+varD);
+  return{d,tau,varD,vard,semD:Math.sqrt(varD),semd:Math.sqrt(vard),erho,phi,es2p:tau+vard};
+}
+
+/* ═══ VENN CANVASES ═══ */
+function drawVennRandom(canvasId){
+  const cv=document.getElementById(canvasId);
+  cv.width=cv.offsetWidth;cv.height=230;
+  const ctx=cv.getContext('2d');const W=cv.width,H=230;
+  ctx.clearRect(0,0,W,H);
+  const cx=W*.38,cy=H*.46,rP=72;
+  // p circle
+  ctx.beginPath();ctx.arc(cx,cy,rP,0,Math.PI*2);ctx.fillStyle='rgba(16,185,129,.14)';ctx.fill();ctx.strokeStyle='rgba(110,231,183,.6)';ctx.lineWidth=1.5;ctx.stroke();
+  // outer σ²(H) circle - separate from p
+  ctx.beginPath();ctx.arc(cx+rP+32,cy,42,0,Math.PI*2);ctx.fillStyle='rgba(217,119,6,.1)';ctx.fill();ctx.strokeStyle='rgba(252,211,77,.45)';ctx.lineWidth=1.2;ctx.stroke();
+  // I circle left
+  ctx.beginPath();ctx.arc(cx-rP-22,cy,42,0,Math.PI*2);ctx.fillStyle='rgba(249,168,212,.1)';ctx.fill();ctx.strokeStyle='rgba(249,168,212,.45)';ctx.lineWidth=1.2;ctx.stroke();
+  // labels
+  ctx.font='bold 12px Cairo';ctx.textAlign='center';ctx.fillStyle='rgba(110,231,183,.9)';ctx.fillText('τ = σ²(p)',cx,cy-14);
+  ctx.fillStyle='rgba(94,234,212,.8)';ctx.font='10px Georgia';ctx.fillText('δ: pI,pH,pIH',cx,cy+6);
+  ctx.fillStyle='rgba(249,168,212,.8)';ctx.font='10px Georgia';ctx.fillText('σ²(I)',cx-rP-22,cy-8);ctx.fillText('σ²(IH)',cx-rP-22,cy+8);
+  ctx.fillStyle='rgba(252,211,77,.8)';ctx.fillText('σ²(H)',cx+rP+32,cy);
+  ctx.fillStyle='rgba(240,236,224,.3)';ctx.font='10px Cairo';ctx.textAlign='center';ctx.fillText('الخارج = σ²(Δ)−σ²(δ)',cx,H-8);
+}
+
+function drawVennMixed(canvasId){
+  const cv=document.getElementById(canvasId);
+  cv.width=cv.offsetWidth;cv.height=230;
+  const ctx=cv.getContext('2d');const W=cv.width,H=230;
+  ctx.clearRect(0,0,W,H);
+  const cx=W*.42,cy=H*.46,rP=82;
+  // enlarged p circle (now includes pH contribution)
+  ctx.beginPath();ctx.arc(cx,cy,rP,0,Math.PI*2);ctx.fillStyle='rgba(16,185,129,.16)';ctx.fill();ctx.strokeStyle='rgba(110,231,183,.7)';ctx.lineWidth=2;ctx.stroke();
+  // I circle outside only
+  ctx.beginPath();ctx.arc(cx-rP-20,cy,42,0,Math.PI*2);ctx.fillStyle='rgba(249,168,212,.1)';ctx.fill();ctx.strokeStyle='rgba(249,168,212,.45)';ctx.lineWidth=1.2;ctx.stroke();
+  // σ²(pH) absorbed arrow inside p circle
+  ctx.fillStyle='rgba(252,211,77,.7)';ctx.font='10px Georgia';ctx.textAlign='center';ctx.fillText('σ²(pH) ← هنا الآن',cx+18,cy+22);
+  // labels
+  ctx.font='bold 12px Cairo';ctx.textAlign='center';ctx.fillStyle='rgba(110,231,183,.9)';ctx.fillText('τ = σ²(p)+σ²(pH)',cx,cy-18);
+  ctx.fillStyle='rgba(94,234,212,.8)';ctx.font='10px Georgia';ctx.fillText('δ: pI, pIH فقط',cx,cy-2);
+  ctx.fillStyle='rgba(249,168,212,.8)';ctx.font='10px Georgia';ctx.fillText('σ²(I)',cx-rP-20,cy-8);ctx.fillText('σ²(IH)',cx-rP-20,cy+8);
+  // H fixed - gone
+  ctx.fillStyle='rgba(240,236,224,.28)';ctx.font='9px Cairo';ctx.fillText('σ²(H) ثابت — ليست في σ²(Δ)',cx,H-8);
+}
+
+/* ═══ TRANSITION CHART (Fixed degree slider) ═══ */
+let transChart;
+const G_DEF={p:.25,i:.06,h:.08,pi:.15,ph:.10,ih:.02,pih:.12};
+function updateTransChart(){
+  const fix=+document.getElementById('fixDeg').value/100;
+  const varP=+document.getElementById('varP').value/100;
+  const varPh=+document.getElementById('varPh').value/100;
+  document.getElementById('fixDegV').textContent=fix.toFixed(1);
+  document.getElementById('varPV').textContent=varP.toFixed(2);
+  document.getElementById('varPhV').textContent=varPh.toFixed(2);
+  // Interpolate: when fix=0 all random, fix=1 H fully fixed → pH moves to tau
+  const tauRand=varP;
+  const tauMixed=varP+varPh;
+  const tau=tauRand+(tauMixed-tauRand)*fix;
+  const deltaD_rand=0.05+0.05; // pI/n + pH/n + pIH
+  const deltaD_mixed=0.05+0.02; // pI/n + pIH without pH
+  const vard=deltaD_rand-(varPh)*fix;
+  const varD=vard+0.04; // plus I, H contributions (simplified)
+  const erho=tau/(tau+Math.max(0,vard));
+  const phi=tau/(tau+Math.max(0.001,varD));
+  document.getElementById('vennMetrics').innerHTML=`
+    <div class="met"><div class="met-sym" style="color:rgba(110,231,183,.9)">σ²(τ)</div><div class="met-val" style="color:rgba(110,231,183,.9)">${tau.toFixed(3)}</div><div class="met-lbl">تباين الكون</div></div>
+    <div class="met"><div class="met-sym" style="color:rgba(249,168,212,.9)">σ²(δ)</div><div class="met-val" style="color:rgba(249,168,212,.9)">${Math.max(0,vard).toFixed(3)}</div><div class="met-lbl">خطأ نسبي</div></div>
+    <div class="met"><div class="met-sym" style="color:rgba(129,140,248,.9)">Eρ²</div><div class="met-val" style="color:${erho>=.8?'#6ee7b7':erho>=.7?'#fcd34d':'#f87171'}">${erho.toFixed(3)}</div><div class="met-lbl">معامل G</div></div>
+    <div class="met"><div class="met-sym" style="color:rgba(201,168,76,.9)">Φ</div><div class="met-val" style="color:rgba(201,168,76,.9)">${phi.toFixed(3)}</div><div class="met-lbl">مؤشر Φ</div></div>
+    <div class="met"><div class="met-sym" style="color:rgba(252,211,77,.9)">σ²(pH) في τ</div><div class="met-val" style="color:rgba(252,211,77,.9)">${(varPh*fix).toFixed(3)}</div><div class="met-lbl">نسبة انتقال</div></div>`;
+  // Stacked bar showing τ vs δ vs "other Δ"
+  if(transChart)transChart.destroy();
+  const steps=Array.from({length:11},(_,i)=>i/10);
+  transChart=new Chart(document.getElementById('transChart'),{type:'bar',data:{
+    labels:['عشوائي←', '0.1','0.2','0.3','0.4','0.5','0.6','0.7','0.8','0.9','←ثابت'],
+    datasets:[
+      {label:'σ²(τ)',data:steps.map(f=>{const t=varP+varPh*f;return+t.toFixed(4)}),backgroundColor:'rgba(110,231,183,.65)',borderRadius:4,stack:'s'},
+      {label:'σ²(δ)',data:steps.map(f=>+Math.max(0,deltaD_rand-varPh*f).toFixed(4)),backgroundColor:'rgba(94,234,212,.5)',borderRadius:4,stack:'s'},
+      {label:'σ²(Δ)−σ²(δ)',data:steps.map(_=>0.04),backgroundColor:'rgba(249,168,212,.35)',borderRadius:4,stack:'s'},
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{color:'rgba(240,236,224,.45)',font:{size:10},boxWidth:14}}},scales:{x:{stacked:true,grid:{color:'rgba(255,255,255,.04)'},ticks:{color:'rgba(240,236,224,.4)',font:{size:9}}},y:{stacked:true,grid:{color:'rgba(255,255,255,.04)'},ticks:{color:'rgba(240,236,224,.4)',font:{size:9}},max:.7}}}
+  });
+  document.getElementById('vennInfo').innerHTML=`درجة التثبيت=${fix.toFixed(1)}: τ=${tau.toFixed(3)}, σ²(δ)=${Math.max(0,vard).toFixed(3)}, Eρ²=${erho.toFixed(3)}. كلما زاد التثبيت → τ يرتفع وσ²(δ) ينخفض → Eρ² يرتفع — لكن نطاق التعميم يضيق.`;
+}
+['fixDeg','varP','varPh'].forEach(id=>document.getElementById(id).addEventListener('input',updateTransChart));
+
+/* ═══ COMPARISON CHART ═══ */
+let cmpChart;
+const gDef={p:.25,i:.06,h:.08,pi:.15,ph:.10,ih:.02,pih:.12};
+function updateCompare(){
+  const nh=+document.getElementById('cNhS').value;
+  document.getElementById('cNhV').textContent=nh;
+  const niVals=Array.from({length:10},(_,i)=>i+1);
+  const gc='rgba(255,255,255,.04)',tc='rgba(240,236,224,.42)';
+  const data=[
+    {label:'متقاطع — عشوائي',data:niVals.map(ni=>+calcRandom(gDef,ni,nh).vard.toFixed(4)),borderColor:'rgba(110,231,183,.8)',borderWidth:2,fill:false,tension:.35,pointRadius:3},
+    {label:'متقاطع — H ثابت',data:niVals.map(ni=>+calcMixedHFixed(gDef,ni,nh).vard.toFixed(4)),borderColor:'rgba(252,211,77,.8)',borderWidth:2,fill:false,tension:.35,pointRadius:3,borderDash:[5,5]},
+    {label:'متداخل — عشوائي',data:niVals.map(ni=>+calcNestedRandom(gDef,ni,nh).vard.toFixed(4)),borderColor:'rgba(94,234,212,.7)',borderWidth:2,fill:false,tension:.35,pointRadius:3},
+    {label:'متداخل — H ثابت',data:niVals.map(ni=>+calcNestedMixedHFixed(gDef,ni,nh).vard.toFixed(4)),borderColor:'rgba(252,211,77,.45)',borderWidth:2,fill:false,tension:.35,pointRadius:3,borderDash:[3,3]},
+  ];
+  if(cmpChart)cmpChart.destroy();
+  cmpChart=new Chart(document.getElementById('compareChart'),{type:'line',data:{labels:niVals,datasets:data},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{color:tc,font:{size:10},boxWidth:14,padding:10}}},scales:{x:{title:{display:true,text:"n′ᵢ",color:tc,font:{size:11}},grid:{color:gc},ticks:{color:tc,font:{size:10}}},y:{title:{display:true,text:'σ²(δ)',color:tc,font:{size:11}},grid:{color:gc},ticks:{color:tc,font:{size:10}},min:0}}}});
+  const maxNi=10;
+  const r=calcRandom(gDef,maxNi,nh),mh=calcMixedHFixed(gDef,maxNi,nh),nr=calcNestedRandom(gDef,maxNi,nh),nmh=calcNestedMixedHFixed(gDef,maxNi,nh);
+  document.getElementById('compareInfo').innerHTML=`عند n′ᵢ=${maxNi}, n′ₕ=${nh}: متقاطع عشوائي σ²(δ)=${r.vard.toFixed(4)} | متقاطع مختلط ${mh.vard.toFixed(4)} | متداخل عشوائي ${nr.vard.toFixed(4)} | متداخل مختلط ${nmh.vard.toFixed(4)} (الأدنى دائماً)`;
+}
+document.getElementById('cNhS').addEventListener('input',updateCompare);
+
+/* ═══ FULL CALCULATOR ═══ */
+function runCalc(){
+  const g=getG();
+  const ni=+document.getElementById('ni').value||4;
+  const nh=+document.getElementById('nh').value||2;
+  const rnd=calcRandom(g,ni,nh);
+  const mxd=calcMixedHFixed(g,ni,nh);
+  const fmtN=(v,d=4)=>+v.toFixed(d);
+  const fmt=(v,d=4)=>v.toFixed(d);
+  const mkCard=(title,res,color,bg,label)=>{
+    const rows=[
+      ['σ²(τ)',res.tau,color],['σ²(Δ)',res.varD,'rgba(249,168,212,.9)'],
+      ['σ²(δ)',res.vard,'rgba(94,234,212,.9)'],['σ̂(Δ)',res.semD,'rgba(249,168,212,.7)'],
+      ['σ̂(δ)',res.semd,'rgba(94,234,212,.7)'],['ES²(p)',res.es2p,'rgba(252,211,77,.8)'],
+      ['Eρ²',res.erho,res.erho>=.85?'#6ee7b7':res.erho>=.7?'#fcd34d':'#f87171'],
+      ['Φ',res.phi,'rgba(201,168,76,.9)']
+    ];
+    return`<div style="background:${bg};border:1px solid ${color.replace('.9','.25')};border-radius:12px;padding:18px 20px">
+      <div style="font-size:.64rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:${color};margin-bottom:12px">${title}</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;direction:ltr;font-family:'Georgia',serif;font-size:.76rem;margin-bottom:12px">
+        ${Object.entries(res.d).map(([k,v])=>`<div style="background:rgba(0,0,0,.28);border-radius:6px;padding:7px;text-align:center"><div style="color:${color}">σ²(${k})</div><div style="font-weight:700;color:var(--ivory);font-size:.92rem">${fmt(v)}</div></div>`).join('')}
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px">
+        ${rows.map(([l,v,c])=>`<div style="background:rgba(0,0,0,.22);border-radius:6px;padding:8px 10px;display:flex;justify-content:space-between;direction:ltr"><span style="color:var(--im);font-family:'Georgia',serif;font-size:.73rem">${l}</span><span style="color:${c};font-weight:700;font-size:1rem;font-family:'Cairo',sans-serif">${fmt(v,3)}</span></div>`).join('')}
+      </div>
+      <div style="margin-top:10px;padding:9px 13px;background:${res.erho>=.85?'rgba(5,150,105,.07)':res.erho>=.7?'rgba(201,168,76,.07)':'rgba(220,38,38,.07)'};border:1px solid ${res.erho>=.85?'rgba(110,231,183,.25)':res.erho>=.7?'rgba(201,168,76,.25)':'rgba(248,113,113,.25)'};border-radius:7px;font-size:.76rem;color:${res.erho>=.85?'#6ee7b7':res.erho>=.7?'#fcd34d':'#f87171'}">
+        ${res.erho>=.85?'✅ ممتاز':res.erho>=.7?'⚠ مقبول':'❌ منخفض'} — Eρ²=${fmt(res.erho,3)}, Φ=${fmt(res.phi,3)}
+      </div></div>`;
+  };
+  document.getElementById('calcOut').innerHTML=`
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:6px">
+      ${mkCard('p×I×H — النموذج العشوائي (4.1): ℛ={I,H}',rnd,'rgba(110,231,183,.9)','rgba(16,185,129,.05)','')}
+      ${mkCard('p×I×H — النموذج المختلط (4.3): ℛ={I}، H ثابت',mxd,'rgba(252,211,77,.9)','rgba(217,119,6,.05)','')}
+    </div>
+    <div style="margin-top:12px;padding:14px 18px;background:rgba(16,185,129,.05);border:1px solid rgba(110,231,183,.15);border-radius:10px;font-size:.8rem;color:var(--id)">
+      <strong style="color:var(--emerald-lt)">المقارنة:</strong> 
+      τ: ${fmt(rnd.tau,3)} → ${fmt(mxd.tau,3)} (زيادة بمقدار σ²(pH)=${fmt(mxd.tau-rnd.tau,3)}) |
+      σ²(δ): ${fmt(rnd.vard,3)} → ${fmt(mxd.vard,3)} (انخفاض بمقدار ${fmt(rnd.vard-mxd.vard,3)}) |
+      Eρ²: ${fmt(rnd.erho,3)} → ${fmt(mxd.erho,3)} (ارتفاع بمقدار ${fmt(mxd.erho-rnd.erho,3)}) |
+      ES²(p) لا يتغير: ${fmt(rnd.es2p,3)}.
+    </div>`;
+}
+
+/* ═══ INIT ═══ */
+window.addEventListener('load',()=>{
+  drawVennRandom('vennRandom');
+  drawVennMixed('vennMixed');
+  updateTransChart();
+  updateCompare();
+  runCalc();
+});
+</script>
+
+<div class="page-nav-bottom" style="background:linear-gradient(135deg,#0a0a1a,#111827);"><a href="index.html" style="background:linear-gradient(135deg,#16213e,#0f3460);color:#fff;">&#x1F3E0; &#x627;&#x644;&#x631;&#x626;&#x64A;&#x633;&#x64A;&#x629;</a> <a href="4.2.html" style="background:linear-gradient(135deg,#4a5568,#2d3748);color:#fff;">&#x2190; &#x627;&#x644;&#x633;&#x627;&#x628;&#x642;</a> <a href="4.4.html" style="background:linear-gradient(135deg,#2b6cb0,#2c5282);color:#fff;">&#x627;&#x644;&#x62A;&#x627;&#x644;&#x64A; &#x2192;</a></div>
+</body>
+</html>

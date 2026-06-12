@@ -1,0 +1,1902 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>مكوّنات التباين في دراسة G — تصميم p × i</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+/* ══════════════ TOKENS ══════════════ */
+:root{
+  --bg:#faf7f2;
+  --surface:#ffffff;
+  --deep:#1e1b18;
+  --ink:#2d2926;
+  --warm:#4a3728;
+  --rust:#c1440e;
+  --gold:#d4860a;
+  --amber:#e8a020;
+  --sand:#f0c87a;
+  --teal:#0f7a6e;
+  --sky:#1d7fa3;
+  --mint:#22c494;
+  --violet:#6b3fa0;
+  --rose:#b8315a;
+  --slate:#5a6475;
+  --muted:#8a95a3;
+  --border:#e4ddd5;
+  --border2:#d4c9bc;
+  --r:14px;
+  --sh:0 2px 16px rgba(30,27,24,.07);
+  --sh-md:0 8px 32px rgba(30,27,24,.10);
+  --sh-lg:0 20px 60px rgba(30,27,24,.14);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'Cairo','Tajawal',sans-serif;background:var(--bg);color:var(--ink);direction:rtl;overflow-x:hidden;line-height:1.75;}
+
+/* ══════════════ PROGRESS / NAV ══════════════ */
+.pgbar{position:fixed;top:0;left:0;right:0;z-index:1000;height:3px;background:var(--border);}
+.pgfill{height:100%;width:0%;background:linear-gradient(90deg,var(--rust),var(--gold),var(--teal));transition:width .1s;}
+
+.top-nav{
+  position:sticky;top:3px;z-index:900;
+  background:rgba(250,247,242,.96);backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+  padding:0 36px;display:flex;align-items:stretch;
+  box-shadow:var(--sh);
+}
+.nav-logo{font-size:.88rem;font-weight:700;color:var(--rust);display:flex;align-items:center;gap:8px;padding:14px 0;margin-left:22px;white-space:nowrap;}
+.nav-links{display:flex;overflow-x:auto;gap:0;}
+.nl{padding:0 15px;height:52px;display:flex;align-items:center;font-size:.77rem;font-weight:700;color:var(--slate);text-decoration:none;white-space:nowrap;border-bottom:3px solid transparent;transition:all .22s;}
+.nl:hover{color:var(--rust);background:rgba(193,68,14,.04);}
+.nl.active{color:var(--rust);border-bottom-color:var(--rust);}
+
+/* ══════════════ HERO ══════════════ */
+.hero{
+  background:var(--deep);
+  min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:80px 40px;position:relative;overflow:hidden;text-align:center;
+}
+/* blueprint grid */
+.hero::before{
+  content:'';position:absolute;inset:0;
+  background-image:linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px);
+  background-size:48px 48px;pointer-events:none;
+}
+.hero-glow{
+  position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse 700px 500px at 30% 40%,rgba(212,134,10,.1) 0%,transparent 60%),
+             radial-gradient(ellipse 500px 400px at 75% 70%,rgba(15,122,110,.09) 0%,transparent 55%);
+}
+.hero-tag{display:inline-flex;align-items:center;gap:8px;background:rgba(212,134,10,.15);border:1px solid rgba(212,134,10,.35);color:#f0c87a;padding:8px 22px;border-radius:50px;font-size:.8rem;font-weight:700;letter-spacing:1px;margin-bottom:28px;}
+.hero h1{font-size:clamp(2.6rem,6.5vw,4.8rem);font-weight:900;color:white;line-height:1.1;margin-bottom:18px;}
+.hero h1 em{font-style:normal;background:linear-gradient(120deg,var(--sand),var(--mint));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.hero-sub{font-size:1.05rem;color:rgba(255,255,255,.6);max-width:620px;margin:0 auto 50px;line-height:1.95;}
+.hero-trio{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;}
+.htile{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.11);border-radius:14px;padding:20px 24px;min-width:170px;text-align:center;transition:all .3s;cursor:default;}
+.htile:hover{background:rgba(255,255,255,.12);transform:translateY(-5px);}
+.htile .ht-sym{font-family:'Georgia',serif;font-size:1.6rem;font-weight:700;margin-bottom:6px;}
+.htile .ht-name{font-size:.8rem;color:rgba(255,255,255,.65);}
+
+/* ══════════════ SECTION ══════════════ */
+.sec{padding:72px 40px;position:relative;}
+.sec-inner{max-width:1080px;margin:0 auto;}
+.sec-warm{background:#fdf8f2;}
+.sec-light{background:var(--surface);}
+.sec-dark{background:var(--deep);color:white;}
+.sec-slate{background:#f2f4f7;}
+
+.tag{display:inline-block;padding:5px 16px;border-radius:50px;font-size:.74rem;font-weight:700;letter-spacing:1px;margin-bottom:12px;}
+.t-rust{background:linear-gradient(135deg,var(--rust),#e05010);color:white;}
+.t-gold{background:linear-gradient(135deg,var(--gold),var(--amber));color:white;}
+.t-teal{background:linear-gradient(135deg,var(--teal),var(--mint));color:white;}
+.t-sky{background:linear-gradient(135deg,var(--sky),#1a9bd4);color:white;}
+.t-violet{background:linear-gradient(135deg,var(--violet),#8b5cf6);color:white;}
+.t-slate{background:var(--slate);color:white;}
+.t-warm{background:linear-gradient(135deg,var(--warm),#6b4f3a);color:white;}
+
+h2.st{font-size:clamp(1.7rem,4vw,2.5rem);font-weight:900;color:var(--deep);margin-bottom:12px;}
+h2.st.light{color:white;}
+.sdesc{font-size:.95rem;color:var(--slate);max-width:650px;line-height:1.9;margin-bottom:44px;}
+.sdesc.light{color:rgba(255,255,255,.68);}
+.cx{text-align:center;}.cmx{margin:0 auto;}
+
+/* grids */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:22px;}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;}
+
+/* ══════════════ CARD ══════════════ */
+.card{background:var(--surface);border-radius:var(--r);padding:26px;box-shadow:var(--sh);border:1px solid var(--border);transition:all .28s;}
+.card:hover{transform:translateY(-3px);box-shadow:var(--sh-md);}
+.dcard{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.11);border-radius:var(--r);padding:24px;}
+
+/* ══════════════ EQUATION ══════════════ */
+.eq{background:var(--surface);border-radius:10px;padding:13px 18px;border-right:3px solid;font-family:'Georgia',serif;font-size:.96rem;direction:ltr;text-align:center;margin:9px 0;box-shadow:var(--sh);}
+.eq-rust{border-color:var(--rust);}
+.eq-gold{border-color:var(--gold);}
+.eq-teal{border-color:var(--teal);}
+.eq-sky{border-color:var(--sky);}
+.eq-violet{border-color:var(--violet);}
+.eq-main{background:linear-gradient(135deg,#fef9f0,#fef3e0);border-radius:14px;padding:20px 28px;border:2px solid rgba(212,134,10,.25);font-family:'Georgia',serif;font-size:1.08rem;direction:ltr;text-align:center;margin:16px 0;box-shadow:var(--sh-md);}
+
+/* ══════════════ VARIANCE COMPONENT CARDS ══════════════ */
+.vc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;}
+.vc-card{border-radius:16px;overflow:hidden;box-shadow:var(--sh-md);}
+.vc-hdr{padding:20px 24px;color:white;text-align:center;}
+.vch-p{background:linear-gradient(135deg,#1a5fa8,var(--sky));}
+.vch-i{background:linear-gradient(135deg,#0f6b5e,var(--teal));}
+.vch-pi{background:linear-gradient(135deg,#5a2d8a,var(--violet));}
+.vc-sym{font-family:'Georgia',serif;font-size:1.8rem;font-weight:700;margin-bottom:4px;}
+.vc-name{font-size:.82rem;opacity:.88;}
+.vc-body{background:white;padding:22px;}
+.vc-body p{font-size:.84rem;color:var(--slate);line-height:1.85;margin-bottom:12px;}
+.vc-formula{background:#f8f9fc;border-radius:10px;padding:12px 16px;font-family:'Georgia',serif;font-size:.9rem;direction:ltr;text-align:center;border-right:3px solid;margin-bottom:12px;}
+.vf-p{border-color:var(--sky);}
+.vf-i{border-color:var(--teal);}
+.vf-pi{border-color:var(--violet);}
+.vc-badge{display:inline-block;padding:4px 12px;border-radius:50px;font-size:.72rem;font-weight:700;margin-top:4px;}
+.vb-p{background:#dbeafe;color:#1e40af;}
+.vb-i{background:#d1fae5;color:#065f46;}
+.vb-pi{background:#ede9fe;color:#4c1d95;}
+
+/* ══════════════ VENN DIAGRAM SECTION ══════════════ */
+.venn-wrap{background:white;border-radius:16px;padding:36px;box-shadow:var(--sh-md);border:1px solid var(--border);}
+.venn-tabs{display:flex;gap:8px;margin-bottom:28px;flex-wrap:wrap;}
+.vtab{padding:8px 20px;border-radius:50px;border:2px solid var(--border);font-size:.82rem;font-weight:700;cursor:pointer;transition:all .2s;background:white;color:var(--slate);font-family:'Cairo',sans-serif;}
+.vtab:hover{border-color:var(--rust);}
+.vtab.active{background:var(--rust);border-color:var(--rust);color:white;}
+.venn-panels{position:relative;}
+.vpanel{display:none;}
+.vpanel.active{display:block;}
+.venn-svg-row{display:flex;gap:24px;justify-content:center;align-items:flex-start;flex-wrap:wrap;}
+.venn-caption{text-align:center;font-size:.82rem;color:var(--slate);margin-top:12px;line-height:1.7;}
+
+/* ══════════════ ANOVA TABLE ══════════════ */
+.anova-table-wrap{background:white;border-radius:16px;box-shadow:var(--sh-md);overflow:hidden;border:1px solid var(--border);}
+.anova-table-hdr{background:linear-gradient(135deg,var(--deep),var(--warm));color:white;padding:20px 28px;display:flex;align-items:center;gap:12px;}
+.anova-table-hdr h3{font-size:1rem;font-weight:700;}
+.anova-tbl{width:100%;border-collapse:separate;border-spacing:0;}
+.anova-tbl thead tr{background:linear-gradient(135deg,#f0ebe4,#e8dfd4);}
+.anova-tbl th{padding:14px 18px;font-size:.82rem;font-weight:700;color:var(--warm);text-align:center;border-bottom:2px solid var(--border2);}
+.anova-tbl th:first-child{text-align:right;}
+.anova-tbl tbody tr{transition:background .2s;}
+.anova-tbl tbody tr:nth-child(odd){background:#fdfcfb;}
+.anova-tbl tbody tr:nth-child(even){background:#f8f4ef;}
+.anova-tbl tbody tr:hover{background:#fef3e0;}
+.anova-tbl td{padding:14px 18px;font-size:.85rem;border-bottom:1px solid var(--border);text-align:center;vertical-align:middle;}
+.anova-tbl td:first-child{font-weight:700;text-align:right;}
+.anova-tbl td.sym{font-family:'Georgia',serif;font-weight:700;}
+.row-p td{color:#1e40af;}
+.row-i td{color:#065f46;}
+.row-pi td{color:#4c1d95;}
+.anova-tbl tfoot tr{background:linear-gradient(135deg,#fef9f0,#fef3e0);}
+.anova-tbl tfoot td{padding:12px 18px;font-size:.82rem;color:var(--warm);font-weight:600;border-top:2px solid var(--border2);}
+
+/* EMS chips */
+.ems-wrap{background:linear-gradient(135deg,#f9f5f0,#f2ebe0);border-radius:14px;padding:24px 28px;border:1px solid var(--border2);margin-top:24px;}
+.ems-title{font-size:.88rem;font-weight:700;color:var(--warm);margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+.ems-rows{display:flex;flex-direction:column;gap:10px;}
+.ems-row{display:flex;align-items:center;gap:12px;background:white;border-radius:10px;padding:12px 16px;box-shadow:var(--sh);}
+.ems-lhs{font-family:'Georgia',serif;font-weight:700;font-size:.9rem;min-width:90px;direction:ltr;text-align:left;}
+.ems-eq-sign{color:var(--muted);font-size:1rem;flex-shrink:0;}
+.ems-rhs{font-family:'Georgia',serif;font-size:.88rem;direction:ltr;flex:1;}
+.ems-badge{padding:3px 10px;border-radius:6px;font-size:.72rem;font-weight:700;margin-right:auto;}
+
+/* ══════════════ NUMERICAL EXAMPLE ══════════════ */
+.data-table-wrap{background:white;border-radius:16px;box-shadow:var(--sh-md);overflow:hidden;border:1px solid var(--border);}
+.data-hdr{background:linear-gradient(135deg,var(--warm),#6b4f3a);color:white;padding:18px 24px;display:flex;align-items:center;gap:10px;}
+.data-hdr h3{font-size:.95rem;font-weight:700;}
+.dtbl{width:100%;border-collapse:separate;border-spacing:0;overflow-x:auto;}
+.dtbl th{padding:10px 12px;font-size:.76rem;font-weight:700;background:#f5f0ea;color:var(--warm);text-align:center;border-bottom:1px solid var(--border2);}
+.dtbl th:first-child{background:#ede6dc;text-align:right;}
+.dtbl td{padding:9px 12px;font-size:.82rem;text-align:center;border-bottom:1px solid var(--border);font-family:'Georgia',serif;}
+.dtbl td:first-child{font-family:'Cairo',sans-serif;font-weight:700;background:#faf6f0;text-align:right;}
+.dtbl tbody tr:hover{background:#fef9f0;}
+.cell-1{background:#e0f0e8 !important;}
+.cell-0{background:#fef2f0 !important;}
+.row-mu-i td{background:#f0fdf4;font-weight:700;color:var(--teal);}
+.row-mu-i td:first-child{background:#dcfce7;}
+.col-mu-p{background:#dbeafe !important;font-weight:700;color:#1e40af !important;}
+
+/* RESULT BOX */
+.result-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:20px;}
+.result-box{border-radius:14px;padding:20px;text-align:center;border:2px solid;box-shadow:var(--sh);}
+.rb-p{background:#eff6ff;border-color:#bfdbfe;}
+.rb-i{background:#f0fdf4;border-color:#bbf7d0;}
+.rb-pi{background:#f5f3ff;border-color:#ddd6fe;}
+.rb-sym{font-family:'Georgia',serif;font-size:1.2rem;font-weight:700;margin-bottom:6px;}
+.rb-val{font-size:1.8rem;font-weight:900;margin:8px 0;}
+.rb-label{font-size:.74rem;color:var(--slate);line-height:1.6;}
+
+/* ══════════════ VBAR ══════════════ */
+.vbar-section{background:white;border-radius:16px;padding:32px;box-shadow:var(--sh-md);border:1px solid var(--border);}
+.vbar-title{font-size:.92rem;font-weight:700;color:var(--deep);margin-bottom:20px;display:flex;align-items:center;gap:8px;}
+.vbar-row{display:flex;align-items:center;gap:14px;margin-bottom:12px;}
+.vbar-lbl{min-width:80px;font-family:'Georgia',serif;font-size:.88rem;font-weight:700;direction:ltr;text-align:left;}
+.vbar-bg{flex:1;background:#f1f3f7;border-radius:50px;height:28px;overflow:hidden;}
+.vbar{height:100%;border-radius:50px;display:flex;align-items:center;padding:0 10px;font-size:.76rem;font-weight:700;color:white;direction:ltr;justify-content:flex-end;min-width:40px;transition:width 1.4s cubic-bezier(.34,1.56,.64,1);}
+.vb-p-c{background:linear-gradient(90deg,#1a5fa8,#38bdf8);}
+.vb-i-c{background:linear-gradient(90deg,#0f6b5e,#34d399);}
+.vb-pi-c{background:linear-gradient(90deg,#5a2d8a,#a78bfa);}
+.vbar-num{min-width:50px;font-size:.84rem;font-weight:700;direction:ltr;text-align:left;}
+.vbar-desc{font-size:.78rem;color:var(--slate);line-height:1.6;}
+
+/* ══════════════ STEP BOXES ══════════════ */
+.steps-v{display:flex;flex-direction:column;gap:0;position:relative;}
+.steps-v::before{content:'';position:absolute;right:28px;top:36px;bottom:36px;width:2px;background:linear-gradient(to bottom,var(--rust),var(--gold),var(--teal));border-radius:2px;}
+.step-v{display:flex;gap:20px;padding:18px 0;position:relative;}
+.sv-num{width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.2rem;font-weight:900;color:white;flex-shrink:0;position:relative;z-index:2;box-shadow:var(--sh-md);}
+.svn1{background:linear-gradient(135deg,var(--rust),#e05010);}
+.svn2{background:linear-gradient(135deg,var(--gold),var(--amber));}
+.svn3{background:linear-gradient(135deg,var(--teal),var(--mint));}
+.svn4{background:linear-gradient(135deg,var(--sky),#1a9bd4);}
+.sv-body{background:white;border-radius:14px;padding:20px 24px;flex:1;box-shadow:var(--sh);border:1px solid var(--border);}
+.sv-body h4{font-size:.9rem;font-weight:700;color:var(--deep);margin-bottom:8px;}
+.sv-body p{font-size:.84rem;color:var(--slate);line-height:1.85;}
+
+/* ══════════════ INSIGHT ══════════════ */
+.ins{border-radius:14px;padding:18px 22px;display:flex;gap:12px;margin:16px 0;}
+.ins .ico{font-size:1.4rem;flex-shrink:0;margin-top:2px;}
+.ins .ititle{font-weight:700;font-size:.88rem;margin-bottom:4px;}
+.ins .itext{font-size:.83rem;color:var(--slate);line-height:1.85;}
+.i-rust{background:#fff5f0;border:1.5px solid #fec9b0;}
+.i-gold{background:#fffbee;border:1.5px solid #fde68a;}
+.i-teal{background:#f0fdf9;border:1.5px solid #a7f3d0;}
+.i-sky{background:#f0f8ff;border:1.5px solid #bae6fd;}
+.i-violet{background:#f6f3ff;border:1.5px solid #ddd6fe;}
+.i-rust .ititle{color:var(--rust);}
+.i-gold .ititle{color:var(--gold);}
+.i-teal .ititle{color:var(--teal);}
+.i-sky .ititle{color:var(--sky);}
+.i-violet .ititle{color:var(--violet);}
+
+/* ══════════════ BADGE ══════════════ */
+.bdg{display:inline-block;padding:3px 11px;border-radius:50px;font-size:.73rem;font-weight:700;}
+.bd-rust{background:#fee2d5;color:#9a2f08;}
+.bd-gold{background:#fef3c7;color:#92400e;}
+.bd-teal{background:#d1fae5;color:#065f46;}
+.bd-sky{background:#dbeafe;color:#1e40af;}
+.bd-violet{background:#ede9fe;color:#4c1d95;}
+
+/* ══════════════ INTERACTIVE CALC ══════════════ */
+.calc-box{background:white;border-radius:16px;padding:32px;box-shadow:var(--sh-md);border:1px solid var(--border);}
+.calc-title{font-size:.95rem;font-weight:700;color:var(--deep);margin-bottom:20px;display:flex;align-items:center;gap:8px;}
+.calc-inputs{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:20px;}
+.ci{text-align:center;}
+.ci label{display:block;font-size:.8rem;font-weight:700;color:var(--slate);margin-bottom:6px;}
+.ci input{width:100%;padding:10px 12px;border:2px solid var(--border);border-radius:10px;font-size:1rem;font-family:'Georgia',serif;text-align:center;transition:border-color .2s;background:#faf8f5;}
+.ci input:focus{outline:none;border-color:var(--rust);}
+.ci .ci-lbl{font-size:.72rem;color:var(--muted);margin-top:4px;direction:ltr;}
+.calc-results{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+.cr{border-radius:12px;padding:16px;text-align:center;border:2px solid;}
+.cr-p{background:#eff6ff;border-color:#bfdbfe;}
+.cr-i{background:#f0fdf4;border-color:#bbf7d0;}
+.cr-pi{background:#f5f3ff;border-color:#ddd6fe;}
+.cr-sym{font-family:'Georgia',serif;font-size:.9rem;font-weight:700;color:var(--slate);}
+.cr-val{font-size:1.6rem;font-weight:900;margin:6px 0;}
+.cr-val-p{color:#1e40af;}
+.cr-val-i{color:#065f46;}
+.cr-val-pi{color:#4c1d95;}
+.cr-desc{font-size:.72rem;color:var(--slate);}
+
+/* ══════════════ SUMMARY ══════════════ */
+.summary-cards{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;}
+.scard{border-radius:14px;padding:22px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);}
+.scard h4{font-size:.92rem;font-weight:700;margin-bottom:8px;}
+.scard p{font-size:.82rem;color:rgba(255,255,255,.68);line-height:1.85;}
+
+/* ══════════════ DIVIDER ══════════════ */
+.rdiv{height:3px;border:none;background:linear-gradient(90deg,var(--rust),var(--gold),var(--teal),var(--sky),var(--violet));}
+
+/* ══════════════ FOOTER ══════════════ */
+footer{background:var(--deep);color:rgba(255,255,255,.48);text-align:center;padding:40px 20px;font-size:.88rem;line-height:1.9;}
+
+/* ══════════════ FADE ══════════════ */
+.fu{opacity:0;transform:translateY(22px);transition:opacity .58s ease,transform .58s ease;}
+.fu.in{opacity:1;transform:translateY(0);}
+.fu:nth-child(2){transition-delay:.07s;}
+.fu:nth-child(3){transition-delay:.14s;}
+.fu:nth-child(4){transition-delay:.21s;}
+
+/* ══════════════ RESPONSIVE ══════════════ */
+@media(max-width:860px){
+  .g2,.g3,.vc-grid,.result-grid,.summary-cards,.calc-inputs,.calc-results{grid-template-columns:1fr;}
+  .sec{padding:50px 20px;}
+  .hero{padding:60px 20px;}
+  .top-nav{padding:0 14px;}
+  .steps-v::before{display:none;}
+  .venn-svg-row{flex-direction:column;align-items:center;}
+}
+@media(max-width:480px){
+  .hero-trio{flex-direction:column;align-items:center;}
+  .vbar-desc{display:none;}
+}
+
+/* COMPREHENSIVE MOBILE RESPONSIVE FIXES */
+*, *::before, *::after { box-sizing: border-box; }
+html { max-width: 100%; }
+body { max-width: 100%; }
+img, svg, canvas, video, iframe { max-width: 100%; height: auto; }
+table { max-width: 100%; }
+
+.table-wrap {
+  width: 100%; max-width: 100%;
+  overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 12px;
+}
+.tbl-wrap { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.score-matrix-wrap { overflow-x: auto; }
+
+pre, code { white-space: pre-wrap; word-break: break-word; max-width: 100%; }
+
+/* Page bottom navigation */
+.page-nav-bottom {
+  display: flex; flex-wrap: wrap; gap: 12px;
+  justify-content: center; align-items: center;
+  padding: 28px 20px; text-align: center;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  margin-top: 40px;
+}
+.page-nav-bottom a {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 12px 28px; border-radius: 50px;
+  font-size: 0.95rem; font-weight: 700;
+  text-decoration: none; min-height: 48px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.page-nav-bottom a:hover { transform: translateY(-2px); }
+
+@media (max-width: 768px) {
+  .page-nav-bottom { padding: 18px 14px; gap: 8px; }
+  .page-nav-bottom a { font-size: 0.88rem; padding: 10px 18px; }
+}
+@media (max-width: 480px) {
+  .page-nav-bottom a { font-size: 0.82rem; padding: 8px 14px; min-height: 44px; width: 100%; justify-content: center; }
+}
+
+/* Overflow fixes */
+.eq-row { flex-wrap: wrap; gap: 8px; }
+.eq-formula { min-width: 0; }
+.sym-featured { flex-wrap: wrap; gap: 12px; }
+
+@media (max-width: 768px) {
+  /* Navigation */
+  .nav, .top-nav {
+    padding: 0 14px !important;
+    height: auto !important;
+    min-height: 52px;
+    flex-wrap: wrap !important;
+    gap: 4px;
+  }
+  .nav-links { flex-wrap: wrap !important; gap: 2px !important; overflow-x: visible !important; }
+  .nav a, .nav-link, .nl {
+    font-size: 0.78rem !important;
+    padding: 5px 9px !important;
+    white-space: normal !important;
+    height: auto !important;
+    min-height: 30px;
+    display: inline-flex !important;
+    align-items: center;
+  }
+  .nav-logo, .nav-brand { font-size: 0.85rem !important; white-space: normal !important; }
+
+  /* Hero */
+  .hero {
+    min-height: auto !important;
+    padding: 44px 14px !important;
+  }
+  .hero h1, .hero-t, .hero-title {
+    font-size: clamp(1.6rem, 7vw, 2.8rem) !important;
+    line-height: 1.25 !important;
+  }
+  .hero h2, .hero-sub, .hero-subtitle-line {
+    font-size: clamp(1.15rem, 4vw, 1.8rem) !important;
+  }
+  .hero p, .hero-desc { font-size: 0.95rem !important; }
+  .hero-content, .hero-c { max-width: 100% !important; width: 100% !important; }
+  .hero::before, .hero::after,
+  .hero-aura { width: 280px !important; height: 280px !important; opacity: 0.2 !important; }
+  .hero-ring, .hero-ring-2, .hr1, .hr2 { display: none !important; }
+  .hero-mesh, .hero-grid { opacity: 0.08 !important; }
+  .hero-badge, .hero-eyebrow { font-size: 0.68rem !important; padding: 5px 14px; }
+  .hero-meta { flex-wrap: wrap !important; gap: 8px; justify-content: center; }
+  .hero-meta-item { padding: 10px 14px; min-width: 0; flex: 1 1 40%; }
+  .hero-cards { gap: 10px; justify-content: center; }
+  .hero-pills { flex-wrap: wrap !important; gap: 8px; }
+  .hcard { min-width: 0 !important; padding: 14px 16px; }
+  .scroll-hint { display: none !important; }
+  .chapter-deco { display: none !important; }
+
+  /* Sections */
+  .section, .sec { padding: 44px 14px !important; }
+  .section-inner, .sec-inner, .sec-in { max-width: 100% !important; }
+  .section-header, .sec-header { margin-bottom: 28px; }
+
+  /* Grids */
+  .scenario-grid, .crossed-grid, .concepts-grid, .gstudy-layout,
+  .matrix-grid, .sym-grid-2, .sym-grid-3, .sym-card-grid,
+  .authors-grid, .design-compare, .asm-grid, .expect-grid,
+  .rel-grid, .vp-grid, .g2, .g3, .g4, .compare-grid,
+  .ms-grid, .concepts-grid { grid-template-columns: 1fr !important; gap: 16px !important; }
+
+  .hero-cards { grid-template-columns: 1fr 1fr !important; }
+
+  /* Flex */
+  .tree-row { flex-wrap: wrap !important; justify-content: center; }
+  .var-row { flex-wrap: wrap !important; gap: 6px; }
+  .step-item { flex-wrap: wrap !important; gap: 14px; }
+  .step-content { width: 100% !important; order: 1; }
+  .step-num { order: 0; }
+  .decomp, .decomp-live, .flow-row { flex-direction: column !important; align-items: center !important; }
+  .decomp-op, .dl-op, .fn-arrow { transform: rotate(90deg); }
+  .crow { flex-direction: column !important; }
+  .concept-row { flex-wrap: wrap; }
+
+  /* Padding */
+  .family-bg, .universe-card, .scenario-bg, .var-section-bg,
+  .source-card, .guide-card, .interactive-box, .score-matrix-wrap,
+  .assumption-wrap, .lm-box, .ins, .highlight-box, .warn-box,
+  .crossed-card, .concept-card, .section-card, .cbox {
+    padding: 20px 14px !important;
+  }
+  .intro-callout { padding: 18px 16px; }
+  .source-card { gap: 14px; }
+  .tree-connector { height: 20px; }
+  .tree-node { min-width: 120px !important; font-size: 0.82rem !important; padding: 10px 14px !important; }
+  .section-divider, .div { margin: 0 14px; }
+
+  /* Fixed widths */
+  .var-label { min-width: 50px !important; font-size: 0.78rem !important; }
+  .var-desc { min-width: 0 !important; flex: 1 1 100% !important; }
+  .var-value { min-width: 40px !important; }
+  .sym-featured-glyph { width: 44px !important; height: 44px !important; }
+
+  /* Tables */
+  .table-wrap {
+    margin: 0 -14px; padding: 0 14px;
+    width: calc(100% + 28px); border-radius: 0;
+  }
+  .tbl-wrap { margin: 0 -14px; padding: 0 14px; }
+
+  .prog-bar { z-index: 9999; }
+}
+
+@media (max-width: 480px) {
+  .hero { padding: 32px 10px !important; }
+  .hero h1, .hero-t, .hero-title { font-size: clamp(1.3rem, 8vw, 2rem) !important; }
+  .hero h2, .hero-sub { font-size: clamp(1rem, 5vw, 1.5rem) !important; }
+  .hero p, .hero-desc { font-size: 0.9rem !important; }
+  .nav, .top-nav { padding: 0 8px !important; min-height: 44px; gap: 2px !important; }
+  .nav a, .nav-link, .nl { font-size: 0.7rem !important; padding: 4px 7px !important; }
+
+  .section, .sec { padding: 28px 10px !important; }
+
+  .hero-cards { grid-template-columns: 1fr !important; }
+  .hero-pills { gap: 6px; }
+  .pill { padding: 8px 10px; }
+
+  .table-wrap {
+    margin: 0 -10px; padding: 0 10px;
+    width: calc(100% + 20px);
+  }
+  table { font-size: 0.72rem !important; }
+  td, th { padding: 5px 7px !important; }
+
+  .hero-card, .concept-card, .crossed-card, .scenario-item,
+  .step-content, .coeff-card, .card, .design-card, .sym-card,
+  .exp-card, .author-card, .hcard { padding: 12px !important; }
+
+  .tree-node { min-width: 100px !important; font-size: 0.78rem !important; }
+  .hero-meta-item { padding: 8px 10px; }
+
+  .btn, .btn-primary, .btn-ghost {
+    width: 100%; justify-content: center; min-height: 44px;
+  }
+}
+
+/* â•â•â•â•â•â• ADDITIONAL OVERFLOW FIXES â•â•â•â•â•â• */
+[style*="min-width:200px"], [style*="min-width: 200px"], [style*="min-width:220px"], [style*="min-width: 220px"],
+[style*="min-width:280px"], [style*="min-width: 280px"], [style*="min-width:500px"], [style*="min-width: 500px"] {
+  min-width: 0 !important;
+}
+[style*="width:480px"], [style*="width: 480px"], [style*="width:400px"], [style*="width: 400px"] {
+  max-width: 100% !important;
+  width: auto !important;
+}
+.flex-item, .sym-grid-2 > .sym-featured, .eq-row { flex-wrap: wrap; }
+.score-matrix { min-width: 0 !important; }
+.hcard, .pill { min-width: 0 !important; }
+.dt-node { max-width: 100% !important; }
+
+@media (max-width: 768px) {
+  .mat { grid-template-columns: repeat(auto-fill, minmax(32px, 1fr)) !important; }
+  .mc { width: 32px !important; height: 32px !important; font-size: 0.6rem !important; }
+  .hcard { min-width: 0 !important; }
+  .hero-meta-num { font-size: 1.5rem !important; }
+  .hero-meta-lbl { font-size: 0.68rem !important; }
+  .hero-meta-item { flex: 1 1 42% !important; }
+  .pill { min-width: 0 !important; flex: 1 1 30% !important; }
+}
+
+@media (max-width: 480px) {
+  .mat { grid-template-columns: repeat(auto-fill, minmax(28px, 1fr)) !important; }
+  .mc { width: 28px !important; height: 28px !important; font-size: 0.55rem !important; }
+}
+
+/* ==================================================
+   FINAL REAL MOBILE LAYOUT REBUILD
+   Must be the last CSS block in the file
+   ================================================== */
+*, *::before, *::after { box-sizing: border-box !important; }
+html, body {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  min-width: 0 !important;
+}
+img, svg, canvas, video, iframe {
+  max-width: 100% !important;
+  height: auto !important;
+}
+table { max-width: 100% !important; }
+
+/* Force all major containers to viewport width */
+@media (max-width: 768px) {
+  html, body {
+    overflow-x: clip !important;
+    min-width: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .hero,
+  .section,
+  .sec,
+  .container,
+  .wrapper,
+  .content,
+  .main,
+  .page,
+  .page-wrap,
+  .layout,
+  .shell,
+  .panel,
+  .chapter,
+  .chapter-wrap,
+  .story,
+  .story-wrap,
+  .book-page,
+  .section-dark,
+  .section-mid,
+  .intro-section,
+  .source-section,
+  .guide-section,
+  .sec-dark,
+  .sec-alt,
+  .sec-inner,
+  .section-inner,
+  .section-header,
+  .sec-header,
+  .family-bg,
+  .universe-card,
+  .scenario-bg,
+  .var-section-bg,
+  .source-card,
+  .index-card,
+  .guide-card,
+  .intro-body,
+  .interactive-box,
+  .score-matrix-wrap,
+  .assumption-wrap,
+  .lm-box,
+  .cbox,
+  .comparison-wrap,
+  .steps-flow,
+  .highlight-box,
+  .warn-box,
+  .insight-box,
+  .history-wrap {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+    transform: none !important;
+    left: auto !important;
+    right: auto !important;
+    box-sizing: border-box !important;
+  }
+
+  .hero {
+    min-height: auto !important;
+    height: auto !important;
+    padding-top: 36px !important;
+    padding-bottom: 36px !important;
+    text-align: center !important;
+    overflow: hidden !important;
+  }
+
+  .hero-content,
+  .hero-inner,
+  .hero-wrap,
+  .hero-text,
+  .hero-c,
+  .hero-content {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+    text-align: center !important;
+    transform: none !important;
+    position: relative !important;
+  }
+
+  .hero h1,
+  .hero-title,
+  .hero-t,
+  .hero-ta,
+  h1 {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    font-size: clamp(1.55rem, 8vw, 2.3rem) !important;
+    line-height: 1.25 !important;
+    text-align: center !important;
+    white-space: normal !important;
+    overflow-wrap: break-word !important;
+    word-break: normal !important;
+  }
+
+  .hero-sub,
+  .hero-subtitle-line,
+  .hero-s,
+  .hero-d,
+  .hero-desc,
+  .sec-lead,
+  .slead,
+  .section-desc,
+  .subtitle,
+  .lead {
+    max-width: 100% !important;
+    white-space: normal !important;
+    overflow-wrap: break-word !important;
+    width: 100% !important;
+  }
+
+  .grid,
+  .cards,
+  .hero-cards,
+  .hero-meta,
+  .hero-pills,
+  .scenario-grid,
+  .crossed-grid,
+  .concepts-grid,
+  .gstudy-layout,
+  .matrix-grid,
+  .design-compare,
+  .authors-grid,
+  .rel-grid,
+  .vp-grid,
+  .g2,
+  .g3,
+  .g4,
+  .asm-grid,
+  .expect-grid,
+  .sym-grid-2,
+  .sym-grid-3,
+  .sym-card-grid,
+  .compare-grid,
+  .ms-grid,
+  .crow {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    gap: 16px !important;
+    transform: none !important;
+  }
+
+  .hero-cards {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+  }
+
+  .card,
+  .hero-card,
+  .glass-card,
+  .info-card,
+  .concept-card,
+  .step-card,
+  .source-card,
+  .index-card,
+  .guide-card,
+  .hcard,
+  .pill,
+  .tree-node,
+  .dt-node,
+  .matrix-card,
+  .panel-card,
+  .design-card,
+  .design-header,
+  .design-body,
+  .crossed-card,
+  .scenario-item,
+  .step-content,
+  .author-card,
+  .sym-card,
+  .sym-featured,
+  .var-section-bg,
+  .intro-callout,
+  .eq-row,
+  .eq-main {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    transform: none !important;
+  }
+
+  [style*="min-width"],
+  [style*="width: 480"],
+  [style*="width:480"],
+  [style*="width: 400"],
+  [style*="width:400"] {
+    max-width: 100% !important;
+    min-width: 0 !important;
+    width: auto !important;
+  }
+
+  .nav,
+  .top-nav,
+  .page-nav,
+  .page-nav-bottom {
+    width: 100% !important;
+    max-width: 100% !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    white-space: normal !important;
+    overflow: visible !important;
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
+
+  .nav-links {
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    gap: 4px !important;
+    overflow: visible !important;
+    width: auto !important;
+  }
+
+  .nav a,
+  .nav-link,
+  .nl,
+  .top-nav a,
+  .page-nav a,
+  .page-nav-bottom a {
+    max-width: 100% !important;
+    white-space: normal !important;
+    text-align: center !important;
+    min-height: 36px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 4px 10px !important;
+    font-size: 0.75rem !important;
+  }
+
+  .nav-logo,
+  .nav-brand {
+    font-size: 0.82rem !important;
+    white-space: normal !important;
+    max-width: 100% !important;
+    overflow: visible !important;
+  }
+
+  /* Hide all decorative overlays, rings, meshes */
+  .hero::before,
+  .hero::after,
+  .hero-ring,
+  .hero-ring-2,
+  .hr1,
+  .hr2,
+  .hero-mesh,
+  .hero-grid,
+  .hero-aura,
+  .chapter-deco,
+  .decor,
+  .bg-shape,
+  .section-divider,
+  .rainbow,
+  .div,
+  .scroll-hint,
+  .starfield {
+    display: none !important;
+  }
+
+  /* Section dividers must not cause overflow */
+  .section-divider,
+  .div-a,
+  .div-r,
+  .div-s,
+  .div-v,
+  .div-g {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    max-width: 100% !important;
+  }
+
+  .table-wrap,
+  .tbl-wrap {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  /* Hero-specific containers */
+  .hero-badge,
+  .hero-eyebrow {
+    display: inline-flex !important;
+    max-width: 100% !important;
+    white-space: normal !important;
+  }
+
+  .hero-meta {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .hero-meta-item {
+    flex: 1 1 42% !important;
+    min-width: 0 !important;
+    max-width: 48% !important;
+  }
+
+  .hcard,
+  .pill {
+    min-width: 0 !important;
+    flex: 1 1 42% !important;
+    max-width: 48% !important;
+  }
+
+  .decomp-block,
+  .decomp-live .dl-block {
+    min-width: 0 !important;
+    flex: 1 1 auto !important;
+  }
+
+  /* Family tree and diagrams */
+  .family-bg {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  /* Force flex containers to wrap */
+  .concept-row,
+  .badge-row,
+  .hero-actions {
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+  }
+
+  .btn,
+  .btn-primary,
+  .btn-ghost,
+  .calc-btn {
+    min-height: 44px !important;
+    padding: 12px 24px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  html, body {
+    min-width: 0 !important;
+    width: 100% !important;
+  }
+
+  .hero,
+  .section,
+  .sec,
+  .container,
+  .wrapper,
+  .content,
+  .main,
+  .page,
+  .page-wrap {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+  }
+
+  .hero {
+    padding-top: 28px !important;
+    padding-bottom: 28px !important;
+  }
+
+  .hero h1,
+  .hero-title,
+  .hero-t,
+  .hero-ta,
+  h1 {
+    font-size: clamp(1.35rem, 8.5vw, 2rem) !important;
+    line-height: 1.28 !important;
+  }
+
+  h2 {
+    font-size: clamp(1.2rem, 6.5vw, 1.65rem) !important;
+  }
+
+  h3 {
+    font-size: clamp(1rem, 5.5vw, 1.35rem) !important;
+  }
+
+  .card,
+  .hero-card,
+  .glass-card,
+  .info-card,
+  .concept-card,
+  .step-card,
+  .source-card,
+  .crossed-card,
+  .scenario-item,
+  .design-card {
+    padding: 14px 10px !important;
+  }
+
+  .nav,
+  .top-nav {
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+  }
+
+  .nav a,
+  .nav-link,
+  .nl {
+    padding: 3px 6px !important;
+    font-size: 0.68rem !important;
+  }
+
+  .hero-meta-item {
+    flex: 1 1 100% !important;
+    max-width: 100% !important;
+  }
+
+  .hcard {
+    flex: 1 1 100% !important;
+    max-width: 100% !important;
+  }
+
+  .hero-cards {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    flex-direction: column !important;
+    align-items: center !important;
+  }
+}
+
+/* === PAGE NAV TOP === */
+.page-nav-top {
+  direction: rtl;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  width: min(100% - 24px, 1100px);
+  margin: 14px auto;
+  padding: 10px;
+  border-radius: 16px;
+  background: rgba(15, 52, 96, 0.88);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.14);
+  backdrop-filter: blur(8px);
+  position: relative;
+  z-index: 10;
+}
+.page-nav-top a,
+.page-nav-top a:visited {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 8px 18px;
+  border-radius: 999px;
+  text-decoration: none;
+  font-weight: 700;
+  color: #ffffff;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.18);
+  transition: background 0.2s, transform 0.2s;
+}
+.page-nav-top a:hover {
+  background: rgba(0, 180, 216, 0.28);
+  transform: translateY(-2px);
+}
+@media (max-width: 480px) {
+  .page-nav-top {
+    width: calc(100% - 20px);
+    gap: 8px;
+    padding: 8px;
+  }
+  .page-nav-top a {
+    flex: 1 1 auto;
+    min-width: 90px;
+    padding: 8px 12px;
+    font-size: 0.9rem;
+  }
+}
+</style>
+</head>
+<body>
+<nav class="page-nav-top" aria-label="تنقل الصفحة العلوي"><a href="index.html" class="nav-home">الرئيسية</a></nav>
+
+<!-- PROGRESS -->
+<div class="pgbar"><div class="pgfill" id="pg"></div></div>
+
+<!-- NAV -->
+<nav class="top-nav">
+  <div class="nav-logo">📐 الفصل الثاني § 2.2.1</div>
+  <div class="nav-links">
+<a href="2.1.html" class="nl">← السابق</a><a href="index.html" class="nl">الرئيسية</a><a href="2.3.html" class="nl">التالي →</a>
+
+    <a href="#def"   class="nl active" data-s="def">تعريف المكوّنات</a>
+    <a href="#venn"  class="nl" data-s="venn">مخططات فن</a>
+    <a href="#anova" class="nl" data-s="anova">جدول ANOVA</a>
+    <a href="#ems"   class="nl" data-s="ems">معادلات EMS</a>
+    <a href="#data"  class="nl" data-s="data">المثال العددي</a>
+    <a href="#calc"  class="nl" data-s="calc">الحاسبة</a>
+    <a href="#sum"   class="nl" data-s="sum">الخلاصة</a>
+  </div>
+</nav>
+
+<!-- ═══════════════════ HERO ═══════════════════ -->
+<section class="hero" id="top">
+  <div class="hero-glow"></div>
+  <div class="hero-tag">📊 القسم 2.2 — 2.2.1</div>
+  <h1>مكوّنات التباين<br>في <em>دراسة G</em></h1>
+  <p class="hero-sub">كيف نُفكِّك التباين الكلي في بيانات دراسة G (p × i) إلى مصادره الحقيقية — ثم كيف نُقدِّرها بأسلوب ANOVA؟</p>
+  <div class="hero-trio">
+    <div class="htile">
+      <div class="ht-sym" style="color:#93c5fd;">σ²(p)</div>
+      <div class="ht-name">تباين الأشخاص</div>
+    </div>
+    <div class="htile">
+      <div class="ht-sym" style="color:#6ee7b7;">σ²(i)</div>
+      <div class="ht-name">تباين الفقرات</div>
+    </div>
+    <div class="htile">
+      <div class="ht-sym" style="color:#c4b5fd;">σ²(pi)</div>
+      <div class="ht-name">التباين المتبقي</div>
+    </div>
+    <div class="htile">
+      <div class="ht-sym" style="color:var(--sand);">ANOVA</div>
+      <div class="ht-name">أداة التقدير</div>
+    </div>
+  </div>
+</section>
+<hr class="rdiv">
+
+<!-- ═══════════════════ SECTION 1: تعريف المكوّنات ═══════════════════ -->
+<section class="sec sec-warm" id="def">
+<div class="sec-inner">
+  <div class="cx fu">
+    <span class="tag t-rust">التعريف الرياضي</span>
+    <h2 class="st">ثلاثة مكوّنات تباين — لكل منها معنى مستقل</h2>
+    <p class="sdesc cmx">كل تأثير في النموذج الخطي X<sub>pi</sub> = μ + ν<sub>p</sub> + ν<sub>i</sub> + ν<sub>pi</sub> يُفرز تبايناً خاصاً به</p>
+  </div>
+
+  <div class="vc-grid fu">
+    <!-- σ²(p) -->
+    <div class="vc-card">
+      <div class="vc-hdr vch-p">
+        <div class="vc-sym">σ²(p)</div>
+        <div class="vc-name">مكوّن تباين الأشخاص</div>
+      </div>
+      <div class="vc-body">
+        <div class="vc-formula vf-p">σ²(p) = E<sub>p</sub>(μ<sub>p</sub> − μ)² = E<sub>p</sub> ν<sub>p</sub>²</div>
+        <p>يقيس مدى تفاوت قدرات الأشخاص في المجتمع. كلما كبر هذا المكوّن دلّ على فروق حقيقية أكبر بين الأشخاص.</p>
+        <p style="font-size:.78rem;color:var(--muted);">يُرمز له أيضاً بـ σ²(μ<sub>p</sub>) أو σ²(ν<sub>p</sub>) — لأن تباين متوسطات الأشخاص = تباين آثارهم.</p>
+        <span class="vc-badge vb-p">✓ تباين مرغوب — هو ما نريد قياسه</span>
+      </div>
+    </div>
+    <!-- σ²(i) -->
+    <div class="vc-card">
+      <div class="vc-hdr vch-i">
+        <div class="vc-sym">σ²(i)</div>
+        <div class="vc-name">مكوّن تباين الفقرات</div>
+      </div>
+      <div class="vc-body">
+        <div class="vc-formula vf-i">σ²(i) = E<sub>i</sub>(μ<sub>i</sub> − μ)² = E<sub>i</sub> ν<sub>i</sub>²</div>
+        <p>يقيس مدى تفاوت صعوبة الفقرات في الكون. تباين كبير يعني أن الفقرات تتفاوت كثيراً في مستوى صعوبتها.</p>
+        <p style="font-size:.78rem;color:var(--muted);">يُرمز له أيضاً بـ σ²(μ<sub>i</sub>) أو σ²(ν<sub>i</sub>). ولاحظ: لا يُرمز للمتبقي بـ σ²(μ<sub>pi</sub>) لأن μ<sub>pi</sub> غير معرَّفة.</p>
+        <span class="vc-badge vb-i">⚠️ مصدر خطأ مطلق في القياس</span>
+      </div>
+    </div>
+    <!-- σ²(pi) -->
+    <div class="vc-card">
+      <div class="vc-hdr vch-pi">
+        <div class="vc-sym">σ²(pi)</div>
+        <div class="vc-name">المتبقي (تفاعل + خطأ)</div>
+      </div>
+      <div class="vc-body">
+        <div class="vc-formula vf-pi">σ²(pi) = E<sub>p</sub>E<sub>i</sub>(X<sub>pi</sub> − μ<sub>p</sub> − μ<sub>i</sub> + μ)²</div>
+        <p>يمثل التفاعل الحقيقي بين الشخص والفقرة (بعض الأشخاص أفضل في بعض الفقرات) مضافاً إليه أي خطأ عشوائي آخر.</p>
+        <p style="font-size:.78rem;color:var(--muted);">يُسمى أحياناً σ²(pi,e) للإشارة صراحةً إلى دمجه التفاعل والخطأ معاً — لأنهما غير قابلَين للتمييز.</p>
+        <span class="vc-badge vb-pi">⚠️ مصدر خطأ مطلق ونسبي معاً</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="ins i-gold fu" style="margin-top:22px;">
+    <div class="ico">💡</div>
+    <div>
+      <div class="ititle">لماذا لا نستخدم هذه المعادلات مباشرةً في التقدير؟</div>
+      <div class="itext">
+        المعادلات 2.11–2.13 تصف مكوّنات التباين بدلالة <strong>مربعات التأثيرات العشوائية غير المعروفة</strong> (ν<sub>p</sub>, ν<sub>i</sub>, ν<sub>pi</sub>) — وهذه لا يمكن ملاحظتها مباشرة. لذلك نلجأ إلى <strong>تحليل التباين (ANOVA)</strong> الذي يُقدِّر هذه المكوّنات من الدرجات الملحوظة الفعلية.
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ═══════════════════ SECTION 2: مخططات فن ═══════════════════ -->
+<section class="sec sec-light" id="venn">
+<div class="sec-inner">
+  <div class="cx fu">
+    <span class="tag t-gold">مخططات فن</span>
+    <h2 class="st">الصورة البصرية لمكوّنات التباين</h2>
+    <p class="sdesc cmx">مخططات فن (Venn Diagrams) تُقدِّم فهماً بصرياً لعلاقة مكوّنات التباين بمتوسطات المربعات المتوقعة</p>
+  </div>
+
+  <div class="venn-wrap fu">
+    <div class="venn-tabs">
+      <button class="vtab active" onclick="showVenn('basic')">الصورة الأساسية</button>
+      <button class="vtab" onclick="showVenn('ems_p')">EMS(p)</button>
+      <button class="vtab" onclick="showVenn('ems_i')">EMS(i)</button>
+      <button class="vtab" onclick="showVenn('ems_pi')">EMS(pi)</button>
+    </div>
+
+    <!-- BASIC -->
+    <div class="vpanel active" id="vp-basic">
+      <div class="venn-svg-row">
+        <div style="text-align:center;">
+          <svg width="280" height="240" viewBox="0 0 280 240" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <filter id="s1"><feDropShadow dx="0" dy="2" stdDeviation="4" flood-opacity=".15"/></filter>
+            </defs>
+            <!-- Big outer circle: total variance -->
+            <circle cx="140" cy="120" r="108" fill="none" stroke="#d4c9bc" stroke-width="2" stroke-dasharray="6,4"/>
+            <text x="140" y="16" text-anchor="middle" font-family="Cairo" font-size="12" fill="#8a95a3">تباين الدرجة الكلية σ²(X)</text>
+            <!-- p circle -->
+            <circle cx="100" cy="100" r="60" fill="rgba(37,99,235,.12)" stroke="#3b82f6" stroke-width="2" filter="url(#s1)"/>
+            <text x="78" y="88" text-anchor="middle" font-family="Georgia" font-size="13" font-weight="700" fill="#1e40af">σ²(p)</text>
+            <text x="78" y="104" text-anchor="middle" font-family="Cairo" font-size="10" fill="#3b82f6">الأشخاص</text>
+            <!-- i circle -->
+            <circle cx="180" cy="100" r="60" fill="rgba(15,122,110,.12)" stroke="#0f7a6e" stroke-width="2" filter="url(#s1)"/>
+            <text x="202" y="88" text-anchor="middle" font-family="Georgia" font-size="13" font-weight="700" fill="#065f46">σ²(i)</text>
+            <text x="202" y="104" text-anchor="middle" font-family="Cairo" font-size="10" fill="#0f7a6e">الفقرات</text>
+            <!-- pi region (bottom) -->
+            <ellipse cx="140" cy="168" rx="55" ry="38" fill="rgba(107,63,160,.12)" stroke="#6b3fa0" stroke-width="2" stroke-dasharray="5,3"/>
+            <text x="140" y="165" text-anchor="middle" font-family="Georgia" font-size="12" font-weight="700" fill="#4c1d95">σ²(pi)</text>
+            <text x="140" y="180" text-anchor="middle" font-family="Cairo" font-size="10" fill="#6b3fa0">متبقي + تفاعل</text>
+          </svg>
+          <div class="venn-caption">النموذج الخطي: X<sub>pi</sub> = μ + ν<sub>p</sub> + ν<sub>i</sub> + ν<sub>pi</sub><br>التباين الكلي = σ²(p) + σ²(i) + σ²(pi)</div>
+        </div>
+        <div style="flex:1;min-width:220px;">
+          <div class="card" style="margin-bottom:12px;border-right:4px solid #3b82f6;">
+            <div style="font-family:'Georgia',serif;font-weight:700;color:#1e40af;margin-bottom:6px;">σ²(p) — دائرة الأشخاص</div>
+            <p style="font-size:.82rem;color:var(--slate);line-height:1.8;">تباين قدرات الأشخاص — هذا ما يهمنا قياسه. كلما كانت الدائرة أكبر، كانت الفروق بين الأشخاص أوضح.</p>
+          </div>
+          <div class="card" style="margin-bottom:12px;border-right:4px solid #0f7a6e;">
+            <div style="font-family:'Georgia',serif;font-weight:700;color:#065f46;margin-bottom:6px;">σ²(i) — دائرة الفقرات</div>
+            <p style="font-size:.82rem;color:var(--slate);line-height:1.8;">تباين صعوبة الفقرات. لا يُفيد في المقارنة بين الأشخاص لكنه يؤثر على التفسير المطلق للدرجات.</p>
+          </div>
+          <div class="card" style="border-right:4px solid #6b3fa0;">
+            <div style="font-family:'Georgia',serif;font-weight:700;color:#4c1d95;margin-bottom:6px;">σ²(pi) — المنطقة المتبقية</div>
+            <p style="font-size:.82rem;color:var(--slate);line-height:1.8;">كل ما لا يُفسَّر بالشخص ولا بالفقرة. يشمل التفاعل الحقيقي والخطأ العشوائي المدمجَين معاً.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EMS(p) -->
+    <div class="vpanel" id="vp-ems_p">
+      <div class="venn-svg-row">
+        <div style="text-align:center;">
+          <svg width="280" height="240" viewBox="0 0 280 240" xmlns="http://www.w3.org/2000/svg">
+            <!-- p circle highlighted -->
+            <circle cx="100" cy="105" r="72" fill="rgba(37,99,235,.22)" stroke="#3b82f6" stroke-width="2.5"/>
+            <text x="80" y="90" text-anchor="middle" font-family="Georgia" font-size="13" font-weight="700" fill="#1e40af">σ²(p)</div>
+            <!-- pi region shown -->
+            <ellipse cx="140" cy="162" rx="65" ry="42" fill="rgba(107,63,160,.18)" stroke="#6b3fa0" stroke-width="2" stroke-dasharray="5,3"/>
+            <text x="140" y="158" text-anchor="middle" font-family="Georgia" font-size="11" font-weight="700" fill="#4c1d95">σ²(pi)</text>
+            <!-- i faded -->
+            <circle cx="180" cy="105" r="60" fill="rgba(15,122,110,.04)" stroke="#0f7a6e" stroke-width="1.5" stroke-dasharray="4,4"/>
+            <text x="200" y="92" text-anchor="middle" font-family="Georgia" font-size="11" fill="#94a3b8">σ²(i)</text>
+            <!-- bracket -->
+            <text x="140" y="26" text-anchor="middle" font-family="Cairo" font-size="11" fill="#1e40af" font-weight="700">EMS(p) = σ²(pi) + nᵢ·σ²(p)</text>
+            <line x1="50" y1="35" x2="230" y2="35" stroke="#3b82f6" stroke-width="1.5" stroke-dasharray="4,3"/>
+            <line x1="50" y1="35" x2="50" y2="200" stroke="#3b82f6" stroke-width="1.5" stroke-dasharray="4,3"/>
+            <line x1="230" y1="35" x2="230" y2="200" stroke="#3b82f6" stroke-width="1.5" stroke-dasharray="4,3"/>
+          </svg>
+          <div class="venn-caption">EMS(p) تشمل دائرة p بالكامل (× nᵢ) + منطقة pi</div>
+        </div>
+        <div style="flex:1;min-width:220px;">
+          <div class="eq-main" style="font-size:1rem;">
+            EMS(p) = σ²(pi) + n<sub>i</sub> σ²(p)
+          </div>
+          <div class="card" style="margin-top:14px;">
+            <div style="font-size:.86rem;font-weight:700;color:var(--deep);margin-bottom:10px;">كيف نقرأ هذه المعادلة؟</div>
+            <div style="display:flex;flex-direction:column;gap:8px;">
+              <div style="display:flex;align-items:flex-start;gap:10px;font-size:.82rem;color:var(--slate);">
+                <span style="color:#1e40af;font-weight:700;flex-shrink:0;">nᵢ·σ²(p)</span>
+                <span>المكوّن الأساسي الذي يحتوي p مضروباً في عدد الفقرات — لأن كل شخص يُختبر بـ nᵢ فقرة</span>
+              </div>
+              <div style="display:flex;align-items:flex-start;gap:10px;font-size:.82rem;color:var(--slate);">
+                <span style="color:#4c1d95;font-weight:700;flex-shrink:0;">σ²(pi)</span>
+                <span>يُضاف دائماً إلى EMS لأنه موجود في كل مصدر من المصادر</span>
+              </div>
+              <div style="display:flex;align-items:flex-start;gap:10px;font-size:.82rem;color:var(--slate);">
+                <span style="color:#94a3b8;font-weight:700;flex-shrink:0;">σ²(i)</span>
+                <span>غائب — لأن MS(p) لا يتأثر بالفروق بين الفقرات عند حساب متوسطات الأشخاص</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EMS(i) -->
+    <div class="vpanel" id="vp-ems_i">
+      <div class="venn-svg-row">
+        <div style="text-align:center;">
+          <svg width="280" height="240" viewBox="0 0 280 240" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="180" cy="105" r="72" fill="rgba(15,122,110,.22)" stroke="#0f7a6e" stroke-width="2.5"/>
+            <text x="200" y="90" text-anchor="middle" font-family="Georgia" font-size="13" font-weight="700" fill="#065f46">σ²(i)</text>
+            <ellipse cx="140" cy="162" rx="65" ry="42" fill="rgba(107,63,160,.18)" stroke="#6b3fa0" stroke-width="2" stroke-dasharray="5,3"/>
+            <text x="140" y="158" text-anchor="middle" font-family="Georgia" font-size="11" font-weight="700" fill="#4c1d95">σ²(pi)</text>
+            <circle cx="100" cy="105" r="60" fill="rgba(37,99,235,.04)" stroke="#3b82f6" stroke-width="1.5" stroke-dasharray="4,4"/>
+            <text x="80" y="92" text-anchor="middle" font-family="Georgia" font-size="11" fill="#94a3b8">σ²(p)</text>
+            <text x="140" y="26" text-anchor="middle" font-family="Cairo" font-size="11" fill="#065f46" font-weight="700">EMS(i) = σ²(pi) + nₚ·σ²(i)</text>
+            <line x1="50" y1="35" x2="230" y2="35" stroke="#0f7a6e" stroke-width="1.5" stroke-dasharray="4,3"/>
+            <line x1="50" y1="35" x2="50" y2="200" stroke="#0f7a6e" stroke-width="1.5" stroke-dasharray="4,3"/>
+            <line x1="230" y1="35" x2="230" y2="200" stroke="#0f7a6e" stroke-width="1.5" stroke-dasharray="4,3"/>
+          </svg>
+          <div class="venn-caption">EMS(i) تشمل دائرة i بالكامل (× nₚ) + منطقة pi</div>
+        </div>
+        <div style="flex:1;min-width:220px;">
+          <div class="eq-main" style="font-size:1rem;">
+            EMS(i) = σ²(pi) + n<sub>p</sub> σ²(i)
+          </div>
+          <div class="card" style="margin-top:14px;">
+            <div style="font-size:.86rem;font-weight:700;color:var(--deep);margin-bottom:10px;">تماثل التركيب مع EMS(p)</div>
+            <p style="font-size:.82rem;color:var(--slate);line-height:1.85;">نفس المنطق: σ²(i) مضروب في nₚ (عدد الأشخاص) لأن كل فقرة يُجيب عليها nₚ شخص. وσ²(pi) مُضاف دائماً. أما σ²(p) فغائب لنفس السبب.</p>
+            <div class="ins i-teal" style="margin-top:12px;padding:12px 16px;">
+              <div class="ico" style="font-size:1.1rem;">📐</div>
+              <div><div class="itext">هذا التماثل بين EMS(p) وEMS(i) هو ما يجعل تصميم p×i <strong>متوازناً</strong> ومريحاً في الحساب.</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EMS(pi) -->
+    <div class="vpanel" id="vp-ems_pi">
+      <div class="venn-svg-row">
+        <div style="text-align:center;">
+          <svg width="280" height="240" viewBox="0 0 280 240" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="100" cy="105" r="60" fill="rgba(37,99,235,.04)" stroke="#3b82f6" stroke-width="1.5" stroke-dasharray="4,4"/>
+            <circle cx="180" cy="105" r="60" fill="rgba(15,122,110,.04)" stroke="#0f7a6e" stroke-width="1.5" stroke-dasharray="4,4"/>
+            <text x="80" y="92" text-anchor="middle" font-family="Georgia" font-size="11" fill="#94a3b8">σ²(p)</text>
+            <text x="200" y="92" text-anchor="middle" font-family="Georgia" font-size="11" fill="#94a3b8">σ²(i)</text>
+            <ellipse cx="140" cy="162" rx="72" ry="50" fill="rgba(107,63,160,.25)" stroke="#6b3fa0" stroke-width="2.5"/>
+            <text x="140" y="158" text-anchor="middle" font-family="Georgia" font-size="14" font-weight="700" fill="#4c1d95">σ²(pi)</text>
+            <text x="140" y="178" text-anchor="middle" font-family="Cairo" font-size="10" fill="#6b3fa0">المتبقي + التفاعل</text>
+            <text x="140" y="26" text-anchor="middle" font-family="Cairo" font-size="11" fill="#4c1d95" font-weight="700">EMS(pi) = σ²(pi)</text>
+            <line x1="68" y1="35" x2="212" y2="35" stroke="#6b3fa0" stroke-width="1.5" stroke-dasharray="4,3"/>
+            <line x1="68" y1="35" x2="68" y2="210" stroke="#6b3fa0" stroke-width="1.5" stroke-dasharray="4,3"/>
+            <line x1="212" y1="35" x2="212" y2="210" stroke="#6b3fa0" stroke-width="1.5" stroke-dasharray="4,3"/>
+          </svg>
+          <div class="venn-caption">EMS(pi) = σ²(pi) فقط — أبسط الثلاثة</div>
+        </div>
+        <div style="flex:1;min-width:220px;">
+          <div class="eq-main" style="font-size:1rem;">
+            EMS(pi) = σ²(pi)
+          </div>
+          <div class="card" style="margin-top:14px;">
+            <div style="font-size:.86rem;font-weight:700;color:var(--deep);margin-bottom:10px;">لماذا بالغ البساطة؟</div>
+            <p style="font-size:.82rem;color:var(--slate);line-height:1.85;">MS(pi) هو المتوسط الموزون لمربعات الانحرافات في الخلايا الفردية بعد حذف تأثير الأشخاص والفقرات. لذا يُقدِّر مباشرةً σ²(pi) — ولهذا يكون <strong>مقدِّر σ²(pi) هو ببساطة MS(pi) نفسه</strong> بلا أي تعديل.</p>
+            <div class="ins i-violet" style="margin-top:12px;padding:12px 16px;">
+              <div class="ico" style="font-size:1.1rem;">⚡</div>
+              <div><div class="itext">MS(pi) يُستخدم كمعيار مرجعي (Denominator) في اشتقاق σ̂²(p) وσ̂²(i) — لذا حسابه أولاً هو الخطوة المفتاح.</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ═══════════════════ SECTION 3: جدول ANOVA ═══════════════════ -->
+<section class="sec sec-slate" id="anova">
+<div class="sec-inner">
+  <div class="cx fu">
+    <span class="tag t-warm">جدول ANOVA</span>
+    <h2 class="st">الجدول 2.1 — صيغ تحليل التباين</h2>
+    <p class="sdesc cmx">الأداة الحسابية التي تربط البيانات الملحوظة بمكوّنات التباين المُراد تقديرها</p>
+  </div>
+
+  <!-- Key formulas -->
+  <div class="g2 fu" style="margin-bottom:28px;">
+    <div>
+      <div style="font-size:.88rem;font-weight:700;color:var(--warm);margin-bottom:12px;">مجاميع المربعات — الصيغ التعريفية</div>
+      <div class="eq eq-rust" style="font-size:.88rem;">SS(p) = n<sub>i</sub> Σ<sub>p</sub>(X̄<sub>p</sub> − X̄)²</div>
+      <div class="eq eq-teal" style="font-size:.88rem;">SS(i) = n<sub>p</sub> Σ<sub>i</sub>(X̄<sub>i</sub> − X̄)²</div>
+      <div class="eq eq-violet" style="font-size:.88rem;">SS(pi) = Σ<sub>p</sub>Σ<sub>i</sub>(X<sub>pi</sub> − X̄<sub>p</sub> − X̄<sub>i</sub> + X̄)²</div>
+    </div>
+    <div>
+      <div style="font-size:.88rem;font-weight:700;color:var(--warm);margin-bottom:12px;">الصيغ الحسابية الأسهل</div>
+      <div class="eq eq-rust" style="font-size:.88rem;">SS(p) = n<sub>i</sub>Σ<sub>p</sub>X̄<sub>p</sub>² − n<sub>p</sub>n<sub>i</sub>X̄²</div>
+      <div class="eq eq-teal" style="font-size:.88rem;">SS(i) = n<sub>p</sub>Σ<sub>i</sub>X̄<sub>i</sub>² − n<sub>p</sub>n<sub>i</sub>X̄²</div>
+      <div class="eq eq-violet" style="font-size:.88rem;">SS(pi) = Σ<sub>p</sub>Σ<sub>i</sub>X<sub>pi</sub>² − n<sub>i</sub>Σ<sub>p</sub>X̄<sub>p</sub>² − n<sub>p</sub>Σ<sub>i</sub>X̄<sub>i</sub>² + n<sub>p</sub>n<sub>i</sub>X̄²</div>
+      <div class="ins i-gold" style="margin-top:10px;padding:12px 14px;">
+        <div class="ico" style="font-size:1.1rem;">💻</div>
+        <div><div class="itext">الصيغ على اليمين <em>أسهل حاسوبياً</em> — تعمل على المجاميع الخام بدلاً من الانحرافات</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="anova-table-wrap fu">
+    <div class="anova-table-hdr">
+      <div style="font-size:1.6rem;">📋</div>
+      <div>
+        <h3>جدول تحليل التباين الكامل — تصميم p × i</h3>
+        <div style="font-size:.75rem;opacity:.8;margin-top:2px;">Table 2.1 — ANOVA for G Study in p × i Design</div>
+      </div>
+    </div>
+    <div style="overflow-x:auto;">
+    <div class="table-wrap"><table class="anova-tbl">
+      <thead>
+        <tr>
+          <th style="text-align:right;">التأثير (α)</th>
+          <th>درجات الحرية df(α)</th>
+          <th>مجموع المربعات SS(α)</th>
+          <th>متوسط المربعات MS(α)</th>
+          <th>تقدير مكوّن التباين σ̂²(α)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="row-p">
+          <td><span class="bdg bd-sky">p — الأشخاص</span></td>
+          <td class="sym">n<sub>p</sub> − 1</td>
+          <td class="sym">SS(p)</td>
+          <td class="sym">MS(p)</td>
+          <td class="sym">[MS(p) − MS(pi)] / n<sub>i</sub></td>
+        </tr>
+        <tr class="row-i">
+          <td><span class="bdg bd-teal">i — الفقرات</span></td>
+          <td class="sym">n<sub>i</sub> − 1</td>
+          <td class="sym">SS(i)</td>
+          <td class="sym">MS(i)</td>
+          <td class="sym">[MS(i) − MS(pi)] / n<sub>p</sub></td>
+        </tr>
+        <tr class="row-pi">
+          <td><span class="bdg bd-violet">pi — المتبقي</span></td>
+          <td class="sym">(n<sub>p</sub> − 1)(n<sub>i</sub> − 1)</td>
+          <td class="sym">SS(pi)</td>
+          <td class="sym">MS(pi)</td>
+          <td class="sym">MS(pi)</td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="5" style="text-align:right;font-size:.8rem;color:var(--slate);">
+            📌 تحقق: SS(p) + SS(i) + SS(pi) = SS الكلي = Σ<sub>p</sub>Σ<sub>i</sub>(X<sub>pi</sub> − X̄)²
+          </td>
+        </tr>
+      </tfoot>
+    </table></div>
+    </div>
+  </div>
+
+  <!-- Decomposition step -->
+  <div class="ins i-sky fu" style="margin-top:22px;">
+    <div class="ico">🔗</div>
+    <div>
+      <div class="ititle">المعادلة 2.15 — التفكيك الكامل لمجاميع المربعات</div>
+      <div class="itext">
+        <div class="eq eq-sky" style="margin:8px 0;font-size:.88rem;background:#eff8ff;">Σ<sub>p</sub>Σ<sub>i</sub>(X<sub>pi</sub>−X̄)² = n<sub>i</sub>Σ<sub>p</sub>(X̄<sub>p</sub>−X̄)² + n<sub>p</sub>Σ<sub>i</sub>(X̄<sub>i</sub>−X̄)² + Σ<sub>p</sub>Σ<sub>i</sub>(X<sub>pi</sub>−X̄<sub>p</sub>−X̄<sub>i</sub>+X̄)²</div>
+        أي: <strong>SS الكلي = SS(p) + SS(i) + SS(pi)</strong> — وهذا هو جوهر تحليل التباين: تفكيك التباين الكلي إلى أجزائه المنسوبة لكل مصدر.
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ═══════════════════ SECTION 4: معادلات EMS ═══════════════════ -->
+<section class="sec sec-warm" id="ems">
+<div class="sec-inner">
+  <div class="cx fu">
+    <span class="tag t-teal">معادلات EMS</span>
+    <h2 class="st">القيم المتوقعة لمتوسطات المربعات</h2>
+    <p class="sdesc cmx">Expected Mean Squares — الجسر الرياضي بين الملحوظ (MS) والمعلمي (σ²)</p>
+  </div>
+
+  <div class="ems-wrap fu">
+    <div class="ems-title">📐 معادلات EMS — من المعادلة 2.16 إلى 2.18</div>
+    <div class="ems-rows">
+      <div class="ems-row">
+        <div class="ems-lhs" style="color:#1e40af;">EMS(p)</div>
+        <div class="ems-eq-sign">=</div>
+        <div class="ems-rhs">σ²(pi) + <strong style="color:#1e40af;">n<sub>i</sub>·σ²(p)</strong></div>
+        <span class="ems-badge" style="background:#dbeafe;color:#1e40af;">المعادلة 2.16</span>
+      </div>
+      <div class="ems-row">
+        <div class="ems-lhs" style="color:#065f46;">EMS(i)</div>
+        <div class="ems-eq-sign">=</div>
+        <div class="ems-rhs">σ²(pi) + <strong style="color:#065f46;">n<sub>p</sub>·σ²(i)</strong></div>
+        <span class="ems-badge" style="background:#d1fae5;color:#065f46;">المعادلة 2.17</span>
+      </div>
+      <div class="ems-row">
+        <div class="ems-lhs" style="color:#4c1d95;">EMS(pi)</div>
+        <div class="ems-eq-sign">=</div>
+        <div class="ems-rhs"><strong style="color:#4c1d95;">σ²(pi)</strong></div>
+        <span class="ems-badge" style="background:#ede9fe;color:#4c1d95;">المعادلة 2.18</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Derivation steps -->
+  <div style="margin-top:28px;" class="fu">
+    <div style="font-size:.92rem;font-weight:700;color:var(--deep);margin-bottom:18px;">⚙️ كيف نُقدِّر مكوّنات التباين من معادلات EMS؟</div>
+    <div class="steps-v">
+      <div class="step-v">
+        <div class="sv-num svn1">١</div>
+        <div class="sv-body">
+          <h4>نبدأ بـ σ²(pi) — لأنها الأبسط</h4>
+          <p>من المعادلة 2.18: EMS(pi) = σ²(pi). نستبدل المتوقع بالملحوظ:</p>
+          <div class="eq eq-violet" style="margin-top:8px;">σ̂²(pi) = MS(pi)</div>
+        </div>
+      </div>
+      <div class="step-v">
+        <div class="sv-num svn2">٢</div>
+        <div class="sv-body">
+          <h4>ننتقل لـ σ²(p) — نطرح EMS(pi) من EMS(p)</h4>
+          <p>من المعادلة 2.16: EMS(p) − EMS(pi) = nᵢ·σ²(p). إذاً:</p>
+          <div class="eq eq-rust" style="margin-top:8px;">σ̂²(p) = [MS(p) − MS(pi)] / n<sub>i</sub></div>
+        </div>
+      </div>
+      <div class="step-v">
+        <div class="sv-num svn3">٣</div>
+        <div class="sv-body">
+          <h4>وبالمثل لـ σ²(i)</h4>
+          <p>من المعادلة 2.17: EMS(i) − EMS(pi) = nₚ·σ²(i). إذاً:</p>
+          <div class="eq eq-teal" style="margin-top:8px;">σ̂²(i) = [MS(i) − MS(pi)] / n<sub>p</sub></div>
+        </div>
+      </div>
+      <div class="step-v">
+        <div class="sv-num svn4">✓</div>
+        <div class="sv-body">
+          <h4>الخلاصة — ثلاثة مقدِّرات ANOVA</h4>
+          <p>المعادلات 2.19 و2.20 و2.21 تُعطينا مقدِّرات مكوّنات التباين من البيانات الملحوظة فقط.</p>
+          <div class="ins i-rust" style="margin-top:10px;padding:12px 14px;">
+            <div class="ico" style="font-size:1rem;">⚠️</div>
+            <div><div class="itext">قد تظهر قيم سالبة لـ σ̂²(p) أو σ̂²(i) — وهذا ممكن رياضياً (عندما MS(pi) > MS(p) أو MS(i))، ويُعالَج بوضع التقدير = 0 أو باستخدام طرائق تقدير بديلة.</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ═══════════════════ SECTION 5: المثال العددي ═══════════════════ -->
+<section class="sec sec-light" id="data">
+<div class="sec-inner">
+  <div class="cx fu">
+    <span class="tag t-sky">المثال العددي</span>
+    <h2 class="st">مجموعة البيانات الاصطناعية رقم 1</h2>
+    <p class="sdesc cmx">10 أشخاص × 12 فقرة (درجات ثنائية 0/1) — تطبيق كامل لحساب مكوّنات التباين</p>
+  </div>
+
+  <!-- Data table -->
+  <div class="data-table-wrap fu">
+    <div class="data-hdr"><div style="font-size:1.4rem;">🗂️</div><h3>الجدول 2.2 — البيانات الاصطناعية (n<sub>p</sub>=10، n<sub>i</sub>=12)</h3></div>
+    <div style="overflow-x:auto;">
+    <div class="table-wrap"><table class="dtbl" id="dataTable">
+      <thead>
+        <tr>
+          <th>الشخص</th>
+          <th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th>
+          <th>7</th><th>8</th><th>9</th><th>10</th><th>11</th><th>12</th>
+          <th style="background:#1e3a8a;color:white;">X̄<sub>p</sub></th>
+        </tr>
+      </thead>
+      <tbody id="dataTbody"><!-- JS --></tbody>
+      <tfoot>
+        <tr class="row-mu-i">
+          <td>X̄<sub>i</sub></td>
+          <td>1.0</td><td>.9</td><td>.9</td><td>.7</td><td>.7</td><td>.6</td>
+          <td>.6</td><td>.4</td><td>.3</td><td>.3</td><td>.2</td><td>.1</td>
+          <td style="background:#0f6b5e;color:white;font-weight:700;">X̄=.558</td>
+        </tr>
+      </tfoot>
+    </table></div>
+    </div>
+  </div>
+
+  <!-- Computed summaries -->
+  <div class="card fu" style="margin-top:20px;">
+    <div style="font-size:.88rem;font-weight:700;color:var(--warm);margin-bottom:14px;">📊 الإحصاءات الملخَّصة (المستخدمة في الحساب)</div>
+    <div class="g4">
+      <div style="background:#fef9f0;border-radius:10px;padding:14px;text-align:center;border:1px solid var(--border2);">
+        <div style="font-size:.72rem;color:var(--muted);margin-bottom:4px;">المتوسط العام</div>
+        <div style="font-family:'Georgia',serif;font-size:1.2rem;font-weight:700;color:var(--deep);">X̄ = .5583</div>
+      </div>
+      <div style="background:#eff6ff;border-radius:10px;padding:14px;text-align:center;border:1px solid #bfdbfe;">
+        <div style="font-size:.72rem;color:var(--muted);margin-bottom:4px;">Σₚ X̄ₚ²</div>
+        <div style="font-family:'Georgia',serif;font-size:1.2rem;font-weight:700;color:#1e40af;">3.7292</div>
+      </div>
+      <div style="background:#f0fdf4;border-radius:10px;padding:14px;text-align:center;border:1px solid #bbf7d0;">
+        <div style="font-size:.72rem;color:var(--muted);margin-bottom:4px;">Σᵢ X̄ᵢ²</div>
+        <div style="font-family:'Georgia',serif;font-size:1.2rem;font-weight:700;color:#065f46;">4.71</div>
+      </div>
+      <div style="background:#f5f3ff;border-radius:10px;padding:14px;text-align:center;border:1px solid #ddd6fe;">
+        <div style="font-size:.72rem;color:var(--muted);margin-bottom:4px;">ΣₚΣᵢ Xₚᵢ²</div>
+        <div style="font-family:'Georgia',serif;font-size:1.2rem;font-weight:700;color:#4c1d95;">67</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step by step calculation -->
+  <div class="card fu" style="margin-top:20px;">
+    <div style="font-size:.92rem;font-weight:700;color:var(--deep);margin-bottom:20px;">🔢 حساب جدول ANOVA خطوةً بخطوة</div>
+    <div style="display:flex;flex-direction:column;gap:12px;">
+      <!-- SS calculations -->
+      <div style="background:#fef9f0;border-radius:12px;padding:16px 20px;border:1px solid var(--border2);">
+        <div style="font-size:.82rem;font-weight:700;color:var(--rust);margin-bottom:8px;">📌 حساب مجاميع المربعات</div>
+        <div class="eq eq-rust" style="font-size:.84rem;">SS(p) = 12×3.7292 − 10×12×(.5583)² = 44.75 − 37.41 = <strong>7.34</strong></div>
+        <div class="eq eq-teal" style="font-size:.84rem;">SS(i) = 10×4.71 − 10×12×(.5583)² = 47.1 − 37.41 = <strong>9.69</strong></div>
+        <div class="eq eq-violet" style="font-size:.84rem;">SS(pi) = 67 − 12×3.7292 − 10×4.71 + 10×12×(.5583)² = <strong>12.56</strong></div>
+      </div>
+      <!-- df and MS -->
+      <div style="background:#f0f8ff;border-radius:12px;padding:16px 20px;border:1px solid #bae6fd;">
+        <div style="font-size:.82rem;font-weight:700;color:var(--sky);margin-bottom:8px;">📌 درجات الحرية ومتوسطات المربعات</div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;direction:ltr;">
+          <div style="text-align:center;font-size:.82rem;color:#1e40af;">df(p)=9 → MS(p)=.8157</div>
+          <div style="text-align:center;font-size:.82rem;color:#065f46;">df(i)=11 → MS(i)=.8811</div>
+          <div style="text-align:center;font-size:.82rem;color:#4c1d95;">df(pi)=99 → MS(pi)=.1269</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Final ANOVA table (actual values) -->
+  <div class="anova-table-wrap fu" style="margin-top:22px;">
+    <div class="anova-table-hdr" style="background:linear-gradient(135deg,var(--teal),var(--mint));">
+      <div style="font-size:1.4rem;">✅</div>
+      <h3>الجدول 2.3 — نتائج ANOVA للبيانات الاصطناعية رقم 1</h3>
+    </div>
+    <div style="overflow-x:auto;">
+    <div class="table-wrap"><table class="anova-tbl">
+      <thead>
+        <tr>
+          <th style="text-align:right;">التأثير</th>
+          <th>df</th><th>SS</th><th>MS</th><th>σ̂²</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="row-p">
+          <td><span class="bdg bd-sky">p — الأشخاص</span></td>
+          <td>9</td><td>7.3417</td><td class="sym">.8157</td>
+          <td style="font-weight:900;font-family:'Georgia',serif;color:#1e40af;">.0574</td>
+        </tr>
+        <tr class="row-i">
+          <td><span class="bdg bd-teal">i — الفقرات</span></td>
+          <td>11</td><td>9.6917</td><td class="sym">.8811</td>
+          <td style="font-weight:900;font-family:'Georgia',serif;color:#065f46;">.0754</td>
+        </tr>
+        <tr class="row-pi">
+          <td><span class="bdg bd-violet">pi — المتبقي</span></td>
+          <td>99</td><td>12.5583</td><td class="sym">.1269</td>
+          <td style="font-weight:900;font-family:'Georgia',serif;color:#4c1d95;">.1269</td>
+        </tr>
+      </tbody>
+    </table></div>
+    </div>
+  </div>
+
+  <!-- Variance bars -->
+  <div class="vbar-section fu" style="margin-top:22px;">
+    <div class="vbar-title">📊 الحجم النسبي لمكوّنات التباين</div>
+    <div id="vbars">
+      <div class="vbar-row">
+        <div class="vbar-lbl" style="color:#1e40af;">σ²(p)</div>
+        <div class="vbar-bg"><div class="vbar vb-p-c" data-w="22%" style="width:0%">.0574</div></div>
+        <div class="vbar-num" style="color:#1e40af;">.0574</div>
+        <div class="vbar-desc">22% — فروق بين الأشخاص (مرغوب)</div>
+      </div>
+      <div class="vbar-row">
+        <div class="vbar-lbl" style="color:#065f46;">σ²(i)</div>
+        <div class="vbar-bg"><div class="vbar vb-i-c" data-w="29%" style="width:0%">.0754</div></div>
+        <div class="vbar-num" style="color:#065f46;">.0754</div>
+        <div class="vbar-desc">29% — فروق بين الفقرات في الصعوبة</div>
+      </div>
+      <div class="vbar-row">
+        <div class="vbar-lbl" style="color:#4c1d95;">σ²(pi)</div>
+        <div class="vbar-bg"><div class="vbar vb-pi-c" data-w="49%" style="width:0%">.1269</div></div>
+        <div class="vbar-num" style="color:#4c1d95;">.1269</div>
+        <div class="vbar-desc">49% — تفاعل + خطأ (الأكبر!)</div>
+      </div>
+    </div>
+    <div class="ins i-rust" style="margin-top:16px;">
+      <div class="ico">🔍</div>
+      <div>
+        <div class="ititle">ماذا تُخبرنا هذه الأرقام؟</div>
+        <div class="itext">
+          σ²(pi) = .1269 هو <strong>الأكبر</strong> — يعني أن كثيراً من التباين في الدرجات يعود لتفاعلات فريدة بين أشخاص وفقرات بعينها (بعض الأشخاص أجادوا في فقرات معينة لكن ليس أخرى). 
+          σ²(p) = .0574 هو <strong>الأصغر</strong> — مما يشير إلى نسبة ثبات منخفضة نسبياً لهذه الفقرات الاثنتي عشرة.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ═══════════════════ SECTION 6: الحاسبة ═══════════════════ -->
+<section class="sec sec-slate" id="calc">
+<div class="sec-inner">
+  <div class="cx fu">
+    <span class="tag t-violet">حاسبة تفاعلية</span>
+    <h2 class="st">احسب مكوّنات التباين بنفسك</h2>
+    <p class="sdesc cmx">أدخل قيم MS ونتائج تصميمك الخاص — واحصل فوراً على تقديرات σ²</p>
+  </div>
+
+  <div class="calc-box fu">
+    <div class="calc-title">🎛️ أدخل القيم:</div>
+    <div class="calc-inputs">
+      <div class="ci">
+        <label>MS(p)</label>
+        <input type="number" id="cMSp" value="0.8157" step="0.0001" oninput="calcVC()">
+        <div class="ci-lbl">متوسط مربعات الأشخاص</div>
+      </div>
+      <div class="ci">
+        <label>MS(i)</label>
+        <input type="number" id="cMSi" value="0.8811" step="0.0001" oninput="calcVC()">
+        <div class="ci-lbl">متوسط مربعات الفقرات</div>
+      </div>
+      <div class="ci">
+        <label>MS(pi)</label>
+        <input type="number" id="cMSpi" value="0.1269" step="0.0001" oninput="calcVC()">
+        <div class="ci-lbl">متوسط مربعات المتبقي</div>
+      </div>
+      <div class="ci">
+        <label>n<sub>p</sub></label>
+        <input type="number" id="cnp" value="10" min="2" step="1" oninput="calcVC()">
+        <div class="ci-lbl">عدد الأشخاص</div>
+      </div>
+      <div class="ci">
+        <label>n<sub>i</sub></label>
+        <input type="number" id="cni" value="12" min="2" step="1" oninput="calcVC()">
+        <div class="ci-lbl">عدد الفقرات</div>
+      </div>
+      <div class="ci" style="display:flex;align-items:center;justify-content:center;">
+        <button onclick="calcVC()" style="padding:12px 22px;background:var(--rust);color:white;border:none;border-radius:10px;font-family:'Cairo',sans-serif;font-size:.88rem;font-weight:700;cursor:pointer;box-shadow:var(--sh-md);">احسب ▶</button>
+      </div>
+    </div>
+    <div class="calc-results" id="calcResults">
+      <div class="cr cr-p">
+        <div class="cr-sym">σ̂²(p)</div>
+        <div class="cr-val cr-val-p" id="cvp">—</div>
+        <div class="cr-desc">تباين الأشخاص<br>[MS(p)−MS(pi)] / nᵢ</div>
+      </div>
+      <div class="cr cr-i">
+        <div class="cr-sym">σ̂²(i)</div>
+        <div class="cr-val cr-val-i" id="cvi">—</div>
+        <div class="cr-desc">تباين الفقرات<br>[MS(i)−MS(pi)] / nₚ</div>
+      </div>
+      <div class="cr cr-pi">
+        <div class="cr-sym">σ̂²(pi)</div>
+        <div class="cr-val cr-val-pi" id="cvpi">—</div>
+        <div class="cr-desc">المتبقي<br>= MS(pi) مباشرة</div>
+      </div>
+    </div>
+    <div id="calcInsight" class="ins i-teal" style="margin-top:16px;display:none;">
+      <div class="ico">📊</div>
+      <div>
+        <div class="ititle">تفسير النتائج</div>
+        <div class="itext" id="calcInsText"></div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ═══════════════════ SECTION 7: الخلاصة ═══════════════════ -->
+<section class="sec sec-dark" id="sum">
+<div class="sec-inner">
+  <div class="cx fu">
+    <span class="tag t-slate">الخلاصة</span>
+    <h2 class="st light">المسار الكامل — من البيانات إلى مكوّنات التباين</h2>
+    <p class="sdesc light cmx">في خمس خطوات واضحة يمكنك الانتقال من جدول بيانات خام إلى تقديرات موثوقة لمكوّنات التباين</p>
+  </div>
+
+  <div class="fu">
+    <!-- Flow diagram -->
+    <div style="background:rgba(255,255,255,.05);border-radius:16px;padding:28px;border:1px solid rgba(255,255,255,.1);margin-bottom:28px;">
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:center;font-size:.82rem;">
+        <div style="background:rgba(193,68,14,.25);border:1px solid rgba(193,68,14,.4);border-radius:10px;padding:10px 16px;text-align:center;min-width:120px;">
+          <div style="font-weight:700;color:#fca5a5;">البيانات X<sub>pi</sub></div>
+          <div style="opacity:.7;margin-top:2px;">نقطة البداية</div>
+        </div>
+        <div style="font-size:1.4rem;color:rgba(255,255,255,.25);">→</div>
+        <div style="background:rgba(212,134,10,.2);border:1px solid rgba(212,134,10,.35);border-radius:10px;padding:10px 16px;text-align:center;min-width:120px;">
+          <div style="font-weight:700;color:var(--sand);">مجاميع SS</div>
+          <div style="opacity:.7;margin-top:2px;">المعادلات 2.15</div>
+        </div>
+        <div style="font-size:1.4rem;color:rgba(255,255,255,.25);">→</div>
+        <div style="background:rgba(29,127,163,.2);border:1px solid rgba(29,127,163,.35);border-radius:10px;padding:10px 16px;text-align:center;min-width:120px;">
+          <div style="font-weight:700;color:#7dd3fc;">متوسطات MS</div>
+          <div style="opacity:.7;margin-top:2px;">÷ درجات الحرية</div>
+        </div>
+        <div style="font-size:1.4rem;color:rgba(255,255,255,.25);">→</div>
+        <div style="background:rgba(15,122,110,.2);border:1px solid rgba(15,122,110,.35);border-radius:10px;padding:10px 16px;text-align:center;min-width:120px;">
+          <div style="font-weight:700;color:#6ee7b7;">معادلات EMS</div>
+          <div style="opacity:.7;margin-top:2px;">2.16 – 2.18</div>
+        </div>
+        <div style="font-size:1.4rem;color:rgba(255,255,255,.25);">→</div>
+        <div style="background:rgba(107,63,160,.25);border:1px solid rgba(107,63,160,.4);border-radius:10px;padding:10px 16px;text-align:center;min-width:120px;">
+          <div style="font-weight:700;color:#c4b5fd;">مكوّنات σ̂²</div>
+          <div style="opacity:.7;margin-top:2px;">الهدف النهائي</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="summary-cards fu">
+    <div class="scard">
+      <h4 style="color:#93c5fd;">🧱 المكوّنات هي اللبنات الأساسية</h4>
+      <p>مكوّنات التباين σ²(p)، σ²(i)، σ²(pi) هي القاعدة الحاسمة لجميع الحسابات اللاحقة في نظرية التعميم — من حساب الخطأ إلى المعاملات.</p>
+    </div>
+    <div class="scard">
+      <h4 style="color:#6ee7b7;">⚖️ كل مكوّن بمعادلة خاصة</h4>
+      <p>σ̂²(pi) = MS(pi) مباشرة. σ̂²(p) = [MS(p)−MS(pi)]/nᵢ. σ̂²(i) = [MS(i)−MS(pi)]/nₚ. هذه المعادلات مشتقة من حل معادلات EMS.</p>
+    </div>
+    <div class="scard">
+      <h4 style="color:var(--sand);">📐 المخططات البصرية للفهم</h4>
+      <p>مخططات فن لا تُقدِّم بل تُفسِّر — فهي تُظهر أي المكوّنات تدخل في كل EMS، مما يُيسِّر فهم منطق الاشتقاق وتذكُّره.</p>
+    </div>
+    <div class="scard">
+      <h4 style="color:#f9a8d4;">🔁 الاستخدام في دراسة D</h4>
+      <p>هذه المكوّنات ستُستخدم لاحقاً في دراسة القرار (D) لحساب تباين الخطأ σ²(Δ)، σ²(δ) ومعاملات التعميم Eρ² وΦ.</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<hr class="rdiv">
+<footer>
+  <p style="font-size:1rem;color:white;margin-bottom:8px;">📖 <strong>Generalizability Theory</strong> — Robert L. Brennan</p>
+  <p>الفصل الثاني — القسمان 2.2 و 2.2.1: مكوّنات التباين في دراسة G لتصميم p × i</p>
+  <p style="margin-top:10px;font-size:.76rem;opacity:.4;">الدليل البصري الشامل لمفاهيم القياس التربوي المتقدم</p>
+</footer>
+
+<script>
+/* ── PROGRESS + NAV ── */
+window.addEventListener('scroll',()=>{
+  const p=window.scrollY/(document.body.scrollHeight-window.innerHeight)*100;
+  document.getElementById('pg').style.width=p+'%';
+  const secs=['def','venn','anova','ems','data','calc','sum'];
+  let cur='def';
+  secs.forEach(s=>{const el=document.getElementById(s);if(el&&el.getBoundingClientRect().top<110)cur=s;});
+  document.querySelectorAll('.nl').forEach(l=>l.classList.toggle('active',l.dataset.s===cur));
+},{passive:true});
+
+/* ── FADE IN ── */
+const io=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('in');});},{threshold:.07});
+document.querySelectorAll('.fu').forEach(el=>io.observe(el));
+
+/* ── VBAR ANIMATE ── */
+const vio=new IntersectionObserver(e=>{
+  e.forEach(x=>{if(x.isIntersecting){
+    x.target.querySelectorAll('.vbar').forEach(b=>{const w=b.getAttribute('data-w');if(w)setTimeout(()=>{b.style.width=w;},200);});
+    vio.unobserve(x.target);
+  }});
+},{threshold:.3});
+const vbarSec=document.getElementById('vbars');
+if(vbarSec)vio.observe(vbarSec);
+
+/* ── VENN TABS ── */
+function showVenn(id){
+  document.querySelectorAll('.vpanel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.vtab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('vp-'+id).classList.add('active');
+  event.target.classList.add('active');
+}
+
+/* ── DATA TABLE ── */
+const rawData=[
+  [1,0,1,0,0,0,0,0,0,0,0,0],
+  [1,1,1,0,0,1,0,0,0,0,0,0],
+  [1,1,1,1,1,0,0,0,0,0,0,0],
+  [1,1,0,1,1,0,0,1,0,0,0,0],
+  [1,1,1,1,1,0,1,0,0,0,0,0],
+  [1,1,1,0,1,1,1,0,0,0,0,0],
+  [1,1,1,1,1,1,1,0,0,0,0,0],
+  [1,1,1,1,0,1,1,1,1,1,0,0],
+  [1,1,1,1,1,1,1,1,1,1,1,0],
+  [1,1,1,1,1,1,1,1,1,1,1,1]
+];
+const muP=[.1667,.3333,.4167,.4167,.5000,.5000,.5833,.7500,.9167,1.0000];
+const grand=.5583;
+
+function buildDataTable(){
+  const tb=document.getElementById('dataTbody');
+  rawData.forEach((row,pi)=>{
+    const tr=document.createElement('tr');
+    let cells=`<td>p${pi+1}</td>`;
+    row.forEach(v=>{ cells+=`<td class="${v===1?'cell-1':'cell-0'}">${v}</td>`; });
+    cells+=`<td class="col-mu-p">${muP[pi].toFixed(4)}</td>`;
+    tr.innerHTML=cells;
+    tb.appendChild(tr);
+  });
+}
+buildDataTable();
+
+/* ── CALCULATOR ── */
+function calcVC(){
+  const MSp=parseFloat(document.getElementById('cMSp').value)||0;
+  const MSi=parseFloat(document.getElementById('cMSi').value)||0;
+  const MSpi=parseFloat(document.getElementById('cMSpi').value)||0;
+  const np=parseInt(document.getElementById('cnp').value)||1;
+  const ni=parseInt(document.getElementById('cni').value)||1;
+
+  const vp=(MSp-MSpi)/ni;
+  const vi=(MSi-MSpi)/np;
+  const vpi=MSpi;
+  const total=Math.max(vp,0)+Math.max(vi,0)+vpi;
+
+  document.getElementById('cvp').textContent=vp.toFixed(4)+(vp<0?' ⚠️':'');
+  document.getElementById('cvi').textContent=vi.toFixed(4)+(vi<0?' ⚠️':'');
+  document.getElementById('cvpi').textContent=vpi.toFixed(4);
+
+  const ins=document.getElementById('calcInsight');
+  const txt=document.getElementById('calcInsText');
+  ins.style.display='flex';
+
+  const pct=v=>total>0?(Math.max(v,0)/total*100).toFixed(1):'—';
+  let msg=`إجمالي التباين المُقدَّر: <strong>${total.toFixed(4)}</strong> | `;
+  msg+=`σ̂²(p)=${vp>=0?vp.toFixed(4):'سالبة → صفر'} (${pct(vp)}%) | `;
+  msg+=`σ̂²(i)=${vi>=0?vi.toFixed(4):'سالبة → صفر'} (${pct(vi)}%) | `;
+  msg+=`σ̂²(pi)=${vpi.toFixed(4)} (${pct(vpi)}%). `;
+  if(vp<0||vi<0)msg+='<br>⚠️ القيم السالبة تحدث عندما MS(pi) > MS(p) أو MS(i) — يُعالَج عادةً بضبطها على صفر.';
+  else if(vp<vpi)msg+='<br>💡 σ²(p) أصغر من σ²(pi) — يُشير إلى ثبات منخفض نسبياً.';
+  else msg+='<br>✅ σ²(p) أكبر من σ²(pi) — مؤشر جيد للثبات!';
+  txt.innerHTML=msg;
+
+  // color
+  ins.className='ins '+(vp<0||vi<0?'i-rust':vp>vpi?'i-teal':'i-gold');
+}
+calcVC();
+</script>
+
+<div class="page-nav-bottom" style="background:linear-gradient(135deg,#0a0a1a,#111827);"><a href="index.html" style="background:linear-gradient(135deg,#16213e,#0f3460);color:#fff;">&#x1F3E0; &#x627;&#x644;&#x631;&#x626;&#x64A;&#x633;&#x64A;&#x629;</a> <a href="2.1.html" style="background:linear-gradient(135deg,#4a5568,#2d3748);color:#fff;">&#x2190; &#x627;&#x644;&#x633;&#x627;&#x628;&#x642;</a> <a href="2.3.html" style="background:linear-gradient(135deg,#2b6cb0,#2c5282);color:#fff;">&#x627;&#x644;&#x62A;&#x627;&#x644;&#x64A; &#x2192;</a></div>
+</body>
+</html>
